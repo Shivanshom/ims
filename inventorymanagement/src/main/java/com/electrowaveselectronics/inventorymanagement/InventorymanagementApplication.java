@@ -1,6 +1,6 @@
 package com.electrowaveselectronics.inventorymanagement;
 
-import com.electrowaveselectronics.inventorymanagement.dao.AppDAO;
+import com.electrowaveselectronics.inventorymanagement.repository.AppDAO;
 import com.electrowaveselectronics.inventorymanagement.entity.Godown;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
 import com.electrowaveselectronics.inventorymanagement.entity.PurchaseOrder;
@@ -9,7 +9,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework. context.annotation.Bean;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
@@ -25,12 +24,12 @@ public class InventorymanagementApplication {
 		return runner ->{
 			// Godown
 
-//		  	createGodown(appDAO);
+		  	createGodown(appDAO);
 			addProductByGodownId(appDAO);
-//			listGodowns(appDAO);
-//			findProductsByGodownId(appDAO);
+			listGodowns(appDAO);
+			findProductsByGodownId(appDAO);
 
-//			createOrder(appDAO);
+//			createOrder(appDAO); //DANGER ⚠️
 
 		};
 	}

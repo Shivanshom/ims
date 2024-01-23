@@ -1,8 +1,9 @@
-package com.electrowaveselectronics.inventorymanagement.dao;
+package com.electrowaveselectronics.inventorymanagement.repository;
 
 import com.electrowaveselectronics.inventorymanagement.entity.Godown;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
 import com.electrowaveselectronics.inventorymanagement.entity.PurchaseOrder;
+import com.electrowaveselectronics.inventorymanagement.repository.AppDAO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;

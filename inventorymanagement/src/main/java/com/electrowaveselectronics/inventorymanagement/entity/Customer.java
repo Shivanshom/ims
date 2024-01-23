@@ -2,7 +2,15 @@ package com.electrowaveselectronics.inventorymanagement.entity;
 
 import jakarta.persistence.*;
 
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "customer")
 public class Customer {
     @Id
@@ -19,44 +27,4 @@ public class Customer {
     @Column(name = "customer_number")
     private int customerNo;
 
-    public Customer() {
-    }
-
-    public Customer(int customerName, String customerAddress, int customerNo) {
-        this.customerName = customerName;
-        this.customerAddress = customerAddress;
-        this.customerNo = customerNo;
-    }
-
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
-
-    public int getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(int customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getCustomerAddress() {
-        return customerAddress;
-    }
-
-    public void setCustomerAddress(String customerAddress) {
-        this.customerAddress = customerAddress;
-    }
-
-    public int getCustomerNo() {
-        return customerNo;
-    }
-
-    public void setCustomerNo(int customerNo) {
-        this.customerNo = customerNo;
-    }
 }
