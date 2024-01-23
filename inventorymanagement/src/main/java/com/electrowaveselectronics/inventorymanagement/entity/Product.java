@@ -1,12 +1,18 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.query.Order;
 
 import java.util.List;
 
 @Entity
 @Table(name = "product")
+@Getter
+@Setter
+@ToString
 public class Product {
 
     @Id
@@ -25,17 +31,9 @@ public class Product {
 
     @Column(name = "total_quantity")
     private int totalQuantity;
-
-    @Column(name = "godown_id")
-    private int godownId;
-
-    public int getGodownId() {
-        return godownId;
-    }
-
-    public void setGodownId(int godownId) {
-        this.godownId = godownId;
-    }
+//
+//    @Column(name = "godown_id")
+//    private int godownId;
 
     public Product(){}
     public Product(String productName, int productVolume, float price, int totalQuantity) {
@@ -43,56 +41,5 @@ public class Product {
         this.productVolume = productVolume;
         this.price = price;
         this.totalQuantity = totalQuantity;
-    }
-
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public int getProductVolume() {
-        return productVolume;
-    }
-
-    public void setProductVolume(int productVolume) {
-        this.productVolume = productVolume;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
-    public int getTotalQuantity() {
-        return totalQuantity;
-    }
-
-    public void setTotalQuantity(int totalQuantity) {
-        this.totalQuantity = totalQuantity;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "productId=" + productId +
-                ", productName='" + productName + '\'' +
-                ", productVolume=" + productVolume +
-                ", price=" + price +
-                ", totalQuantity=" + totalQuantity +
-                '}';
     }
 }
