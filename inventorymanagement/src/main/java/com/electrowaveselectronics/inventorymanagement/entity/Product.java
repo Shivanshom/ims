@@ -26,16 +26,16 @@ public class Product {
     @Column(name = "total_quantity")
     private int totalQuantity;
 
-    @Column(name = "godown_id")
-    private int godownId;
-
-    public int getGodownId() {
-        return godownId;
-    }
-
-    public void setGodownId(int godownId) {
-        this.godownId = godownId;
-    }
+//    @Column(name = "godown_id")
+//    private int godownId;
+//
+//    public int getGodownId() {
+//        return godownId;
+//    }
+//
+//    public void setGodownId(int godownId) {
+//        this.godownId = godownId;
+//    }
 
     public Product(){}
     public Product(String productName, int productVolume, float price, int totalQuantity) {

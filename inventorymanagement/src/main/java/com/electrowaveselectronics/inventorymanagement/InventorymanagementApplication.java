@@ -26,7 +26,7 @@ public class InventorymanagementApplication {
 			// Godown
 
 //		  	createGodown(appDAO);
-			addProductByGodownId(appDAO);
+//			addProductByGodownId(appDAO);
 //			listGodowns(appDAO);
 //			findProductsByGodownId(appDAO);
 
