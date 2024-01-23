@@ -1,4 +1,4 @@
-package com.electrowaveselectronics.inventorymanagement.dao;
+package com.electrowaveselectronics.inventorymanagement.repository;
 
 import com.electrowaveselectronics.inventorymanagement.entity.Godown;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
