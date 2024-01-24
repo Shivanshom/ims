@@ -5,14 +5,16 @@ import com.electrowaveselectronics.inventorymanagement.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class Servic {
+public class UserService {
 
 
     public UserRepository userRepository;
 
     @Autowired
-    public Servic(UserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -31,6 +33,24 @@ public class Servic {
             Users u = userRepository.getReferenceById(userId);
             return u;
         }catch (Exception e){
+            throw e;
+        }
+    }
+
+    public List<Users> findAll() throws Exception {
+        try {
+            return userRepository.findAll();
+        }catch (Exception e){
+            throw e;
+        }
+
+    }
+
+    public Users getUserByUserId(int userId) throws Exception {
+        try {
+            Users users = userRepository.getReferenceById(userId);
+            return users;
+        } catch (Exception e) {
             throw e;
         }
     }

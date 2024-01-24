@@ -31,7 +31,8 @@ public class Users {
 //    @Column(name = "godown_id")
 //    private int godownId;
 
-    public Users(String userName, String password, EnumRole role) {
+    public Users(int userId, String userName, String password, EnumRole role) {
+        this.userId=userId;
         this.userName = userName;
         this.password = password;
         this.role = role;
