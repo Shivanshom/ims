@@ -28,6 +28,13 @@ public class Supplier {
     private String contactNumber;
 
 
+    public Supplier(int supplierId, String supplierName, String address, String contactNumber) {
+        this.supplierId = supplierId;
+        this.supplierName = supplierName;
+        this.address = address;
+        this.contactNumber = contactNumber;
+    }
+
     public Supplier(String supplierName, String address, String contactNumber) {
         this.supplierName = supplierName;
         this.address = address;
