@@ -1,20 +1,14 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "godown")
-@Getter
-@Setter
-@ToString
-
+@Data
 public class Godown {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

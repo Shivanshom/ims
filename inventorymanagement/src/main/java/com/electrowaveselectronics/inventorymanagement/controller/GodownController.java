@@ -2,7 +2,7 @@ package com.electrowaveselectronics.inventorymanagement.controller;
 
 import com.electrowaveselectronics.inventorymanagement.entity.Godown;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
-import com.electrowaveselectronics.inventorymanagement.service.Service;
+import com.electrowaveselectronics.inventorymanagement.service.GodownService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,16 +12,16 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-public class Controller {
+public class GodownController {
     @Autowired
-    private Service service;
+    private GodownService godownService;
 
     @GetMapping("/api/getAllGodown")
     @ResponseBody
     public ResponseEntity<?> getAllGodown() {
 
         try {
-            List<Godown> godowns = service.getAllGodown();
+            List<Godown> godowns = godownService.getAllGodown();
             if (!(godowns.size()==0)) {
                 return new ResponseEntity<>(godowns, HttpStatus.ACCEPTED);
             } else {
@@ -37,7 +37,7 @@ public class Controller {
     @ResponseBody
     public ResponseEntity<?> getGodownByGodownId(@PathVariable int godownId) {
         try {
-            Godown godown = service.getGodownByGodownId(godownId);
+            Godown godown = godownService.getGodownByGodownId(godownId);
             if (!Objects.isNull(godown)) {
                 return new ResponseEntity<>(godown, HttpStatus.ACCEPTED);
             } else {
@@ -53,7 +53,7 @@ public class Controller {
     public ResponseEntity<?> setGodown(@RequestBody Godown theGodown) {
 
         try {
-            Godown newGodown = service.setGodown(theGodown);
+            Godown newGodown = godownService.setGodown(theGodown);
             if (!Objects.isNull(newGodown)) {
                 return new ResponseEntity<>(newGodown, HttpStatus.ACCEPTED);
             } else {
@@ -69,7 +69,7 @@ public class Controller {
     public ResponseEntity<?> addProductByGodownId(@RequestBody Product theproduct, @PathVariable int godownId) {
 
         try {
-            Product newProduct = service.addProductByGodownId(godownId, theproduct);
+            Product newProduct = godownService.addProductByGodownId(godownId, theproduct);
             if (!Objects.isNull(newProduct)) {
                 return new ResponseEntity<>("Product added "+ newProduct.toString(), HttpStatus.ACCEPTED);
             } else {
@@ -81,13 +81,12 @@ public class Controller {
         }
     }
 
-
     @DeleteMapping("api/deleteGodown/{godownId}")
     @ResponseBody
     public ResponseEntity<?> deleteGodownByGodownId(@PathVariable int godownId) {
 
         try {
-            String message = service.deleteGodownByGodownId(godownId);
+            String message = godownService.deleteGodownByGodownId(godownId);
             if (!Objects.isNull(message)) {
                 return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
             } else {

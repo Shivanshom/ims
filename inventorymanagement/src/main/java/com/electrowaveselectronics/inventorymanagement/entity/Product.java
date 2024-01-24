@@ -1,6 +1,7 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,9 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "product")
-@Getter
-@Setter
-@ToString
+@Data
 public class Product {
 
     @Id
@@ -31,9 +30,6 @@ public class Product {
 
     @Column(name = "total_quantity")
     private int totalQuantity;
-//
-//    @Column(name = "godown_id")
-//    private int godownId;
 
     public Product(){}
     public Product(String productName, int productVolume, float price, int totalQuantity) {

@@ -1,15 +1,15 @@
 package com.electrowaveselectronics.inventorymanagement.service;
+
 import com.electrowaveselectronics.inventorymanagement.entity.Godown;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
 import com.electrowaveselectronics.inventorymanagement.repository.GodownRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @org.springframework.stereotype.Service
-public class Service {
+public class GodownService {
     @Autowired
     GodownRepository godownRepository;
 
@@ -45,11 +45,8 @@ public class Service {
     public String deleteGodownByGodownId(int godownId)  throws Exception{
         try {
             Godown tempGodown = godownRepository.findById(godownId).get();
-            if(!Objects.isNull(tempGodown)){
-                godownRepository.deleteById(godownId);
-                return "Godown Deleted with id: "+ godownId;
-            }
-            return "Godown not found with id: "+godownId;
+            godownRepository.deleteById(godownId);
+            return "Godown Deleted with id: "+ godownId;
 
         }catch (Exception e){
             throw e;
