@@ -20,7 +20,7 @@ public class DeliveryOrder {
     @Column(name = "order_id")
     private int orderId;
 
-//   FORIEGN KEY
+//   FORIEGN  KEY
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name ="customer_id")
     private Customer customer;

@@ -20,7 +20,7 @@ public class DeliveryOrderService {
         }
     }
 
-    public DeliveryOrder getDeliveryOrderById(int id) throws Exception {
+    public DeliveryOrder  getDeliveryOrderById(int id) throws Exception {
 
         try {
             Optional<DeliveryOrder> deliveryOrderById = deliveryRepository.findById(id);

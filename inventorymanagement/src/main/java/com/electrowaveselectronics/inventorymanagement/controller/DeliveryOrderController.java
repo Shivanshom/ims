@@ -34,6 +34,7 @@ public class DeliveryOrderController {
     @GetMapping("/getDeliveryOrders/{id}")
     @ResponseBody
     public ResponseEntity<?> getDeliveryOrderById(@PathVariable int id) {
+        System.out.println("hi");
         try {
             DeliveryOrder deliveryOrder = deliveryOrderService.getDeliveryOrderById(id);
             if (deliveryOrder != null) {
