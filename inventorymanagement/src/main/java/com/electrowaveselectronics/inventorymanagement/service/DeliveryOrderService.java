@@ -3,12 +3,13 @@ package com.electrowaveselectronics.inventorymanagement.service;
 import com.electrowaveselectronics.inventorymanagement.entity.DeliveryOrder;
 import com.electrowaveselectronics.inventorymanagement.repository.DeliveryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.List;
+import org.springframework.stereotype.Service;
+import java.util.*;
 
-@org.springframework.stereotype.Service
-public class Service {
+@Service
+public class DeliveryOrderService {
     @Autowired
-   private DeliveryRepository deliveryRepository;
+    DeliveryRepository deliveryRepository;
 
     public List<DeliveryOrder> getAllDeliveryOrders() throws Exception {
         try {
@@ -19,13 +20,26 @@ public class Service {
         }
     }
 
+    public DeliveryOrder getDeliveryOrderById(int id) throws Exception {
+
+        try {
+            Optional<DeliveryOrder> deliveryOrderById = deliveryRepository.findById(id);
+            return deliveryOrderById.orElse(null);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
 
     public DeliveryOrder createDeliveryOrder(DeliveryOrder deliveryOrder) throws Exception {
         try {
+            deliveryOrder.setOrderId(0);
             return deliveryRepository.save(deliveryOrder);
         } catch (Exception e) {
             throw e;
         }
     }
+
+
 
     }

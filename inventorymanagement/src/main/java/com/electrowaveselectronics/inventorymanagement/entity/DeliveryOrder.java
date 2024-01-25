@@ -20,9 +20,10 @@ public class DeliveryOrder {
     @Column(name = "order_id")
     private int orderId;
 
-//    foreign key left
-   @Column(name ="customer_id")
-    private int customerId;
+//   FORIEGN KEY
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name ="customer_id")
+    private Customer customer;
 
 
     @Column(name = "order_quantity")

@@ -1,6 +1,6 @@
 package com.electrowaveselectronics.inventorymanagement.controller;
 import com.electrowaveselectronics.inventorymanagement.entity.DeliveryOrder;
-import com.electrowaveselectronics.inventorymanagement.service.Service;
+import com.electrowaveselectronics.inventorymanagement.service.DeliveryOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,16 +10,17 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-public class Controller {
+@RequestMapping("/api")
+public class DeliveryOrderController {
     @Autowired
-    private Service service;
+    private DeliveryOrderService deliveryOrderService;
 
-    @GetMapping
+    @GetMapping("/getDeliveryOrders")
     @ResponseBody
     public ResponseEntity<?> getAllDeliveryOrders() {
         try {
 
-            List<DeliveryOrder> deliveryOrders = service.getAllDeliveryOrders();
+            List<DeliveryOrder> deliveryOrders = deliveryOrderService.getAllDeliveryOrders();
             if (!deliveryOrders.isEmpty()) {
                 return new ResponseEntity<>(deliveryOrders, HttpStatus.ACCEPTED);
             } else {
@@ -30,11 +31,28 @@ public class Controller {
         }
     }
 
-    @PostMapping
+    @GetMapping("/getDeliveryOrders/{id}")
+    @ResponseBody
+    public ResponseEntity<?> getDeliveryOrderById(@PathVariable int id) {
+        try {
+            DeliveryOrder deliveryOrder = deliveryOrderService.getDeliveryOrderById(id);
+            if (deliveryOrder != null) {
+                return new ResponseEntity<>(deliveryOrder, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Delivery Order not found", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
+    @PostMapping("/setDeliveryOrders")
     public ResponseEntity<?> createDeliveryOrder(@RequestBody DeliveryOrder deliveryOrder) {
         try {
 
-            DeliveryOrder newDeliveryOrder = service.createDeliveryOrder(deliveryOrder);
+            DeliveryOrder newDeliveryOrder = deliveryOrderService.createDeliveryOrder(deliveryOrder);
             if (!Objects.isNull(newDeliveryOrder)) {
                 return new ResponseEntity<>(newDeliveryOrder, HttpStatus.CREATED);
             } else {
@@ -44,6 +62,8 @@ public class Controller {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+
 
 
 
