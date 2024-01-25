@@ -1,4 +1,4 @@
-package com.electrowaveselectronics.inventorymanagement.rest;
+package com.electrowaveselectronics.inventorymanagement.controller;
 
 import com.electrowaveselectronics.inventorymanagement.entity.Users;
 import com.electrowaveselectronics.inventorymanagement.service.UserService;
@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api")
@@ -34,20 +33,21 @@ public class UserController {
         return theUsers;
     }
 
-    @ResponseBody
-    public ResponseEntity<?> getUserByUserId(@PathVariable int userId) {
-        try {
-            Users users = userService.getUserByUserId(userId);
-            if (!Objects.isNull(users)) {
-                return new ResponseEntity<>(users, HttpStatus.ACCEPTED);
-            } else {
+//    @ResponseBody
+//    public ResponseEntity<?> getUserByUserId(@PathVariable int userId) {
+//        try {
+//            Users users = userService.getUserByUserId(userId);
+//            if (!Objects.isNull(users)) {
+//                return new ResponseEntity<>(users, HttpStatus.ACCEPTED);
+//            } else {
+//
+//                return new ResponseEntity<>("Godown does not exist with id: "+ userId, HttpStatus.NOT_FOUND);
+//            }
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
-                return new ResponseEntity<>("Godown does not exist with id: "+ userId, HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
 //    @PostMapping("/postusers")
 //    public Users addUsers(@RequestBody Users theUsers){
 //        System.out.println("----in add user");
@@ -74,10 +74,20 @@ public class UserController {
 ////
 ////        }
 //    }
+//    @PutMapping("/updateUsers")
+//    public Users updateUsers(@RequestBody Users theUsers){
+//        Users dbUsers=userService.save(theUsers);
+//        return dbUsers;
+//    }
+
+
     @PutMapping("/updateUsers")
-    public Users updateUsers(@RequestBody Users theUsers){
-        Users dbUsers=userService.save(theUsers);
-        return dbUsers;
+    public ResponseEntity<?> updateUsers(@RequestBody Users theUsers ) throws Exception{
+        try {
+            return new ResponseEntity<>(userService.updateUsers(theUsers), HttpStatus.ACCEPTED);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
+        }
     }
 
 
