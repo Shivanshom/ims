@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "godown")
@@ -21,8 +22,7 @@ public class Godown {
     @Column(name = "volume")
     private int volume;
 
-    @OneToMany(
-           fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "godown_id")
     private List<Product> productList;
 
@@ -44,6 +44,15 @@ public class Godown {
                 productList = new ArrayList<>();
             }
             productList.add(tempProduct);
+    }
+
+    public Product findProductByProductName(String productName){
+        for (Product product: productList){
+            if(Objects.equals(product.getProductName(), productName)){
+                return product;
+            }
+        }
+        return null;
     }
 
 
