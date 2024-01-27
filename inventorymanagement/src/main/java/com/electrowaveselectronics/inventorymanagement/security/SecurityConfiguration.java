@@ -11,7 +11,7 @@
 //
 //import javax.sql.DataSource;
 //@Configuration
-//public class SecurityConfig {
+//public class SecurityConfiguration {
 //
 //    //add support for JDBC...no more hardcoded users
 //    @Bean

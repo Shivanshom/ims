@@ -13,6 +13,11 @@ import lombok.ToString;
 @ToString
 public class Users {
 
+//    @Getter
+//    @ManyToOne
+//    @Column(name = "assignedgodown")
+//    private Godown assignedGodown;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -23,6 +28,7 @@ public class Users {
 
     @Column(name = "password")
     private String password;
+
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
@@ -41,4 +47,5 @@ public class Users {
 
     public Users() {
     }
+
 }

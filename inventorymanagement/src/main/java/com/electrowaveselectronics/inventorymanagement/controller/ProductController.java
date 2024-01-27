@@ -1,11 +1,9 @@
 package com.electrowaveselectronics.inventorymanagement.controller;
 
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
-import com.electrowaveselectronics.inventorymanagement.entity.Users;
 import com.electrowaveselectronics.inventorymanagement.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -28,7 +26,6 @@ public class ProductController {
         }
         return theProduct;
     }
-
 
     @PostMapping("/setProduct")
     public Product addProduct(@RequestBody Product thrproduct){
