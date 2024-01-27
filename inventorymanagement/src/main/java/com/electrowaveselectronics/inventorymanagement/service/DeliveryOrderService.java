@@ -2,15 +2,8 @@
 package com.electrowaveselectronics.inventorymanagement.service;
 import com.electrowaveselectronics.inventorymanagement.entity.Customer;
 import com.electrowaveselectronics.inventorymanagement.entity.DeliveryOrder;
-import com.electrowaveselectronics.inventorymanagement.repository.CustomerRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.DeliveryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cglib.core.Local;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
