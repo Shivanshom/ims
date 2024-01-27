@@ -1,19 +1,35 @@
 
 package com.electrowaveselectronics.inventorymanagement.service;
+import com.electrowaveselectronics.inventorymanagement.entity.Customer;
 import com.electrowaveselectronics.inventorymanagement.entity.DeliveryOrder;
+import com.electrowaveselectronics.inventorymanagement.repository.CustomerRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.DeliveryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cglib.core.Local;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.*;
 
 @Service
 public class DeliveryOrderService {
+
     @Autowired
     DeliveryRepository deliveryRepository;
+
+    @Autowired
+    CustomerRepository customerRepository;
+
 
     public List<DeliveryOrder> getAllDeliveryOrders() throws Exception {
         try {
             List<DeliveryOrder> deliveryOrders = deliveryRepository.findAll();
+
             return deliveryOrders;
         } catch (Exception e) {
             throw e;
@@ -31,9 +47,19 @@ public class DeliveryOrderService {
     }
 
 
-    public DeliveryOrder createDeliveryOrder(DeliveryOrder deliveryOrder) throws Exception {
+    public DeliveryOrder createDeliveryOrder(int customerId, @RequestBody DeliveryOrder deliveryOrder) throws Exception {
         try {
-            deliveryOrder.setOrderId(0);
+
+            Customer customer = customerRepository.findById(customerId).get();
+            deliveryOrder.setOrderDate(new Date());
+            // FOR SETTING DELIVERY DATE
+            int deliveryDays = 7;
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.add(Calendar.DAY_OF_MONTH, deliveryDays);
+            deliveryOrder.setExpectedDate( calendar.getTime());
+
+            deliveryOrder.setCustomer(customer);
             return deliveryRepository.save(deliveryOrder);
         } catch (Exception e) {
             throw e;

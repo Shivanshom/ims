@@ -2,6 +2,7 @@ package com.electrowaveselectronics.inventorymanagement.controller;
 import com.electrowaveselectronics.inventorymanagement.entity.DeliveryOrder;
 import com.electrowaveselectronics.inventorymanagement.service.DeliveryOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,11 +50,11 @@ public class DeliveryOrderController {
 
 
 
-    @PostMapping("/setDeliveryOrders")
-    public ResponseEntity<?> createDeliveryOrder(@RequestBody DeliveryOrder deliveryOrder) {
+    @PostMapping("/setDeliveryOrders/{customerId}")
+    public ResponseEntity<?> createDeliveryOrder(@PathVariable int customerId, @RequestBody DeliveryOrder deliveryOrder) {
         try {
 
-            DeliveryOrder newDeliveryOrder = deliveryOrderService.createDeliveryOrder(deliveryOrder);
+            DeliveryOrder newDeliveryOrder = deliveryOrderService.createDeliveryOrder(customerId, deliveryOrder);
             if (!Objects.isNull(newDeliveryOrder)) {
                 return new ResponseEntity<>(newDeliveryOrder, HttpStatus.CREATED);
             } else {

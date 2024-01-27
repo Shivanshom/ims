@@ -6,7 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Data
@@ -21,7 +23,7 @@ public class DeliveryOrder {
     private int orderId;
 
 //   FORIEGN  KEY
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name ="customer_id")
     private Customer customer;
 
@@ -36,10 +38,28 @@ public class DeliveryOrder {
     @Column(name = "tax")
     private int tax;
 
+    @Column(name = "order_date")
+    private Date orderDate;
+
     @Column(name = "expected_date")
-    private LocalDate expectedDate;
+    private Date expectedDate;
 
 
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+            @JoinTable(
+                    name = "product_delivery",
+                    joinColumns = @JoinColumn(name = "order_id"),
+                    inverseJoinColumns = @JoinColumn(name = "product_id")
+            )
+
+    private List<Product> products;
+
+    public void addProduct(Product product){
+        if(products.equals(null)){
+            products = new ArrayList<Product>();
+        }
+        products.add(product);
+    }
 
 }
