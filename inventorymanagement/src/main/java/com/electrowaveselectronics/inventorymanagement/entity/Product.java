@@ -38,11 +38,26 @@ public class Product {
     }
 
     public Product(){}
-    public Product(String productName, int productVolume, float price, int totalQuantity) {
+
+    public Product(int productId, String productName, int productVolume, float price, int totalQuantity, int godownId) {
+        this.productId = productId;
         this.productName = productName;
         this.productVolume = productVolume;
         this.price = price;
         this.totalQuantity = totalQuantity;
+        this.godownId = godownId;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", productVolume=" + productVolume +
+                ", price=" + price +
+                ", totalQuantity=" + totalQuantity +
+                ", godownId=" + godownId +
+                '}';
     }
 
     public int getProductId() {
@@ -83,16 +98,5 @@ public class Product {
 
     public void setTotalQuantity(int totalQuantity) {
         this.totalQuantity = totalQuantity;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "productId=" + productId +
-                ", productName='" + productName + '\'' +
-                ", productVolume=" + productVolume +
-                ", price=" + price +
-                ", totalQuantity=" + totalQuantity +
-                '}';
     }
 }

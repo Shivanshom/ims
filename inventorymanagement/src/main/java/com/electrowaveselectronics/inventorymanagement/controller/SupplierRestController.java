@@ -22,12 +22,12 @@ public class SupplierRestController {
     // expose "/suppliers" and return a list of suppliers
 
     @GetMapping("/getAllSuppliers")
-    public ResponseEntity<?> getAllSuppliers()throws Exception{
-        try{
+    public ResponseEntity<?> getAllSuppliers() throws Exception {
+        try {
             List<Supplier> suppliers = supplierService.getAllSuppliers();
-            return new ResponseEntity<>(suppliers,HttpStatus.ACCEPTED);
-        }catch(Exception e) {
-            return  new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(suppliers, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -36,16 +36,16 @@ public class SupplierRestController {
     public ResponseEntity<?> getSupplierBySupplierId(@PathVariable int supplierId) {
         try {
             Optional<Supplier> theSupplier = supplierService.getSupplierBySupplierId(supplierId);
-            return new ResponseEntity<>(theSupplier,HttpStatus.ACCEPTED);
-        }catch (Exception e) {
-            return new ResponseEntity<>(e.fillInStackTrace().toString(),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(theSupplier, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
     // add mapping for POST /suppliers - add new supplier
 
     @PostMapping("/setSupplier")
-    public ResponseEntity<?> setSupplier(@RequestBody Supplier theSupplier){
+    public ResponseEntity<?> setSupplier(@RequestBody Supplier theSupplier) {
 
         // also just in case they pass an id in JSON ... set id to 0
         // this is to force a save of new item ... instead of update
@@ -53,14 +53,10 @@ public class SupplierRestController {
 //        theSupplier.setSupplierId(0);
 
         try {
-            return new ResponseEntity<>(supplierService.setSupplier(theSupplier),HttpStatus.ACCEPTED) ;
-        }catch (Exception e){
-            return new ResponseEntity<>(e.fillInStackTrace().toString(),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(supplierService.setSupplier(theSupplier), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
         }
-
-
-
-
 
 
     }
@@ -69,18 +65,14 @@ public class SupplierRestController {
 
     @PutMapping("/updateSuppliers")
     public ResponseEntity<?> updateSuppliers(@RequestBody Supplier theSupplier) throws Exception {
-try {
-    return new ResponseEntity<>(supplierService.updateSuppliers(theSupplier),HttpStatus.ACCEPTED) ;
-}catch (Exception e){
-    return new ResponseEntity<>(e.fillInStackTrace().toString(),HttpStatus.NOT_FOUND);
-}
-
-
+        try {
+            return new ResponseEntity<>(supplierService.updateSuppliers(theSupplier), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
+        }
 
 
     }
-
-
 
 
 }
