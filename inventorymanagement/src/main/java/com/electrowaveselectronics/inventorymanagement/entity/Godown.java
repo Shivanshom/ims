@@ -16,8 +16,11 @@ public class Godown {
     @Column(name = "godown_id") // inventory id
     private int godownId;
 
-    @Column(name = "location")
-    private String location;
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "state")
+    private String state;
 
     @Column(name = "volume")
     private int volume;
@@ -29,14 +32,13 @@ public class Godown {
 
 
     public Godown(){
-
     }
 
-    public Godown(String location, int volume) {
-        this.location = location;
+    public Godown(String city, String state, int volume) {
+        this.city = city;
+        this.state = state;
         this.volume = volume;
     }
-
 
     // add convenience methods
     public void addProducts(Product tempProduct){

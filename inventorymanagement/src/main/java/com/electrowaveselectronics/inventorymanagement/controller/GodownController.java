@@ -88,7 +88,11 @@ public class GodownController {
     public ResponseEntity<?> getCapacityByGodownId(@PathVariable int godownId){
         try{
             int godownCapacity = godownService.getCapacityByGodownId(godownId);
-            if (!Objects.isNull(godownCapacity)) {
+<<<<<<< Updated upstream
+            if (godownCapacity!=0) {
+=======
+            if (godownCapacity>0) {
+>>>>>>> Stashed changes
                 return new ResponseEntity<>("Capacity of godown "+ godownCapacity + " meters cube", HttpStatus.ACCEPTED);
             } else {
 
@@ -101,13 +105,13 @@ public class GodownController {
         }
     }
 
-    @PatchMapping("api/updateGodownVolume/{godownId}")
-    public ResponseEntity<?> updateGodownVolumeByGodownId(@RequestBody Godown theGodown, @PathVariable int godownId) {
+    @PatchMapping("api/updateGodown/{godownId}")
+    public ResponseEntity<?> updateGodownByGodownId(@RequestBody Godown theGodown, @PathVariable int godownId) {
 
         try {
 
-            int updatedVolume = godownService.updateGodownVolumeByGodownId(theGodown.getVolume(), godownId);
-            return new ResponseEntity<>("Godown Volume updated to: "+updatedVolume + " meters cube", HttpStatus.ACCEPTED);
+            Godown updatedGodown = godownService.updateGodownByGodownId(theGodown, godownId);
+            return new ResponseEntity<>(updatedGodown, HttpStatus.ACCEPTED);
 
         } catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
@@ -115,12 +119,30 @@ public class GodownController {
     }
 
     // product
+    @GetMapping("api/listProducts/{godownId}")
+    @ResponseBody
+    public ResponseEntity<?> listProductByGodownId(@PathVariable int godownId){
+        try{
+            List<Product> productList = godownService.listProductByGodownId(godownId);
+            if(!Objects.isNull(productList)){
+                return new ResponseEntity<>(productList, HttpStatus.ACCEPTED);
+            }
+            else{
+                return new ResponseEntity<>("No products Found "+godownId, HttpStatus.NOT_FOUND);
+            }
+
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PatchMapping("api/addProduct/{godownId}")
     public ResponseEntity<?> addProductByGodownId(@RequestBody Product theproduct, @PathVariable int godownId) {
         try {
             Product newProduct = godownService.addProductByGodownId(godownId, theproduct);
             if (!Objects.isNull(newProduct)) {
-                return new ResponseEntity<>("Product added "+ newProduct.toString(), HttpStatus.ACCEPTED);
+                return new ResponseEntity<>("Product added "+ newProduct.getProductName(), HttpStatus.ACCEPTED);
             } else {
 
                 return new ResponseEntity<>("Something went wrong, try again...", HttpStatus.NOT_FOUND);
@@ -130,12 +152,12 @@ public class GodownController {
         }
     }
 
-    @PostMapping("api/setProduct/{godownId}")
+    @PatchMapping("api/setProduct/{godownId}")
     public ResponseEntity<?> setProductByGodownId(@RequestBody Product theproduct, @PathVariable int godownId) {
         try {
             Product newProduct = godownService.setProductByGodownId(godownId, theproduct);
             if (!Objects.isNull(newProduct)) {
-                return new ResponseEntity<>("Product updated "+ newProduct.toString(), HttpStatus.ACCEPTED);
+                return new ResponseEntity<>("Product updated "+ newProduct.getProductName(), HttpStatus.ACCEPTED);
             } else {
 
                 return new ResponseEntity<>("Something went wrong, try again...", HttpStatus.NOT_FOUND);

@@ -6,12 +6,15 @@ import com.electrowaveselectronics.inventorymanagement.repository.GodownReposito
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.management.RuntimeErrorException;
-import java.util.*;
+import java.util.List;
+<<<<<<< Updated upstream
+=======
+import java.util.Objects;
+>>>>>>> Stashed changes
+import java.util.Optional;
 
 @org.springframework.stereotype.Service
 public class GodownService {
-
 
     @Autowired
     private GodownRepository godownRepository;
@@ -57,15 +60,20 @@ public class GodownService {
 
     }
 
-    public int updateGodownVolumeByGodownId(int Volume, int godownId) throws Exception {
+    public Godown updateGodownByGodownId(Godown theGodown, int godownId) throws Exception {
         try {
             Godown existingGodown = godownRepository.findById(godownId).get();
-            if(Volume>0){
-                existingGodown.setVolume(Volume);
-                godownRepository.save(existingGodown);
-                return existingGodown.getVolume();
+            if(!Objects.isNull(theGodown.getCity())){
+                existingGodown.setCity(theGodown.getCity());
             }
-            else throw new RuntimeException("Value not in valid range.");
+            if(!Objects.isNull(theGodown.getState())){
+                existingGodown.setState(theGodown.getState());
+            }
+            if(theGodown.getVolume()>0){
+                existingGodown.setVolume(theGodown.getVolume());
+            }
+            godownRepository.save(existingGodown);
+            return existingGodown;
 
 
         } catch (Exception e) {
@@ -114,6 +122,7 @@ public class GodownService {
 
     public Product setProductByGodownId(int godownId, Product theProduct) throws Exception{
         try {
+
             Godown tempGodown = godownRepository.findById(godownId).get();
             Product existingProduct = tempGodown.findProductByProductName(theProduct.getProductName());
             if(existingProduct==null){
@@ -137,4 +146,16 @@ public class GodownService {
     }
 
 
+    public List<Product> listProductByGodownId(int godownId) throws Exception {
+        try{
+            Godown tempGodown = godownRepository.findById(godownId).get();
+            List<Product> productList = tempGodown.getProductList();
+            return productList;
+
+        }
+        catch (Exception e){
+            throw e;
+        }
+
+    }
 }
