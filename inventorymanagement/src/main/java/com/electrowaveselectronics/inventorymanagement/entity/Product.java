@@ -1,12 +1,20 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.query.Order;
 
 import java.util.List;
 
 @Entity
 @Table(name = "product")
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
 public class Product {
 
     @Id
@@ -43,56 +51,5 @@ public class Product {
         this.productVolume = productVolume;
         this.price = price;
         this.totalQuantity = totalQuantity;
-    }
-
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public int getProductVolume() {
-        return productVolume;
-    }
-
-    public void setProductVolume(int productVolume) {
-        this.productVolume = productVolume;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
-    public int getTotalQuantity() {
-        return totalQuantity;
-    }
-
-    public void setTotalQuantity(int totalQuantity) {
-        this.totalQuantity = totalQuantity;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "productId=" + productId +
-                ", productName='" + productName + '\'' +
-                ", productVolume=" + productVolume +
-                ", price=" + price +
-                ", totalQuantity=" + totalQuantity +
-                '}';
     }
 }
