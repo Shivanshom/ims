@@ -1,19 +1,20 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.query.Order;
-
-import java.util.List;
+import lombok.*;
 
 @Entity
 @Table(name = "product")
 @Data
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
+
+    @Column(name = "godown_id")
+    private int godownId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,11 +33,14 @@ public class Product {
     @Column(name = "total_quantity")
     private int totalQuantity;
 
-    public Product(){}
-    public Product(String productName, int productVolume, float price, int totalQuantity) {
+    public Product(String productName, int productVolume, float price, int totalQuantity, int godownId) {
+
         this.productName = productName;
         this.productVolume = productVolume;
         this.price = price;
         this.totalQuantity = totalQuantity;
+
+        this.godownId = godownId;
     }
+
 }
