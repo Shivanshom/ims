@@ -1,9 +1,7 @@
 package com.electrowaveselectronics.inventorymanagement.service;
 
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
-import com.electrowaveselectronics.inventorymanagement.entity.Users;
 import com.electrowaveselectronics.inventorymanagement.repository.ProductRepository;
-import com.electrowaveselectronics.inventorymanagement.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
