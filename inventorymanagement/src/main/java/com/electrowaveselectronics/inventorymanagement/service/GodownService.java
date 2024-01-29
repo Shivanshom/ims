@@ -5,12 +5,8 @@ import com.electrowaveselectronics.inventorymanagement.entity.Product;
 import com.electrowaveselectronics.inventorymanagement.repository.GodownRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
-<<<<<<< Updated upstream
-=======
 import java.util.Objects;
->>>>>>> Stashed changes
 import java.util.Optional;
 
 @org.springframework.stereotype.Service

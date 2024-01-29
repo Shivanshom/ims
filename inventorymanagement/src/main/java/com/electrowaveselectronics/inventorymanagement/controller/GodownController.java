@@ -88,11 +88,8 @@ public class GodownController {
     public ResponseEntity<?> getCapacityByGodownId(@PathVariable int godownId){
         try{
             int godownCapacity = godownService.getCapacityByGodownId(godownId);
-<<<<<<< Updated upstream
-            if (godownCapacity!=0) {
-=======
+
             if (godownCapacity>0) {
->>>>>>> Stashed changes
                 return new ResponseEntity<>("Capacity of godown "+ godownCapacity + " meters cube", HttpStatus.ACCEPTED);
             } else {
 
