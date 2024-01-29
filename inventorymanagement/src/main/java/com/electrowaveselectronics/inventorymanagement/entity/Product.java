@@ -1,21 +1,17 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.query.Order;
-
-import java.util.List;
+import lombok.*;
 
 @Entity
 @Table(name = "product")
-@Getter
-@Setter
-@ToString
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class Product {
+
+    @Column(name = "godown_id")
+    private int godownId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,23 +29,14 @@ public class Product {
 
     @Column(name = "total_quantity")
     private int totalQuantity;
+    public Product(String productName, int productVolume, float price, int totalQuantity, int godownId) {
 
-    @Column(name = "godown_id")
-    private int godownId;
-
-    public int getGodownId() {
-        return godownId;
-    }
-
-    public void setGodownId(int godownId) {
-        this.godownId = godownId;
-    }
-
-    public Product(){}
-    public Product(String productName, int productVolume, float price, int totalQuantity) {
         this.productName = productName;
         this.productVolume = productVolume;
         this.price = price;
         this.totalQuantity = totalQuantity;
+
+        this.godownId = godownId;
     }
+
 }

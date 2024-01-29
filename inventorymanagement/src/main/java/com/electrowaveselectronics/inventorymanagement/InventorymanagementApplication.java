@@ -6,9 +6,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
 
 @EnableJpaRepositories(basePackages = "com.electrowaveselectronics.inventorymanagement.repository")
 @EntityScan(basePackages = "com.electrowaveselectronics.inventorymanagement.entity")
