@@ -1,13 +1,17 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.query.Order;
-
-import java.util.List;
+import lombok.*;
 
 @Entity
 @Table(name = "product")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
+
+    @Column(name = "godown_id")
+    private int godownId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,74 +29,13 @@ public class Product {
 
     @Column(name = "total_quantity")
     private int totalQuantity;
-
-//    @Column(name = "godown_id")
-//    private int godownId;
-//
-//    public int getGodownId() {
-//        return godownId;
-//    }
-//
-//    public void setGodownId(int godownId) {
-//        this.godownId = godownId;
-//    }
-
-    public Product(){}
-    public Product(String productName, int productVolume, float price, int totalQuantity) {
+    public Product(String productName, int productVolume, float price, int totalQuantity, int godownId) {
         this.productName = productName;
         this.productVolume = productVolume;
         this.price = price;
         this.totalQuantity = totalQuantity;
+        this.godownId = godownId;
     }
 
-    public int getProductId() {
-        return productId;
-    }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public int getProductVolume() {
-        return productVolume;
-    }
-
-    public void setProductVolume(int productVolume) {
-        this.productVolume = productVolume;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
-    public int getTotalQuantity() {
-        return totalQuantity;
-    }
-
-    public void setTotalQuantity(int totalQuantity) {
-        this.totalQuantity = totalQuantity;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "productId=" + productId +
-                ", productName='" + productName + '\'' +
-                ", productVolume=" + productVolume +
-                ", price=" + price +
-                ", totalQuantity=" + totalQuantity +
-                '}';
-    }
 }

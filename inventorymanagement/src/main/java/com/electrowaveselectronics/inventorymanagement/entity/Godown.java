@@ -1,80 +1,43 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "godown")
+@Data
 public class Godown {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "godown_id") // inventory id
     private int godownId;
 
-    @Column(name = "location")
-    private String location;
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "state")
+    private String state;
 
     @Column(name = "volume")
     private int volume;
 
-    @OneToMany(
-           fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "godown_id")
     private List<Product> productList;
 
 
 
     public Godown(){
-
     }
 
-    public Godown(String location, int volume) {
-        this.location = location;
+    public Godown(String city, String state, int volume) {
+        this.city = city;
+        this.state = state;
         this.volume = volume;
-    }
-
-    public int getGodownId() {
-        return godownId;
-    }
-
-    public void setGodownId(int godownId) {
-        this.godownId = godownId;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public int getVolume() {
-        return volume;
-    }
-
-    public void setVolume(int volume) {
-        this.volume = volume;
-    }
-
-    public List<Product> getProductList() {
-        return productList;
-    }
-
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
-    }
-
-    @Override
-    public String toString() {
-        return "Godown{" +
-                "godownId=" + godownId +
-                ", location='" + location + '\'' +
-                ", volume=" + volume +
-                ", productList=" + productList +
-                '}';
     }
 
     // add convenience methods
@@ -83,6 +46,15 @@ public class Godown {
                 productList = new ArrayList<>();
             }
             productList.add(tempProduct);
+    }
+
+    public Product findProductByProductName(String productName){
+        for (Product product: productList){
+            if(Objects.equals(product.getProductName(), productName)){
+                return product;
+            }
+        }
+        return null;
     }
 
 

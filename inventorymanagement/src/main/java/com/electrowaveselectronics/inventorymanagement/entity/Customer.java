@@ -2,16 +2,15 @@ package com.electrowaveselectronics.inventorymanagement.entity;
 
 import jakarta.persistence.*;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "customer")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "customer")
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,12 +18,12 @@ public class Customer {
     private int customerId; // provider id
 
     @Column(name = "customer_name")
-    private int customerName;
+    private String customerName;
 
     @Column(name = "customer_address")
     private String customerAddress;
 
     @Column(name = "customer_number")
-    private int customerNo;
+    private String customerNo;
 
 }

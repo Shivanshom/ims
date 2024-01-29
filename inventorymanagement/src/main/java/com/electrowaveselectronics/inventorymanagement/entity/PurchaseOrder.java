@@ -1,6 +1,10 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,6 +12,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "purchase_order")
+@NoArgsConstructor
+@Getter
+@Setter
+@Data
 public class PurchaseOrder {
 
     @Id
@@ -26,67 +34,27 @@ public class PurchaseOrder {
     private int purchaseQuantity;
 
 
-    @ManyToMany(
-            fetch = FetchType.EAGER,
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(
-            name = "purchase_product",
-            joinColumns = @JoinColumn(name = "purchase_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
+    @OneToMany(
+            fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+    @Column(name = "ordered_product_list")
     private List<Product> orderedProductList;
 
-    public PurchaseOrder(){}
+    @Column
+    private int supplierId;
 
-    public PurchaseOrder(Date purchaseDate, int totalCostPrice, int purchaseQuantity) {
+
+    public PurchaseOrder(Date purchaseDate, int totalCostPrice, int purchaseQuantity, List<Product> orderedProductList, int supplierId) {
         this.purchaseDate = purchaseDate;
         this.totalCostPrice = totalCostPrice;
         this.purchaseQuantity = purchaseQuantity;
-    }
-
-    public List<Product> getProductlist() {
-        return orderedProductList;
-    }
-
-    public void setProductlist(List<Product> productlist) {
-        orderedProductList = productlist;
-    }
-
-    public int getPurchaseId() {
-        return purchaseId;
-    }
-
-    public void setPurchaseId(int purchaseId) {
-        this.purchaseId = purchaseId;
-    }
-
-    public Date getPurchaseDate() {
-        return purchaseDate;
-    }
-
-    public void setPurchaseDate(Date purchaseDate) {
-        this.purchaseDate = purchaseDate;
-    }
-
-    public int getTotalCostPrice() {
-        return totalCostPrice;
-    }
-
-    public void setTotalCostPrice(int totalCostPrice) {
-        this.totalCostPrice = totalCostPrice;
-    }
-
-    public int getPurchaseQuantity() {
-        return purchaseQuantity;
-    }
-
-    public void setPurchaseQuantity(int purchaseQuantity) {
-        this.purchaseQuantity = purchaseQuantity;
+        this.orderedProductList = orderedProductList;
+        this.supplierId = supplierId;
     }
 
     // add convenience methods
-    public void addProducts(Product tempProduct){
-        if(orderedProductList==null){
+    public void addProducts(Product tempProduct) {
+        if (orderedProductList == null) {
             orderedProductList = new ArrayList<>();
         }
         orderedProductList.add(tempProduct);
