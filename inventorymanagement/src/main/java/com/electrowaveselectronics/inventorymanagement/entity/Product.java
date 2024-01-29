@@ -6,9 +6,6 @@ import lombok.*;
 @Entity
 @Table(name = "product")
 @Data
-@Getter
-@Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
@@ -32,7 +29,6 @@ public class Product {
 
     @Column(name = "total_quantity")
     private int totalQuantity;
-
     public Product(String productName, int productVolume, float price, int totalQuantity, int godownId) {
 
         this.productName = productName;

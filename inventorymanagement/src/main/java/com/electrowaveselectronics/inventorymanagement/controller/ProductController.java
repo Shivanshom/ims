@@ -3,6 +3,8 @@ package com.electrowaveselectronics.inventorymanagement.controller;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
 import com.electrowaveselectronics.inventorymanagement.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -13,9 +15,21 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @ResponseBody
     @GetMapping("/getAllProduct")
-    public List<Product> findAll() throws Exception {
-        return productService.findAll();
+    public ResponseEntity<?> getAllProducts() {
+        try{
+            List<Object[]> products = productService.getDistinctProductsAndTotalQuantity();
+            if(!products.isEmpty()){
+                return new ResponseEntity<>(products, HttpStatus.ACCEPTED);
+            }else{
+                return new ResponseEntity<>("Product list is empty" , HttpStatus.BAD_REQUEST);
+            }
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(e.getLocalizedMessage() , HttpStatus.BAD_REQUEST);
+
+        }
     }
 
     @GetMapping("/getProduct/{productId}")

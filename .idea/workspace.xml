@@ -4,7 +4,36 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0fec00de-272f-4597-9c8a-2c5d1d6023c4" name="Changes" comment="" />
+    <list default="true" id="0fec00de-272f-4597-9c8a-2c5d1d6023c4" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/controller/GodownController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/controller/PurchaseOrderRestController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/controller/SupplierRestController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/repository/GodownRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/repository/PurchaseOrderRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/repository/SupplierRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/security/GodownSecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/service/GodownService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/service/PurchaseOrderService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/service/SupplierService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/InventorymanagementApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/InventorymanagementApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/controller/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/DeliveryOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/DeliveryOrder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/EnumRole.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/EnumRole.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Godown.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Godown.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/PurchaseOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/PurchaseOrder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Supplier.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Supplier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Users.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/repository/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/repository/ProductRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/security/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/security/SecurityConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/resources/application.properties" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,6 +57,9 @@
   &quot;associatedIndex&quot;: 8
 }</component>
   <component name="ProjectId" id="2b4lWIGmre2O9ArqDOKTiF3qk0T" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -39,10 +71,10 @@
     "Maven.inventorymanagement [clean].executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Merging customerEntity",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/programming/spring/Project/ims/inventorymanagement"
+    "last_opened_file_path": "C:/Users/ASUS/OneDrive/Desktop/EWE/Projects/ims - Copy"
   }
 }]]></component>
   <component name="RunManager">

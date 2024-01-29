@@ -1,22 +1,19 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import jakarta.persistence.*;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
-@ToString
 public class Users {
-
-//    @Getter
-//    @ManyToOne
-//    @Column(name = "assignedgodown")
-//    private Godown assignedGodown;
+    @ManyToOne
+    @Column(name = "assignedgodown")
+    private Godown assignedGodown;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,23 +26,15 @@ public class Users {
     @Column(name = "password")
     private String password;
 
-
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private EnumRole role;
+    private String role;
 
-//    @Column(name = "godown_id")
-//    private int godownId;
-
-    public Users(int userId, String userName, String password, EnumRole role) {
-        this.userId=userId;
+    public Users(String userName, String password, String role) {
         this.userName = userName;
         this.password = password;
         this.role = role;
-//        this.godownId = godownId;
     }
-
-    public Users() {
-    }
-
 }
+
+
