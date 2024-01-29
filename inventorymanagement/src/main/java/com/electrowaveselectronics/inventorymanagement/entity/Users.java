@@ -1,11 +1,22 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import jakarta.persistence.*;
+import lombok.ToString;
 
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
+@ToString
 public class Users {
 
+//    @Getter
+//    @ManyToOne
+//    @Column(name = "assignedgodown")
+//    private Godown assignedGodown;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,46 +29,23 @@ public class Users {
     @Column(name = "password")
     private String password;
 
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private String role;
+    private EnumRole role;
 
-    public Users(){}
+//    @Column(name = "godown_id")
+//    private int godownId;
 
-    public Users(String userName, String password, String role) {
+    public Users(int userId, String userName, String password, EnumRole role) {
+        this.userId=userId;
         this.userName = userName;
         this.password = password;
         this.role = role;
+//        this.godownId = godownId;
     }
 
-    public int getUserId() {
-        return userId;
+    public Users() {
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 }
