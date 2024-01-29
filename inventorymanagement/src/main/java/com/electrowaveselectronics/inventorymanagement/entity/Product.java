@@ -1,9 +1,7 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.query.Order;
 
 import java.util.List;
@@ -13,7 +11,12 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
+
+    @Column(name = "godown_id")
+    private int godownId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,11 +35,13 @@ public class Product {
     @Column(name = "total_quantity")
     private int totalQuantity;
 
-    public Product(){}
-    public Product(String productName, int productVolume, float price, int totalQuantity) {
+    public Product(String productName, int productVolume, float price, int totalQuantity, int godownId) {
         this.productName = productName;
         this.productVolume = productVolume;
         this.price = price;
         this.totalQuantity = totalQuantity;
+        this.godownId = godownId;
     }
+
+
 }
