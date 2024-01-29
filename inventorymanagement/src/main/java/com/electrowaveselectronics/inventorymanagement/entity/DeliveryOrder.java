@@ -12,7 +12,6 @@ public class DeliveryOrder {
     @Column(name = "order_id")
     private int orderId;
 
-//    foreign key left
     @Column(name = "order_quantity")
     private String orderQuantity;
 

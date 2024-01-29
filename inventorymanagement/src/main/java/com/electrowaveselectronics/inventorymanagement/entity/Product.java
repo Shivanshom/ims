@@ -2,12 +2,10 @@ package com.electrowaveselectronics.inventorymanagement.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.query.Order;
-
-import java.util.List;
 
 @Entity
 @Table(name = "product")
+@Data
 @Getter
 @Setter
 @ToString
@@ -36,12 +34,13 @@ public class Product {
     private int totalQuantity;
 
     public Product(String productName, int productVolume, float price, int totalQuantity, int godownId) {
+
         this.productName = productName;
         this.productVolume = productVolume;
         this.price = price;
         this.totalQuantity = totalQuantity;
+
         this.godownId = godownId;
     }
-
 
 }
