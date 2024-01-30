@@ -1,9 +1,19 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "delivery_order")
 public class DeliveryOrder {
@@ -12,64 +22,45 @@ public class DeliveryOrder {
     @Column(name = "order_id")
     private int orderId;
 
+
+//   FORIEGN  KEY
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name ="customer_id")
+    private Customer customer;
+
+
     @Column(name = "order_quantity")
-    private String orderQuantity;
+    private int orderQuantity;
 
     @Column(name = "total_sell_price")
-    private String totalSellPrice;
+
+    private int totalSellPrice;
 
     @Column(name = "tax")
     private int tax;
 
+    @Column(name = "order_date")
+    private Date orderDate;
+
     @Column(name = "expected_date")
-    private int expectedDate;
+    private Date expectedDate;
 
-    public DeliveryOrder(){}
 
-    public DeliveryOrder(String orderQuantity, String totalSellPrice, int tax, int expectedDate) {
-        this.orderQuantity = orderQuantity;
-        this.totalSellPrice = totalSellPrice;
-        this.tax = tax;
-        this.expectedDate = expectedDate;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+            @JoinTable(
+                    name = "product_delivery",
+                    joinColumns = @JoinColumn(name = "order_id"),
+                    inverseJoinColumns = @JoinColumn(name = "product_id")
+            )
+
+    private List<Product> products;
+
+    public void addProduct(Product product){
+        if(products.equals(null)){
+            products = new ArrayList<Product>();
+        }
+        products.add(product);
     }
 
-    public int getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
-
-    public String getOrderQuantity() {
-        return orderQuantity;
-    }
-
-    public void setOrderQuantity(String orderQuantity) {
-        this.orderQuantity = orderQuantity;
-    }
-
-    public String getTotalSellPrice() {
-        return totalSellPrice;
-    }
-
-    public void setTotalSellPrice(String totalSellPrice) {
-        this.totalSellPrice = totalSellPrice;
-    }
-
-    public int getTax() {
-        return tax;
-    }
-
-    public void setTax(int tax) {
-        this.tax = tax;
-    }
-
-    public int getExpectedDate() {
-        return expectedDate;
-    }
-
-    public void setExpectedDate(int expectedDate) {
-        this.expectedDate = expectedDate;
-    }
 }
