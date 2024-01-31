@@ -23,7 +23,7 @@ public class SupplierService {
         }
     }
 
-    public Supplier updateSuppliers(Supplier theSupplier) {
+    public String updateSuppliers(Supplier theSupplier) {
         try {
             Optional<Integer> optional = Optional.of(theSupplier.getSupplierId());
             if (optional.isEmpty()) {
@@ -53,7 +53,8 @@ public class SupplierService {
                 }
                 existingSupplier.setAddress(theSupplier.getAddress());
             }
-            return supplierRepository.save(existingSupplier);
+            Supplier newSupplier = supplierRepository.save(existingSupplier);
+            return "Supplier updated with id: " + newSupplier.getSupplierId();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

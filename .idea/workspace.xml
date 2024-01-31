@@ -5,34 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0fec00de-272f-4597-9c8a-2c5d1d6023c4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/controller/GodownController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/controller/PurchaseOrderRestController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/controller/SupplierRestController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/repository/GodownRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/repository/PurchaseOrderRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/repository/SupplierRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/security/GodownSecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/service/GodownService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/service/PurchaseOrderService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/service/SupplierService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/InventorymanagementApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/InventorymanagementApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/controller/ProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/DeliveryOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/DeliveryOrder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/EnumRole.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/EnumRole.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Godown.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Godown.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Product.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/PurchaseOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/PurchaseOrder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Supplier.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Supplier.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/entity/Users.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/repository/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/repository/ProductRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/security/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/security/SecurityConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/java/com/electrowaveselectronics/inventorymanagement/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventorymanagement/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/inventorymanagement/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,8 +23,22 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="LogFilters">
+    <option name="FILTER_ERRORS" value="false" />
+    <option name="FILTER_WARNINGS" value="false" />
+    <option name="FILTER_INFO" value="true" />
+    <option name="FILTER_DEBUG" value="true" />
+    <option name="CUSTOM_FILTER" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Use Maven wrapper" />
+      </MavenGeneralSettings>
+    </option>
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -64,20 +51,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.InventorymanagementApplication.executor": "Run",
-    "Maven.inventorymanagement [clean,install].executor": "Run",
-    "Maven.inventorymanagement [clean].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging customerEntity",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/ASUS/OneDrive/Desktop/EWE/Projects/ims - Copy"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.InventorymanagementApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.inventorymanagement [clean,install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.inventorymanagement [clean].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Smart Tomcat.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;refractoredEntities&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/EWE/ims&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
-  <component name="RunManager">
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.electrowaveselectronics.inventorymanagement.service" />
+      <recent name="com.electrowaveselectronics.inventorymanagement.dto" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.InventorymanagementApplication">
     <configuration name="InventorymanagementApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.electrowaveselectronics.inventorymanagement.InventorymanagementApplication" />
       <module name="inventorymanagement" />
@@ -91,6 +89,33 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Unnamed" type="com.poratu.idea.plugins.tomcat" nameIsGenerated="true">
+      <predefined_log_file enabled="true" id="Tomcat Localhost Log" />
+      <predefined_log_file enabled="true" id="Tomcat Access Log" />
+      <predefined_log_file id="Tomcat Catalina Log" />
+      <predefined_log_file id="Tomcat Manager Log" />
+      <predefined_log_file id="Tomcat Host Manager Log" />
+      <option name="catalinaBase" value="D:\EWE\ims\inventorymanagement" />
+      <option name="contextPath" value="/ims" />
+      <option name="docBase" value="D:\EWE\ims\inventorymanagement" />
+      <option name="extraClassPath" value="" />
+      <option name="tomcatInfo">
+        <TomcatInfo>
+          <option name="name" value="Apache Tomcat/9.0.85 (2)" />
+          <option name="path" value="C:/Program Files/apache-tomcat-9.0.85" />
+          <option name="version" value="9.0.85.0" />
+        </TomcatInfo>
+      </option>
+      <option name="vmOptions" value="" />
+      <module name="inventorymanagement" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.InventorymanagementApplication" />
+      <item itemvalue="Smart Tomcat.Unnamed" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.InventorymanagementApplication" />
@@ -101,6 +126,7 @@
     <attachedChunks>
       <set>
         <option value="jdk-21.0.1-openjdk-21.0.1-f644763e9732-f98dd351" />
+        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
       </set>
     </attachedChunks>
   </component>
