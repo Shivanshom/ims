@@ -15,10 +15,10 @@ public class GodownHead {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "godownHead_id")
+    @Column(name = "godown_head_id")
     private int godownHeadId;
 
-    @Column(name = "godownHead_name")
+    @Column(name = "godown_head_name")
     private String godownHeadName;
 
     @Column(name = "password")
@@ -28,10 +28,15 @@ public class GodownHead {
     @Column(name = "role")
     private EnumRole role;
 
-    public GodownHead(String userName, String password, EnumRole role) {
-        this.godownHeadName = userName;
+    @Column(name = "godown_id")
+    private int godownId;
+
+    public GodownHead(String godownHeadName,int godownHeadId, String password, EnumRole role, int godownId) {
+        this.godownHeadName = godownHeadName;
+        this.godownHeadId=godownHeadId;
         this.password = password;
         this.role = role;
+        this.godownId=godownId;
     }
 }
 
