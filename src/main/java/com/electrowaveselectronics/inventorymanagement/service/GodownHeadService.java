@@ -98,7 +98,6 @@ public class GodownHeadService {
             GodownHead godownHead = godownHeadRepository.findByGodownHeadName(godownHeadName);
             if (godownHead != null) {
                 result.put("success", "Successfully login");
-
             } else {
                 result.put("error", "Invalid credentials.");
             }
