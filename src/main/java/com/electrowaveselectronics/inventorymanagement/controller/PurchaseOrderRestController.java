@@ -40,10 +40,10 @@ public class PurchaseOrderRestController {
         }
     }
 
-    @PostMapping("/setPurchaseOrder")
+    @PostMapping("/createPurchaseOrder")
     public ResponseEntity<?> setPurchaseOrder(@RequestBody PurchaseOrderDTO thepurchaseOrderDTO) {
         try {
-            return new ResponseEntity<>(purchaseOrderService.setPurchaseOrder(thepurchaseOrderDTO), HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(purchaseOrderService.createPurchaseOrder(thepurchaseOrderDTO), HttpStatus.ACCEPTED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
         }

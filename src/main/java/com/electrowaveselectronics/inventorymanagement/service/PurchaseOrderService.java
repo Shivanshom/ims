@@ -35,7 +35,7 @@ public class PurchaseOrderService {
         return purchaseOrderRepository.findById(purchaseId);
     }
 
-    public String setPurchaseOrder(PurchaseOrderDTO thepurchaseOrderDTO) {
+    public String createPurchaseOrder(PurchaseOrderDTO thepurchaseOrderDTO) {
         try {
             if ((thepurchaseOrderDTO.getSupplierId() <= 0) || (thepurchaseOrderDTO.getGodownId() <= 0)) {
                 throw new IllegalArgumentException("Supplier ID and Godown ID must be provided.");
@@ -93,10 +93,12 @@ public class PurchaseOrderService {
 
     public Optional<Supplier> getSupplierByPurchaseOrderId(int purchaseId) {
         Optional<PurchaseOrder> thePurchaseOrder = purchaseOrderRepository.findById(purchaseId);
-        Optional<Supplier> supplier = supplierRepository.findById(thePurchaseOrder.get().getSupplierId());
-        return supplier;
-
+        if (thePurchaseOrder.isEmpty()) {
+            throw new IllegalArgumentException("Purchase order with the provided ID does not exist.");
+        }
+        return supplierRepository.findById(thePurchaseOrder.get().getSupplierId());
     }
+
 
 //    public Optional<List<Product>> getProductByPurchaseOrderId(int purchaseId) {
 //        Optional<PurchaseOrder> thePurchaseOrder = purchaseOrderRepository.findById(purchaseId);
