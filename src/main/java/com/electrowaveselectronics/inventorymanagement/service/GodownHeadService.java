@@ -25,7 +25,7 @@ public class GodownHeadService {
         try {
             GodownHead savedGodownHead = godownHeadRepository.save(theGodownHead);
             return savedGodownHead;
-        } catch (Exception e) {
+        } catch (Exception e){
             throw e;
         }
 
@@ -43,7 +43,8 @@ public class GodownHeadService {
     public List<GodownHead> findAll() throws Exception {
         try {
             return godownHeadRepository.findAll();
-        } catch (Exception e) {
+
+        }catch (Exception e){
             throw e;
         }
 

@@ -1,5 +1,6 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
+import com.electrowaveselectronics.inventorymanagement.dto.PurchaseProductDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -27,36 +28,33 @@ public class PurchaseOrder {
     private Date purchaseDate;
 
     @Column(name = "total_cost_price")
-    private int totalCostPrice;
+    private float totalCostPrice;
 
 
     @Column(name = "purchase_quantity")
     private int purchaseQuantity;
 
 
-    @OneToMany(
-            fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 
-    @Column(name = "ordered_product_list")
-    private List<Product> orderedProductList;
 
     @Column
     private int supplierId;
 
 
-    public PurchaseOrder(Date purchaseDate, int totalCostPrice, int purchaseQuantity, List<Product> orderedProductList, int supplierId) {
+    public PurchaseOrder(Date purchaseDate, int totalCostPrice, int purchaseQuantity, int supplierId) {
         this.purchaseDate = purchaseDate;
         this.totalCostPrice = totalCostPrice;
         this.purchaseQuantity = purchaseQuantity;
-        this.orderedProductList = orderedProductList;
         this.supplierId = supplierId;
     }
 
-    // add convenience methods
-    public void addProducts(Product tempProduct) {
-        if (orderedProductList == null) {
-            orderedProductList = new ArrayList<>();
-        }
-        orderedProductList.add(tempProduct);
+    @ElementCollection
+    @CollectionTable(name = "purchase_products", joinColumns = @JoinColumn(name = "purchase_id"))
+    @Embedded
+    @Column(name = "product")
+    List<PurchaseProductDTO> products=new ArrayList<>();
+
+    public void addProduct(PurchaseProductDTO product){
+        products.add(product);
     }
 }
