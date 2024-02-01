@@ -11,6 +11,5 @@ public interface GodownRepository extends JpaRepository<Godown, Integer> {
     @Query("SELECT COUNT(g) > 0 FROM Godown g WHERE g.address = :address")
     boolean existsByAddress(@Param("address") String address);
 
-
-
+    
 }
