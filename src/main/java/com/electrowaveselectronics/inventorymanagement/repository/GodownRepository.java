@@ -4,8 +4,13 @@ import com.electrowaveselectronics.inventorymanagement.entity.Godown;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface GodownRepository extends JpaRepository<Godown, Integer> {
+
+    @Query("SELECT COUNT(g) > 0 FROM Godown g WHERE g.address = :address")
+    boolean existsByAddress(@Param("address") String address);
+
 
 
 }

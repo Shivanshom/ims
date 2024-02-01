@@ -138,55 +138,55 @@ public class GodownHeadController {
         }
     }
 
-
-    @GetMapping("api/listProducts/{godownId}")
-    @ResponseBody
-    public ResponseEntity<?> listProductByGodownId(@PathVariable int godownId){
-        try{
-            List<Product> productList = godownService.listProductByGodownId(godownId);
-            if(!Objects.isNull(productList)){
-                return new ResponseEntity<>(productList, HttpStatus.ACCEPTED);
-            }
-            else{
-                return new ResponseEntity<>("No products Found "+godownId, HttpStatus.NOT_FOUND);
-            }
-
-        }
-        catch (Exception e){
-            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping("/api/setGodown")
-    public ResponseEntity<?> setGodown(@RequestBody Godown theGodown) {
-
-        try {
-            Godown newGodown = godownService.setGodown(theGodown);
-            if (!Objects.isNull(newGodown)) {
-                return new ResponseEntity<>(newGodown, HttpStatus.ACCEPTED);
-            } else {
-
-                return new ResponseEntity<>("Something went wrong", HttpStatus.BAD_REQUEST);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PatchMapping("api/addProduct/{godownId}")
-    public ResponseEntity<?> addProductByGodownId(@RequestBody Product theproduct, @PathVariable int godownId) {
-        try {
-            Product newProduct = godownService.addProductByGodownId(godownId, theproduct);
-            if (!Objects.isNull(newProduct)) {
-                return new ResponseEntity<>("Product added "+ newProduct.getProductName(), HttpStatus.ACCEPTED);
-            } else {
-
-                return new ResponseEntity<>("Something went wrong, try again...", HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+//
+//    @GetMapping("api/listProducts/{godownId}")
+//    @ResponseBody
+//    public ResponseEntity<?> listProductByGodownId(@PathVariable int godownId){
+//        try{
+//            List<Product> productList = godownService.listProductByGodownId(godownId);
+//            if(!Objects.isNull(productList)){
+//                return new ResponseEntity<>(productList, HttpStatus.ACCEPTED);
+//            }
+//            else{
+//                return new ResponseEntity<>("No products Found "+godownId, HttpStatus.NOT_FOUND);
+//            }
+//
+//        }
+//        catch (Exception e){
+//            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+//
+//    @PostMapping("/api/setGodown")
+//    public ResponseEntity<?> setGodown(@RequestBody Godown theGodown) {
+//
+//        try {
+//            Godown newGodown = godownService.setGodown(theGodown);
+//            if (!Objects.isNull(newGodown)) {
+//                return new ResponseEntity<>(newGodown, HttpStatus.ACCEPTED);
+//            } else {
+//
+//                return new ResponseEntity<>("Something went wrong", HttpStatus.BAD_REQUEST);
+//            }
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+//
+//    @PatchMapping("api/addProduct/{godownId}")
+//    public ResponseEntity<?> addProductByGodownId(@RequestBody Product theproduct, @PathVariable int godownId) {
+//        try {
+//            Product newProduct = godownService.addProductByGodownId(godownId, theproduct);
+//            if (!Objects.isNull(newProduct)) {
+//                return new ResponseEntity<>("Product added "+ newProduct.getProductName(), HttpStatus.ACCEPTED);
+//            } else {
+//
+//                return new ResponseEntity<>("Something went wrong, try again...", HttpStatus.NOT_FOUND);
+//            }
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
 
 

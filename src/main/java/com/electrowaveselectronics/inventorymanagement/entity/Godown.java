@@ -16,11 +16,8 @@ public class Godown {
     @Column(name = "godown_id") // inventory id
     private int godownId;
 
-    @Column(name = "city")
-    private String city;
-
-    @Column(name = "state")
-    private String state;
+    @Column(name = "address")
+    private String address;
 
     @Column(name = "volume")
     private int volume;
@@ -34,18 +31,18 @@ public class Godown {
     public Godown(){
     }
 
-    public Godown(String city, String state, int volume) {
-        this.city = city;
-        this.state = state;
+    public Godown(String address, int volume) {
+        this.address = address;
         this.volume = volume;
     }
 
     // add convenience methods
     public void addProducts(Product tempProduct){
-            if(productList==null){
-                productList = new ArrayList<>();
-            }
-            productList.add(tempProduct);
+        if(productList==null){
+            productList = new ArrayList<>();
+        }
+        tempProduct.setGodownId(this.godownId);
+        productList.add(tempProduct);
     }
 
     public Product findProductByProductName(String productName){

@@ -22,13 +22,8 @@ public class GodownController {
     public ResponseEntity<?> getAllGodown() {
 
         try {
-            List<Godown> godowns = godownService.getAllGodown();
-            if (!(godowns.isEmpty())) {
-                return new ResponseEntity<>(godowns, HttpStatus.ACCEPTED);
-            } else {
+            return godownService.getAllGodown();
 
-                return new ResponseEntity<>("No Godowns found", HttpStatus.BAD_REQUEST);
-            }
         } catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -36,16 +31,18 @@ public class GodownController {
 
     @GetMapping("/api/getGodown/{godownId}")
     @ResponseBody
-    public ResponseEntity<?> getGodownByGodownId(@PathVariable int godownId) {
+    public ResponseEntity<?> getGodownByGodownId(@PathVariable String godownId) {
         try {
-            Godown godown = godownService.getGodownByGodownId(godownId);
-            if (!Objects.isNull(godown)) {
-                return new ResponseEntity<>(godown, HttpStatus.ACCEPTED);
-            } else {
+            int parsedGodownId = Integer.parseInt(godownId);
+            return godownService.getGodownByGodownId(parsedGodownId);
 
-                return new ResponseEntity<>("Godown does not exist with id: "+ godownId, HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
+        }
+        catch (NumberFormatException e) {
+            String errorMessage = "Invalid Godown ID format. Please provide a valid integer.";
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+
+        }
+        catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -54,13 +51,22 @@ public class GodownController {
     public ResponseEntity<?> setGodown(@RequestBody Godown theGodown) {
 
         try {
-            Godown newGodown = godownService.setGodown(theGodown);
-            if (!Objects.isNull(newGodown)) {
-                return new ResponseEntity<>(newGodown, HttpStatus.ACCEPTED);
-            } else {
+            ResponseEntity<?> responseEntity = godownService.setGodown(theGodown);
+            return new ResponseEntity<>("Operation successful: " + responseEntity.getBody(), responseEntity.getStatusCode());
 
-                return new ResponseEntity<>("Something went wrong", HttpStatus.BAD_REQUEST);
-            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/api/createGodown")
+    public ResponseEntity<?> createGodown(@RequestBody Godown theGodown) {
+
+        try {
+            ResponseEntity<?> responseEntity = godownService.createGodown(theGodown);
+            return new ResponseEntity<>("Operation successful: " + responseEntity.getBody(), responseEntity.getStatusCode());
+
+
         } catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -68,33 +74,40 @@ public class GodownController {
 
     @DeleteMapping("api/deleteGodown/{godownId}")
     @ResponseBody
-    public ResponseEntity<?> deleteGodownByGodownId(@PathVariable int godownId) {
+    public ResponseEntity<?> deleteGodownByGodownId(@PathVariable String godownId) {
 
         try {
-            String message = godownService.deleteGodownByGodownId(godownId);
-            if (!Objects.isNull(message)) {
-                return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
-            } else {
+            int parsedGodownId = Integer.parseInt(godownId);
+            return godownService.deleteGodownByGodownId(parsedGodownId);
 
-                return new ResponseEntity<>("Something went wrong, try again...", HttpStatus.BAD_REQUEST);
-            }
-        } catch (Exception e) {
+        }
+        catch (NumberFormatException e) {
+            String errorMessage = "Invalid Godown ID format. Please provide a valid integer.";
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+
+        }
+        catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/api/getCapacity/{godownId}")
     @ResponseBody
-    public ResponseEntity<?> getCapacityByGodownId(@PathVariable int godownId){
+    public ResponseEntity<?> getCapacityByGodownId(@PathVariable String godownId){
         try{
-            int godownCapacity = godownService.getCapacityByGodownId(godownId);
-
-            if (godownCapacity>0) {
-                return new ResponseEntity<>("Capacity of godown "+ godownCapacity + " meters cube", HttpStatus.ACCEPTED);
+            int parsedGodownId = Integer.parseInt(godownId);
+            int godownCapacity = godownService.getCapacityByGodownId(parsedGodownId);
+            if (godownCapacity>=0) {
+                return new ResponseEntity<>( godownCapacity, HttpStatus.OK);
             } else {
 
-                return new ResponseEntity<>("Something went wrong, try again...", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Godown Capacity Can't be negative...", HttpStatus.BAD_REQUEST);
             }
+
+        }
+        catch (NumberFormatException e) {
+            String errorMessage = "Invalid Godown ID format. Please provide a valid integer.";
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 
         }
         catch (Exception e) {
@@ -103,14 +116,19 @@ public class GodownController {
     }
 
     @PatchMapping("api/updateGodown/{godownId}")
-    public ResponseEntity<?> updateGodownByGodownId(@RequestBody Godown theGodown, @PathVariable int godownId) {
+    public ResponseEntity<?> updateGodownByGodownId(@RequestBody Godown theGodown, @PathVariable String godownId) {
 
         try {
+            int parsedGodownId = Integer.parseInt(godownId);
+            return godownService.updateGodownByGodownId(theGodown, parsedGodownId);
 
-            Godown updatedGodown = godownService.updateGodownByGodownId(theGodown, godownId);
-            return new ResponseEntity<>(updatedGodown, HttpStatus.ACCEPTED);
+        }
+        catch (NumberFormatException e) {
+            String errorMessage = "Invalid Godown ID format. Please provide a valid integer.";
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -118,15 +136,15 @@ public class GodownController {
     // product
     @GetMapping("api/listProducts/{godownId}")
     @ResponseBody
-    public ResponseEntity<?> listProductByGodownId(@PathVariable int godownId){
+    public ResponseEntity<?> listProductByGodownId(@PathVariable String godownId){
         try{
-            List<Product> productList = godownService.listProductByGodownId(godownId);
-            if(!Objects.isNull(productList)){
-                return new ResponseEntity<>(productList, HttpStatus.ACCEPTED);
-            }
-            else{
-                return new ResponseEntity<>("No products Found "+godownId, HttpStatus.NOT_FOUND);
-            }
+            int parsedGodownId = Integer.parseInt(godownId);
+            return godownService.listProductByGodownId(parsedGodownId);
+
+        }
+        catch (NumberFormatException e) {
+            String errorMessage = "Invalid Godown ID format. Please provide a valid integer.";
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 
         }
         catch (Exception e){
@@ -134,31 +152,21 @@ public class GodownController {
         }
     }
 
-    @PatchMapping("api/addProduct/{godownId}")
-    public ResponseEntity<?> addProductByGodownId(@RequestBody Product theproduct, @PathVariable int godownId) {
+    @PostMapping("api/addProduct")
+    public ResponseEntity<?> addProductByGodownId(@RequestBody Product theproduct) {
         try {
-            Product newProduct = godownService.addProductByGodownId(godownId, theproduct);
-            if (!Objects.isNull(newProduct)) {
-                return new ResponseEntity<>("Product added "+ newProduct.getProductName(), HttpStatus.ACCEPTED);
-            } else {
+            return godownService.addProductByGodownId(theproduct);
 
-                return new ResponseEntity<>("Something went wrong, try again...", HttpStatus.NOT_FOUND);
-            }
         } catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PatchMapping("api/setProduct/{godownId}")
-    public ResponseEntity<?> setProductByGodownId(@RequestBody Product theproduct, @PathVariable int godownId) {
+    @PatchMapping("api/updateProduct")
+    public ResponseEntity<?> updateProductByGodownId(@RequestBody Product theproduct) {
         try {
-            Product newProduct = godownService.setProductByGodownId(godownId, theproduct);
-            if (!Objects.isNull(newProduct)) {
-                return new ResponseEntity<>("Product updated "+ newProduct.getProductName(), HttpStatus.ACCEPTED);
-            } else {
+            return godownService.updateProductByGodownId(theproduct);
 
-                return new ResponseEntity<>("Something went wrong, try again...", HttpStatus.NOT_FOUND);
-            }
         } catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
