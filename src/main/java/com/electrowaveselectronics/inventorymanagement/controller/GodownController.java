@@ -1,5 +1,7 @@
 package com.electrowaveselectronics.inventorymanagement.controller;
 
+import com.electrowaveselectronics.inventorymanagement.entity.Auth;
+import com.electrowaveselectronics.inventorymanagement.entity.AuthHolder;
 import com.electrowaveselectronics.inventorymanagement.entity.Godown;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
 import com.electrowaveselectronics.inventorymanagement.service.GodownService;
@@ -19,11 +21,14 @@ public class GodownController {
     // godown
     @GetMapping("/api/getAllGodown")
     @ResponseBody
-    public ResponseEntity<?> getAllGodown() {
+    public ResponseEntity<?> getAllGodown(@CookieValue(name = "user", defaultValue = "") String username) {
 
         try {
-            return godownService.getAllGodown();
-
+            if (!username.isEmpty()) {
+                return godownService.getAllGodown();
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -31,11 +36,14 @@ public class GodownController {
 
     @GetMapping("/api/getGodown/{godownId}")
     @ResponseBody
-    public ResponseEntity<?> getGodownByGodownId(@PathVariable String godownId) {
+    public ResponseEntity<?> getGodownByGodownId(@PathVariable String godownId, @CookieValue(name = "user", defaultValue = "") String username) {
         try {
-            int parsedGodownId = Integer.parseInt(godownId);
-            return godownService.getGodownByGodownId(parsedGodownId);
-
+            if (!username.isEmpty()) {
+                int parsedGodownId = Integer.parseInt(godownId);
+                return godownService.getGodownByGodownId(parsedGodownId);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
         }
         catch (NumberFormatException e) {
             String errorMessage = "Invalid Godown ID format. Please provide a valid integer.";
@@ -48,11 +56,15 @@ public class GodownController {
     }
 
     @PostMapping("/api/setGodown")
-    public ResponseEntity<?> setGodown(@RequestBody Godown theGodown) {
+    public ResponseEntity<?> setGodown(@RequestBody Godown theGodown, @CookieValue(name = "user", defaultValue = "") String username) {
 
         try {
-            ResponseEntity<?> responseEntity = godownService.setGodown(theGodown);
-            return new ResponseEntity<>("Operation successful: " + responseEntity.getBody(), responseEntity.getStatusCode());
+            if (!username.isEmpty()) {
+                ResponseEntity<?> responseEntity = godownService.setGodown(theGodown);
+                return new ResponseEntity<>("Operation successful: " + responseEntity.getBody(), responseEntity.getStatusCode());
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
 
         } catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
@@ -60,12 +72,15 @@ public class GodownController {
     }
 
     @PostMapping("/api/createGodown")
-    public ResponseEntity<?> createGodown(@RequestBody Godown theGodown) {
+    public ResponseEntity<?> createGodown(@RequestBody Godown theGodown, @CookieValue(name = "user", defaultValue = "") String username) {
 
         try {
-            ResponseEntity<?> responseEntity = godownService.createGodown(theGodown);
-            return new ResponseEntity<>("Operation successful: " + responseEntity.getBody(), responseEntity.getStatusCode());
-
+            if (!username.isEmpty()) {
+                ResponseEntity<?> responseEntity = godownService.createGodown(theGodown);
+                return new ResponseEntity<>("Operation successful: " + responseEntity.getBody(), responseEntity.getStatusCode());
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
 
         } catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
@@ -74,12 +89,15 @@ public class GodownController {
 
     @DeleteMapping("api/deleteGodown/{godownId}")
     @ResponseBody
-    public ResponseEntity<?> deleteGodownByGodownId(@PathVariable String godownId) {
+    public ResponseEntity<?> deleteGodownByGodownId(@PathVariable String godownId, @CookieValue(name = "user", defaultValue = "") String username) {
 
         try {
-            int parsedGodownId = Integer.parseInt(godownId);
-            return godownService.deleteGodownByGodownId(parsedGodownId);
-
+            if (!username.isEmpty()) {
+                int parsedGodownId = Integer.parseInt(godownId);
+                return godownService.deleteGodownByGodownId(parsedGodownId);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
         }
         catch (NumberFormatException e) {
             String errorMessage = "Invalid Godown ID format. Please provide a valid integer.";
@@ -93,15 +111,18 @@ public class GodownController {
 
     @GetMapping("/api/getCapacity/{godownId}")
     @ResponseBody
-    public ResponseEntity<?> getCapacityByGodownId(@PathVariable String godownId){
+    public ResponseEntity<?> getCapacityByGodownId(@PathVariable String godownId, @CookieValue(name = "user", defaultValue = "") String username){
         try{
-            int parsedGodownId = Integer.parseInt(godownId);
-            int godownCapacity = godownService.getCapacityByGodownId(parsedGodownId);
-            if (godownCapacity>=0) {
-                return new ResponseEntity<>( godownCapacity, HttpStatus.OK);
+            if (!username.isEmpty()) {
+                int parsedGodownId = Integer.parseInt(godownId);
+                int godownCapacity = godownService.getCapacityByGodownId(parsedGodownId);
+                if (godownCapacity>=0) {
+                    return new ResponseEntity<>( godownCapacity, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Godown Capacity Can't be negative...", HttpStatus.BAD_REQUEST);
+                }
             } else {
-
-                return new ResponseEntity<>("Godown Capacity Can't be negative...", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
             }
 
         }
@@ -116,11 +137,15 @@ public class GodownController {
     }
 
     @PatchMapping("api/updateGodown/{godownId}")
-    public ResponseEntity<?> updateGodownByGodownId(@RequestBody Godown theGodown, @PathVariable String godownId) {
+    public ResponseEntity<?> updateGodownByGodownId(@RequestBody Godown theGodown, @PathVariable String godownId, @CookieValue(name = "user", defaultValue = "") String username) {
 
         try {
-            int parsedGodownId = Integer.parseInt(godownId);
-            return godownService.updateGodownByGodownId(theGodown, parsedGodownId);
+            if (!username.isEmpty()) {
+                int parsedGodownId = Integer.parseInt(godownId);
+                return godownService.updateGodownByGodownId(theGodown, parsedGodownId);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
 
         }
         catch (NumberFormatException e) {
@@ -136,11 +161,14 @@ public class GodownController {
     // product
     @GetMapping("api/listProducts/{godownId}")
     @ResponseBody
-    public ResponseEntity<?> listProductByGodownId(@PathVariable String godownId){
+    public ResponseEntity<?> listProductByGodownId(@PathVariable String godownId, @CookieValue(name = "user", defaultValue = "") String username){
         try{
-            int parsedGodownId = Integer.parseInt(godownId);
-            return godownService.listProductByGodownId(parsedGodownId);
-
+            if (!username.isEmpty()) {
+                int parsedGodownId = Integer.parseInt(godownId);
+                return godownService.listProductByGodownId(parsedGodownId);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
         }
         catch (NumberFormatException e) {
             String errorMessage = "Invalid Godown ID format. Please provide a valid integer.";
@@ -153,20 +181,44 @@ public class GodownController {
     }
 
     @PostMapping("api/addProduct")
-    public ResponseEntity<?> addProductByGodownId(@RequestBody Product theproduct) {
+    public ResponseEntity<?> addProductByGodownId(@RequestBody Product theproduct, @CookieValue(name = "user", defaultValue = "") String username) {
         try {
-            return godownService.addProductByGodownId(theproduct);
-
+            if (!username.isEmpty()) {
+                return godownService.addProductByGodownId(theproduct);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PatchMapping("api/updateProduct")
-    public ResponseEntity<?> updateProductByGodownId(@RequestBody Product theproduct) {
+    public ResponseEntity<?> updateProductByGodownId(@RequestBody Product theproduct, @CookieValue(name = "user", defaultValue = "") String username) {
         try {
-            return godownService.updateProductByGodownId(theproduct);
+            if (!username.isEmpty()) {
+                return godownService.updateProductByGodownId(theproduct);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
 
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/api/findGodownsByAddress")
+    public ResponseEntity<?> findGodownsByAddress(@RequestParam String partialAddress, @CookieValue(name = "user", defaultValue = "") String username) {
+        try {
+            if (!username.isEmpty()) {
+                List<Godown> godowns = godownService.findGodownsByAddress(partialAddress);
+
+                return godowns.isEmpty()
+                        ? new ResponseEntity<>("No Godowns found for the provided address", HttpStatus.NOT_FOUND)
+                        : new ResponseEntity<>(godowns, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }

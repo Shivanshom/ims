@@ -289,4 +289,11 @@ public class GodownService {
             throw e;
         }
     }
+
+    public List<Godown> findGodownsByAddress(String partialAddress) {
+        // Additional validation or checks can be added here if needed
+        return godownRepository.findByAddressLike('%' + partialAddress + '%');
+    }
+
+
 }
