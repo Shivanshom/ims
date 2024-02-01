@@ -17,11 +17,16 @@ public class SupplierService {
 
     public List<Supplier> getAllSuppliers() throws Exception {
         try {
-            return supplierRepository.findAll();
+            List<Supplier> suppliers = supplierRepository.findAll();
+            if (suppliers.isEmpty()) {
+                throw new IllegalArgumentException("No suppliers found.");
+            }
+            return suppliers;
         } catch (Exception e) {
             throw e;
         }
     }
+
 
     public String updateSuppliers(Supplier theSupplier) {
         try {
