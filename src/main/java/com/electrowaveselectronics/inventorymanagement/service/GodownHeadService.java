@@ -2,6 +2,7 @@ package com.electrowaveselectronics.inventorymanagement.service;
 
 import com.electrowaveselectronics.inventorymanagement.repository.GodownHeadRepository;
 import com.electrowaveselectronics.inventorymanagement.entity.GodownHead;
+import com.electrowaveselectronics.inventorymanagement.util.EnumRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -107,5 +108,24 @@ public class GodownHeadService {
             result.put("err", "login failed");
         }
         return result;
+    }
+
+    public boolean isUsernameTaken(String username) {
+        return godownHeadRepository.findByUsername(username) != null;
+    }
+
+    public GodownHead registerGodownHead(String username, String password) {
+        if (isUsernameTaken(username)) {
+            throw new IllegalArgumentException("Username already taken");
+        }
+
+        GodownHead newGodownHead = new GodownHead();
+        newGodownHead.setUsername(username);
+        newGodownHead.setPassword(password);
+        return godownHeadRepository.save(newGodownHead);
+    }
+
+    public EnumRole getRoleByUsername(String username) {
+        return godownHeadRepository.findRoleByUsername(username);
     }
 }

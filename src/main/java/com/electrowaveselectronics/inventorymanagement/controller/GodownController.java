@@ -4,6 +4,7 @@ import com.electrowaveselectronics.inventorymanagement.entity.Auth;
 import com.electrowaveselectronics.inventorymanagement.entity.AuthHolder;
 import com.electrowaveselectronics.inventorymanagement.entity.Godown;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
+import com.electrowaveselectronics.inventorymanagement.service.GodownHeadService;
 import com.electrowaveselectronics.inventorymanagement.service.GodownService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,13 +19,16 @@ public class GodownController {
     @Autowired
     private GodownService godownService;
 
+    @Autowired
+    private GodownHeadService godownHeadService;
+
     // godown
     @GetMapping("/api/getAllGodown")
     @ResponseBody
     public ResponseEntity<?> getAllGodown(@CookieValue(name = "user", defaultValue = "") String username) {
 
         try {
-            if (!username.isEmpty()) {
+            if (!username.isEmpty() && "admin".equals(godownHeadService.getRoleByUsername(username).name())) {
                 return godownService.getAllGodown();
             } else {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);

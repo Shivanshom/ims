@@ -1,7 +1,5 @@
 package com.electrowaveselectronics.inventorymanagement.service;
 
-import com.electrowaveselectronics.inventorymanagement.entity.Auth;
-import com.electrowaveselectronics.inventorymanagement.entity.AuthHolder;
 import com.electrowaveselectronics.inventorymanagement.entity.GodownHead;
 import com.electrowaveselectronics.inventorymanagement.repository.GodownHeadRepository;
 import jakarta.servlet.http.Cookie;
@@ -21,6 +19,12 @@ public class LoginService {
     @Autowired
     GodownHeadRepository godownHeadRepository;
 
+    @Autowired
+    GodownHeadService godownHeadService;
+
+    @Autowired
+    AuthService authService;
+
     public ResponseEntity<?> login(String username, String password, HttpServletResponse response) throws Exception {
         try {
             if (username == null || password == null) {
@@ -37,7 +41,7 @@ public class LoginService {
                 return ResponseEntity.badRequest().body(result);
             }
 
-            GodownHead godownHead = godownHeadRepository.findByGodownHeadName(username);
+            GodownHead godownHead = godownHeadRepository.findByUsername( username);
 
             if (godownHead != null && validatePassword(godownHead, password)) {
                 // Successful login, set a cookie
@@ -45,8 +49,7 @@ public class LoginService {
                 response.addCookie(cookie);
 
                 // Create and store Auth object
-                Auth auth = new Auth(username, password, cookie);
-                AuthHolder.setAuth(auth);
+                authService.createAuthInfo(username, cookie);
 
                 Map<String, String> result = new HashMap<>();
                 result.put("message", "Successfully login.");
@@ -83,11 +86,10 @@ public class LoginService {
     public ResponseEntity<?> logout(HttpServletResponse response, String username) throws Exception {
         try{
             if (!username.isEmpty()) {
-                AuthHolder.clearAuth();
-
                 Cookie cookie = new Cookie("user", null);
                 cookie.setMaxAge(0);
                 response.addCookie(cookie);
+                authService.createAuthInfo(username, cookie);
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.setCacheControl(CacheControl.noStore());
@@ -103,4 +105,17 @@ public class LoginService {
     }
 
 
+    public ResponseEntity<?> register(String username, String password) {
+        if (godownHeadRepository.findByUsername(username)!=null) {
+            return ResponseEntity.badRequest().body("Username already taken");
+        }
+
+        GodownHead newGodownHead = godownHeadService.registerGodownHead(username, password);
+
+        Cookie cookie = generateUserCookie(username);
+
+        authService.createAuthInfo(newGodownHead.getUsername(), cookie);
+
+        return ResponseEntity.ok("Registration successful");
+    }
 }

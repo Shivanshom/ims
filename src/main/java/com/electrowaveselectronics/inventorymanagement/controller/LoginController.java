@@ -37,4 +37,18 @@ public class LoginController {
         }
     }
 
+    @PostMapping("/api/register")
+    public ResponseEntity<?> register(@RequestBody Map<String, String> request) {
+        try {
+            String username = request.get("username");
+            String password = request.get("password");
+            return loginService.register(username, password);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>("Somehing went wrong ... "+ e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
 }
