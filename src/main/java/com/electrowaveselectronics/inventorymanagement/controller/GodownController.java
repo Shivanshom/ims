@@ -28,7 +28,9 @@ public class GodownController {
     public ResponseEntity<?> getAllGodown(@CookieValue(name = "user", defaultValue = "") String username) {
 
         try {
-            if (!username.isEmpty() && "admin".equals(godownHeadService.getRoleByUsername(username).name())) {
+            if (!username.isEmpty()
+                    && "admin".equals(godownHeadService.getRoleByUsername(username).name())
+            ) {
                 return godownService.getAllGodown();
             } else {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
@@ -42,7 +44,9 @@ public class GodownController {
     @ResponseBody
     public ResponseEntity<?> getGodownByGodownId(@PathVariable String godownId, @CookieValue(name = "user", defaultValue = "") String username) {
         try {
-            if (!username.isEmpty()) {
+            if (!username.isEmpty() &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
                 int parsedGodownId = Integer.parseInt(godownId);
                 return godownService.getGodownByGodownId(parsedGodownId);
             } else {
@@ -63,7 +67,8 @@ public class GodownController {
     public ResponseEntity<?> setGodown(@RequestBody Godown theGodown, @CookieValue(name = "user", defaultValue = "") String username) {
 
         try {
-            if (!username.isEmpty()) {
+            if (!username.isEmpty() &&
+                    "admin".equals(godownHeadService.getRoleByUsername(username).name())) {
                 ResponseEntity<?> responseEntity = godownService.setGodown(theGodown);
                 return new ResponseEntity<>("Operation successful: " + responseEntity.getBody(), responseEntity.getStatusCode());
             } else {
@@ -79,7 +84,8 @@ public class GodownController {
     public ResponseEntity<?> createGodown(@RequestBody Godown theGodown, @CookieValue(name = "user", defaultValue = "") String username) {
 
         try {
-            if (!username.isEmpty()) {
+            if (!username.isEmpty() &&
+                    "admin".equals(godownHeadService.getRoleByUsername(username).name())) {
                 ResponseEntity<?> responseEntity = godownService.createGodown(theGodown);
                 return new ResponseEntity<>("Operation successful: " + responseEntity.getBody(), responseEntity.getStatusCode());
             } else {
@@ -96,7 +102,8 @@ public class GodownController {
     public ResponseEntity<?> deleteGodownByGodownId(@PathVariable String godownId, @CookieValue(name = "user", defaultValue = "") String username) {
 
         try {
-            if (!username.isEmpty()) {
+            if (!username.isEmpty() &&
+                    "admin".equals(godownHeadService.getRoleByUsername(username).name())) {
                 int parsedGodownId = Integer.parseInt(godownId);
                 return godownService.deleteGodownByGodownId(parsedGodownId);
             } else {
@@ -117,7 +124,9 @@ public class GodownController {
     @ResponseBody
     public ResponseEntity<?> getCapacityByGodownId(@PathVariable String godownId, @CookieValue(name = "user", defaultValue = "") String username){
         try{
-            if (!username.isEmpty()) {
+            if (!username.isEmpty() &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                    || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
                 int parsedGodownId = Integer.parseInt(godownId);
                 int godownCapacity = godownService.getCapacityByGodownId(parsedGodownId);
                 if (godownCapacity>=0) {
@@ -144,7 +153,9 @@ public class GodownController {
     public ResponseEntity<?> updateGodownByGodownId(@RequestBody Godown theGodown, @PathVariable String godownId, @CookieValue(name = "user", defaultValue = "") String username) {
 
         try {
-            if (!username.isEmpty()) {
+            if (!username.isEmpty() &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                    || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
                 int parsedGodownId = Integer.parseInt(godownId);
                 return godownService.updateGodownByGodownId(theGodown, parsedGodownId);
             } else {
@@ -167,7 +178,8 @@ public class GodownController {
     @ResponseBody
     public ResponseEntity<?> listProductByGodownId(@PathVariable String godownId, @CookieValue(name = "user", defaultValue = "") String username){
         try{
-            if (!username.isEmpty()) {
+            if (!username.isEmpty() && ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
                 int parsedGodownId = Integer.parseInt(godownId);
                 return godownService.listProductByGodownId(parsedGodownId);
             } else {
@@ -187,7 +199,9 @@ public class GodownController {
     @PostMapping("api/addProduct")
     public ResponseEntity<?> addProductByGodownId(@RequestBody Product theproduct, @CookieValue(name = "user", defaultValue = "") String username) {
         try {
-            if (!username.isEmpty()) {
+            if (!username.isEmpty() &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                    || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
                 return godownService.addProductByGodownId(theproduct);
             } else {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
@@ -200,7 +214,9 @@ public class GodownController {
     @PatchMapping("api/updateProduct")
     public ResponseEntity<?> updateProductByGodownId(@RequestBody Product theproduct, @CookieValue(name = "user", defaultValue = "") String username) {
         try {
-            if (!username.isEmpty()) {
+            if (!username.isEmpty() &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                    || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
                 return godownService.updateProductByGodownId(theproduct);
             } else {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
@@ -214,7 +230,7 @@ public class GodownController {
     @GetMapping("/api/findGodownsByAddress")
     public ResponseEntity<?> findGodownsByAddress(@RequestParam String partialAddress, @CookieValue(name = "user", defaultValue = "") String username) {
         try {
-            if (!username.isEmpty()) {
+            if (!username.isEmpty() && "admin".equals(godownHeadService.getRoleByUsername(username).name())) {
                 List<Godown> godowns = godownService.findGodownsByAddress(partialAddress);
 
                 return godowns.isEmpty()

@@ -41,7 +41,7 @@ public class LoginService {
                 return ResponseEntity.badRequest().body(result);
             }
 
-            GodownHead godownHead = godownHeadRepository.findByUsername( username);
+            GodownHead godownHead = godownHeadRepository.findByUsername(username);
 
             if (godownHead != null && validatePassword(godownHead, password)) {
                 // Successful login, set a cookie
