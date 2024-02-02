@@ -1,0 +1,9 @@
+0:0:0:0:0:0:0:1 - - [31/Jan/2024:14:59:49 +0530] "GET /inventorymanagement HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [31/Jan/2024:14:59:49 +0530] "GET /inventorymanagement/ HTTP/1.1" 404 775
+0:0:0:0:0:0:0:1 - - [31/Jan/2024:14:59:49 +0530] "GET /favicon.ico HTTP/1.1" 404 682
+0:0:0:0:0:0:0:1 - - [31/Jan/2024:15:00:23 +0530] "GET /inventorymanagement/api/getAllCustomers HTTP/1.1" 404 798
+0:0:0:0:0:0:0:1 - - [31/Jan/2024:15:00:34 +0530] "GET /inventorymanagement/api/getAllCustomers HTTP/1.1" 404 798
+0:0:0:0:0:0:0:1 - - [31/Jan/2024:15:02:45 +0530] "GET /ims HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [31/Jan/2024:15:02:45 +0530] "GET /ims/ HTTP/1.1" 404 759
+0:0:0:0:0:0:0:1 - - [31/Jan/2024:15:02:58 +0530] "GET /ims/api/getAllCustomers HTTP/1.1" 404 782
+0:0:0:0:0:0:0:1 - - [31/Jan/2024:15:03:00 +0530] "GET /ims/api/getAllCustomers HTTP/1.1" 404 782

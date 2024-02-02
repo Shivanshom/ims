@@ -1,5 +1,6 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
+import ch.qos.logback.core.boolex.Matcher;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -25,5 +26,4 @@ public class Customer {
 
     @Column(name = "customer_number")
     private String customerNo;
-
 }
