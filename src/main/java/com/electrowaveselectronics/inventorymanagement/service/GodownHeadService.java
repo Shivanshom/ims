@@ -1,9 +1,12 @@
 package com.electrowaveselectronics.inventorymanagement.service;
 
+import com.electrowaveselectronics.inventorymanagement.entity.Auth;
+import com.electrowaveselectronics.inventorymanagement.repository.AuthRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.GodownHeadRepository;
 import com.electrowaveselectronics.inventorymanagement.entity.GodownHead;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +14,9 @@ import java.util.Optional;
 
 @Service
 public class GodownHeadService {
+
+    @Autowired
+    public AuthRepository authRepository;
 
 
     public GodownHeadRepository godownHeadRepository;
@@ -93,19 +99,29 @@ public class GodownHeadService {
         }
     }
 
-    public HashMap<String, String> loginwithPassword(String godownHeadName, String password) {
+    public HashMap<String, String> loginwithPassword(String username, String password) {
         HashMap<String, String> result = new HashMap<>();
         try {
-            GodownHead godownHead = godownHeadRepository.findByGodownHeadName(godownHeadName);
-            if (godownHead != null) {
-                result.put("success", "Successfully login");
+            GodownHead godownHead = godownHeadRepository.findByUsername(username);
+            if (godownHead != null && godownHead.getPassword().equals(password)) {
+                result.put("success", "Successfully logged in");
             } else {
-                result.put("error", "Invalid credentials.");
+                result.put("error", "Invalid username or password");
             }
-
         } catch (Exception e) {
-            result.put("err", "login failed");
+            throw e;
         }
         return result;
+    }
+
+
+    public void setAuthToken(String token, String username){
+        Auth auth = authRepository.findByUsername(username);
+        if (auth != null) {
+            auth.setToken(token);
+            authRepository.save(auth);
+        }
+
+
     }
 }

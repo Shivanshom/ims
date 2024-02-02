@@ -21,8 +21,14 @@ public class GodownHead {
     @Column(name = "godown_head_name")
     private String godownHeadName;
 
+    @Column(name = "username")
+    private String username;
+
     @Column(name = "password")
     private String password;
+
+    @Column(name = "token")
+    private String token;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
