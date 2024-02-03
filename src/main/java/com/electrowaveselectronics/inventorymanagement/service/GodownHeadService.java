@@ -1,15 +1,22 @@
 package com.electrowaveselectronics.inventorymanagement.service;
 
+import com.electrowaveselectronics.inventorymanagement.entity.Auth;
+import com.electrowaveselectronics.inventorymanagement.repository.AuthRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.GodownHeadRepository;
 import com.electrowaveselectronics.inventorymanagement.entity.GodownHead;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class GodownHeadService {
+
+    @Autowired
+    public AuthRepository authRepository;
 
 
     public GodownHeadRepository godownHeadRepository;
@@ -22,19 +29,19 @@ public class GodownHeadService {
 
     public GodownHead save(GodownHead theGodownHead) {
         try {
-            GodownHead savedUser = godownHeadRepository.save(theGodownHead);
-            return savedUser;
+            GodownHead savedGodownHead = godownHeadRepository.save(theGodownHead);
+            return savedGodownHead;
         } catch (Exception e){
             throw e;
         }
 
     }
 
-    public GodownHead getUser(int userId) throws Exception {
-        try{
-            GodownHead u = godownHeadRepository.findById(userId).get();
+    public GodownHead getGodownHead(int GodownHeadId) throws Exception {
+        try {
+            GodownHead u = godownHeadRepository.findById(GodownHeadId).get();
             return u;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -42,60 +49,79 @@ public class GodownHeadService {
     public List<GodownHead> findAll() throws Exception {
         try {
             return godownHeadRepository.findAll();
+
         }catch (Exception e){
             throw e;
         }
 
     }
 
-    public GodownHead getUserByUserId(int userId) throws Exception {
+    public GodownHead getGodownHeadByGodownHeadId(int GodownHeadId) throws Exception {
         try {
-            Optional<GodownHead> users = godownHeadRepository.findById(userId);
-            return users.get();
+            Optional<GodownHead> GodownHead = godownHeadRepository.findById(GodownHeadId);
+            return GodownHead.get();
         } catch (Exception e) {
             throw e;
         }
     }
 
-    public GodownHead updateUsers(GodownHead theGodownHead) {
+    public GodownHead updateGodownHead(GodownHead theGodownHead) {
         try {
-            Optional<Integer> optional=Optional.of(theGodownHead.getGodownHeadId());
-            if (optional.isEmpty()){
-                throw new Exception("User id is not provided in input, please try again");
+            Optional<Integer> optional = Optional.of(theGodownHead.getGodownHeadId());
+            if (optional.isEmpty()) {
+                throw new Exception("GodownHead id is not provided in input, please try again");
             }
-            GodownHead existingGodownHead = godownHeadRepository.findById(theGodownHead.getGodownHeadId()).orElseThrow(()-> new Exception("User not found for provided id"));
+            GodownHead existingGodownHead = godownHeadRepository.findById(theGodownHead.getGodownHeadId()).orElseThrow(() -> new Exception("GodownHead not found for provided id"));
 
-            if (theGodownHead.getGodownHeadName()!=null){
+            if (theGodownHead.getGodownHeadName() != null) {
                 existingGodownHead.setGodownHeadName(theGodownHead.getGodownHeadName());
             }
 
-            if (theGodownHead.getPassword()!=null){
+            if (theGodownHead.getPassword() != null) {
                 existingGodownHead.setPassword(theGodownHead.getPassword());
             }
 
-            if (theGodownHead.getRole()!=null){
+            if (theGodownHead.getRole() != null) {
                 existingGodownHead.setRole(theGodownHead.getRole());
             }
 
-            return setUsers(existingGodownHead);
-        }catch (Exception e){
+            return setGodownHead(existingGodownHead);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public GodownHead setUsers(GodownHead theGodownHead) {
+    public GodownHead setGodownHead(GodownHead theGodownHead) {
         try {
             return godownHeadRepository.save(theGodownHead);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
 
-//    public Optional<Users> getUserByUserId(int userId){
-//        try {
-//            return userRepository.findById(userId);
-//        }catch (Exception e){
-//            throw e;
-//        }
-//    }
+    public HashMap<String, String> loginwithPassword(String username, String password) {
+        HashMap<String, String> result = new HashMap<>();
+        try {
+            GodownHead godownHead = godownHeadRepository.findByUsername(username);
+            if (godownHead != null && godownHead.getPassword().equals(password)) {
+                result.put("success", "Successfully logged in");
+            } else {
+                result.put("error", "Invalid username or password");
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        return result;
+    }
+
+
+    public void setAuthToken(String token, String username){
+        Auth auth = authRepository.findByUsername(username);
+        if (auth != null) {
+            auth.setToken(token);
+            authRepository.save(auth);
+        }
+
+
+    }
 }

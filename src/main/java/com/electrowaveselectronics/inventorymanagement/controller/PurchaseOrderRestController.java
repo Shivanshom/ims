@@ -1,5 +1,6 @@
 package com.electrowaveselectronics.inventorymanagement.controller;
 
+import com.electrowaveselectronics.inventorymanagement.dto.PurchaseOrderDTO;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
 import com.electrowaveselectronics.inventorymanagement.entity.PurchaseOrder;
 import com.electrowaveselectronics.inventorymanagement.entity.Supplier;
@@ -39,17 +40,26 @@ public class PurchaseOrderRestController {
         }
     }
 
-    @PostMapping("/setPurchaseOrder")
-    public ResponseEntity<?> setPurchaseOrder(@RequestBody PurchaseOrder thepurchaseOrder) {
+    @PostMapping("/createPurchaseOrder")
+    public ResponseEntity<?> setPurchaseOrder(@RequestBody PurchaseOrderDTO thepurchaseOrderDTO) {
         try {
-
-            return new ResponseEntity<>(purchaseOrderService.setPurchaseOrder(thepurchaseOrder), HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(purchaseOrderService.createPurchaseOrder(thepurchaseOrderDTO), HttpStatus.ACCEPTED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/getSupplierByPurchaseOrderId/{purchaseId}")
+//    @PostMapping("/createPurchaseOrder")
+//    public ResponseEntity<?> createPurchaseOrder(@RequestBody PurchaseOrder thepurchaseOrderDTO) {
+//        try {
+//
+//            return new ResponseEntity<>(purchaseOrderService.createPurchaseOrder(thepurchaseOrderDTO), HttpStatus.ACCEPTED);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
+//        }
+//    }
+
+    @GetMapping("/getSupplierByPurchaseId/{purchaseId}")
     public ResponseEntity<?> getSupplierByPurchaseOrderId(@PathVariable int purchaseId) {
         try {
             Optional<Supplier> theSupplier = purchaseOrderService.getSupplierByPurchaseOrderId(purchaseId);
@@ -59,15 +69,15 @@ public class PurchaseOrderRestController {
         }
     }
 
-    @GetMapping("/getProductByPurchaseOrderId/{purchaseId}")
-    public ResponseEntity<?> getProductByPurchaseOrderId(@PathVariable int purchaseId) {
-        try {
-            Optional<List<Product>> products = purchaseOrderService.getProductByPurchaseOrderId(purchaseId);
-            return new ResponseEntity<>(products, HttpStatus.ACCEPTED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @GetMapping("/getProductByPurchaseOrderId/{purchaseId}")
+//    public ResponseEntity<?> getProductByPurchaseOrderId(@PathVariable int purchaseId) {
+//        try {
+//            Optional<List<Product>> products = purchaseOrderService.getProductByPurchaseOrderId(purchaseId);
+//            return new ResponseEntity<>(products, HttpStatus.ACCEPTED);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
 
 }

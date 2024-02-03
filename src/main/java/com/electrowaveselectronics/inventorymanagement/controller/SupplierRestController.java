@@ -74,5 +74,24 @@ public class SupplierRestController {
 
     }
 
+    @PostMapping("/createSupplier")
+    public ResponseEntity<?> createSupplier(@RequestBody Supplier theSupplier) {
+
+        // also just in case they pass an id in JSON ... set id to 0
+        // this is to force a save of new item ... instead of update
+
+//        theSupplier.setSupplierId(0);
+
+        try {
+            return new ResponseEntity<>(supplierService.createSupplier(theSupplier), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
+        }
+
+
+    }
+
+
+
 
 }

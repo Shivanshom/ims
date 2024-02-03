@@ -3,20 +3,19 @@ package com.electrowaveselectronics.inventorymanagement.service;
 import com.electrowaveselectronics.inventorymanagement.entity.Customer;
 import com.electrowaveselectronics.inventorymanagement.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 public class CustomerService {
 
     @Autowired
     public CustomerRepository customerRepository;
+
 
 
     public List<Customer> getAllCustomers() throws Exception {
@@ -47,17 +46,18 @@ public class CustomerService {
     }
 
 
-    public ResponseEntity<?> updateCustomer(int customerId, Customer newDataCustomer) throws Exception {
+
+    public Customer updateCustomer(int customerId, Customer newDataCustomer) throws Exception {
         try {
             Customer existingCustomer = getCustomerById(customerId);
             existingCustomer.setCustomerName(newDataCustomer.getCustomerName());
             existingCustomer.setCustomerAddress(newDataCustomer.getCustomerAddress());
             existingCustomer.setCustomerNo(newDataCustomer.getCustomerNo());
-            customerRepository.save(existingCustomer);
-            return new ResponseEntity<>("Customer has been updated successfully", HttpStatus.ACCEPTED);
 
-        } catch (Exception e) {
-            return new ResponseEntity<>("An error occured while updating the Customer.", HttpStatus.BAD_REQUEST);
+            return customerRepository.save(existingCustomer);
+
+        }catch(Exception e){
+            throw e;
 
         }
 
