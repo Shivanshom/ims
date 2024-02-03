@@ -88,7 +88,8 @@ public class CustomerController {
         if (customerService.isContactNumberExists(NewDataCustomer.getCustomerNo())) {
             return new ResponseEntity<>("Contact number already exists. Please use a different one.", HttpStatus.BAD_REQUEST);
         } else {
-            return customerService.updateCustomer(customerId, NewDataCustomer);
+            Customer newCustomer = customerService.updateCustomer(customerId,NewDataCustomer);
+            return new ResponseEntity<>("Customer updated with customer id: " + customerId,HttpStatus.ACCEPTED);
         }
     }
 
