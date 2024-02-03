@@ -114,7 +114,7 @@ public class GodownHeadService {
         return godownHeadRepository.findByUsername(username) != null;
     }
 
-    public GodownHead registerGodownHead(String username, String password) {
+    public GodownHead registerGodownHead(String username, String password, String godownHeadName) {
         if (isUsernameTaken(username)) {
             throw new IllegalArgumentException("Username already taken");
         }
@@ -122,6 +122,7 @@ public class GodownHeadService {
         GodownHead newGodownHead = new GodownHead();
         newGodownHead.setUsername(username);
         newGodownHead.setPassword(password);
+        newGodownHead.setGodownHeadName(godownHeadName);
         return godownHeadRepository.save(newGodownHead);
     }
 

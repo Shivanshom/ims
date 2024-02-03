@@ -42,7 +42,8 @@ public class LoginController {
         try {
             String username = request.get("username");
             String password = request.get("password");
-            return loginService.register(username, password);
+            String godownHeadName = request.get("godownHeadName");
+            return loginService.register(username, password, godownHeadName);
         }
         catch (Exception e){
             return new ResponseEntity<>("Somehing went wrong ... "+ e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

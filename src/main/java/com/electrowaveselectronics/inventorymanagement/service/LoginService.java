@@ -20,7 +20,7 @@ public class LoginService {
     GodownHeadRepository godownHeadRepository;
 
     @Autowired
-    GodownHeadService godownHeadService;
+    GodownHeadService  godownHeadService;
 
     @Autowired
     AuthService authService;
@@ -105,12 +105,22 @@ public class LoginService {
     }
 
 
-    public ResponseEntity<?> register(String username, String password) {
+    public ResponseEntity<?> register(String username, String password, String GodownHeadName) {
+        if (username == null || password == null || GodownHeadName == null) {
+            return ResponseEntity.badRequest().body("Username, password, and GodownHeadName cannot be null or empty");
+        }
+
+        if (!isValidUsername(username)) {
+            return ResponseEntity.badRequest().body("Invalid username format. " +
+                    "Should not start with any special char or numeric value, " +
+                    "Should not contain whitespace");
+        }
+
         if (godownHeadRepository.findByUsername(username)!=null) {
             return ResponseEntity.badRequest().body("Username already taken");
         }
 
-        GodownHead newGodownHead = godownHeadService.registerGodownHead(username, password);
+        GodownHead newGodownHead = godownHeadService.registerGodownHead(username, password, GodownHeadName);
 
         Cookie cookie = generateUserCookie(username);
 
