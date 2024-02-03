@@ -28,7 +28,7 @@ public class LoginController {
     }
 
     @PostMapping("/api/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response, @CookieValue(value = "user", defaultValue = "") String username) {
+    public ResponseEntity<?> logout(HttpServletResponse response, @CookieValue(value = "token", defaultValue = "") String username) {
         try {
             return loginService.logout(response, username);
         }

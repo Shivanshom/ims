@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -24,6 +25,8 @@ public class LoginService {
 
     @Autowired
     AuthService authService;
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public ResponseEntity<?> login(String username, String password, HttpServletResponse response) throws Exception {
         try {
@@ -43,7 +46,14 @@ public class LoginService {
 
             GodownHead godownHead = godownHeadRepository.findByUsername(username);
 
-            if (godownHead != null && validatePassword(godownHead, password)) {
+            if(godownHead == null){
+                Map<String, String> result = new HashMap<>();
+                result.put("message", "User does not exist");
+                return ResponseEntity.badRequest().body(result);
+
+            }
+
+            if (validatePassword(godownHead, password)) {
                 // Successful login, set a cookie
                 Cookie cookie = generateUserCookie(username);
                 response.addCookie(cookie);
@@ -72,13 +82,13 @@ public class LoginService {
                 !Pattern.compile("[^a-zA-Z0-9]").matcher(username).find();
     }
 
-    private boolean validatePassword(GodownHead user, String password) {
+    private boolean validatePassword(GodownHead godownHead, String password) {
         // Add your password validation logic here
-        return user.getPassword().equals(password);
+        return passwordEncoder.matches(password, godownHead.getPassword());
     }
 
     private Cookie generateUserCookie(String username) {
-        Cookie cookie = new Cookie("user", username);
+        Cookie cookie = new Cookie("token", username);
         cookie.setMaxAge(3600); // Cookie expiry time in seconds i.e. 1 hour
         return cookie;
     }
@@ -86,7 +96,7 @@ public class LoginService {
     public ResponseEntity<?> logout(HttpServletResponse response, String username) throws Exception {
         try{
             if (!username.isEmpty()) {
-                Cookie cookie = new Cookie("user", null);
+                Cookie cookie = new Cookie("token", null);
                 cookie.setMaxAge(0);
                 response.addCookie(cookie);
                 authService.createAuthInfo(username, cookie);
@@ -120,7 +130,8 @@ public class LoginService {
             return ResponseEntity.badRequest().body("Username already taken");
         }
 
-        GodownHead newGodownHead = godownHeadService.registerGodownHead(username, password, GodownHeadName);
+        String hashedPassword = passwordEncoder.encode(password);
+        GodownHead newGodownHead = godownHeadService.registerGodownHead(username, hashedPassword, GodownHeadName);
 
         Cookie cookie = generateUserCookie(username);
 

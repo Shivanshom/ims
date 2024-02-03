@@ -37,5 +37,4 @@ public class Product {
         this.godownId = godownId;
     }
 
-
 }

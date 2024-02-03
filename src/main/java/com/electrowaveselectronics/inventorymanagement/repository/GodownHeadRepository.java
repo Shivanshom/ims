@@ -12,4 +12,5 @@ public interface GodownHeadRepository extends JpaRepository<GodownHead, Integer>
 
     @Query("SELECT g.role FROM GodownHead g WHERE g.username = :username")
     EnumRole findRoleByUsername(@Param("username")String username);
+
 }

@@ -1,15 +1,11 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
-import com.electrowaveselectronics.inventorymanagement.util.EnumRole;
 import jakarta.persistence.*;
 import jakarta.servlet.http.Cookie;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-
-import java.util.Date;
 
 @Data
 @Entity
@@ -26,9 +22,6 @@ public class Auth {
     @Column(name = "username")
     private String username;
 
-//    @Column(name = "password")
-//    private String password;
-
     @Column(name = "cookie", unique = true, length = 500)
     private Cookie cookie;
 
@@ -36,5 +29,6 @@ public class Auth {
         this.username = username;
         this.cookie = cookie;
     }
+
 }
 

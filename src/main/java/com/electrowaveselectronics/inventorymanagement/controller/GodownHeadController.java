@@ -1,22 +1,14 @@
 package com.electrowaveselectronics.inventorymanagement.controller;
-import com.electrowaveselectronics.inventorymanagement.entity.Godown;
+
 import com.electrowaveselectronics.inventorymanagement.entity.GodownHead;
-import com.electrowaveselectronics.inventorymanagement.entity.Product;
+import com.electrowaveselectronics.inventorymanagement.repository.AuthRepository;
 import com.electrowaveselectronics.inventorymanagement.service.GodownHeadService;
 import com.electrowaveselectronics.inventorymanagement.service.GodownService;
-import com.electrowaveselectronics.inventorymanagement.entity.GodownHead;
-import com.electrowaveselectronics.inventorymanagement.service.GodownHeadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-//import javax.servlet.http.Cookie;
-//import javax.servlet.http.HttpServletResponse;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 import java.util.List;
 
 @RestController
@@ -24,119 +16,70 @@ import java.util.List;
 public class GodownHeadController {
 
     @Autowired
+    AuthRepository authRepository;
+
+    @Autowired
     GodownService godownService;
     private GodownHeadService godownHeadService;
+
     @Autowired
-    public GodownHeadController(GodownHeadService godownHeadService){
+    public GodownHeadController(GodownHeadService godownHeadService) {
         this.godownHeadService = godownHeadService;
     }
 
     @GetMapping("/getAllGodownHead")
-    public List<GodownHead> findAll() throws Exception {
+    public List<GodownHead> findAll(@CookieValue(value = "token") String token) throws Exception {
         return godownHeadService.findAll();
     }
 
     @GetMapping("/getGodownHead/{GodownHeadId}")
-    public GodownHead getGodownHead(@PathVariable int GodownHeadId) throws Exception {
-        GodownHead theGodownHead =  godownHeadService.getGodownHead(GodownHeadId);
-        if (theGodownHead ==null){
+    public GodownHead getGodownHead(@PathVariable int GodownHeadId,@CookieValue(value = "token") String token) throws Exception {
+        GodownHead theGodownHead = godownHeadService.getGodownHead(GodownHeadId);
+        if (theGodownHead == null) {
             throw new RuntimeException("GodownHead id not found= " + GodownHeadId);
         }
         return theGodownHead;
     }
 
-//    @PostMapping("/postusers")
-//    public Users addUsers(@RequestBody Users theUsers){
-//        System.out.println("----in add user");
-//        Users savedUser = userService.save(theUsers);
-//        System.out.println(savedUser);
-//        System.out.println("----------------");
-//        return savedUser;
-//    }
-
     @PostMapping("/setGodownHead")
-    public GodownHead addGodownHead(@RequestBody GodownHead theGodownHead){
+    public GodownHead addGodownHead(@RequestBody GodownHead theGodownHead,@CookieValue(value = "token") String token) {
         theGodownHead.setGodownHeadId(0);
         return godownHeadService.save(theGodownHead);
     }
 
-//    @PutMapping("/updateUsers")
-//    public Users updateUsers(@RequestBody Users theUsers){
-//        Users dbUsers=userService.save(theUsers);
-//        return dbUsers;
-//    }
-
     @PutMapping("/updateGodownHead")
-    public ResponseEntity<?> updateGodownHead(@RequestBody GodownHead theGodownHead) throws Exception{
+    public ResponseEntity<?> updateGodownHead(@RequestBody GodownHead theGodownHead,@CookieValue(value = "token") String token) throws Exception {
         try {
             return new ResponseEntity<>(godownHeadService.updateGodownHead(theGodownHead), HttpStatus.ACCEPTED);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
         }
     }
-
-//    @PostMapping("/register")
-//    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationRequest request) {
-//        if (userService.existsByUsername(request.getUsername())) {
-//            return ResponseEntity.badRequest().body("Error: Username is already taken!");
-//        }
 //
-//        if (userService.existsByEmail(request.getEmail())) {
-//            return ResponseEntity.badRequest().body("Error: Email is already in use!");
-//        }
-//
-//        User user = new User(request.getUsername(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
-//        user.setRoles(Collections.singleton(Role.USER));
-//        userService.save(user);
-//
-//        return ResponseEntity.ok("User registered successfully!");
+//    private Cookie generateToken(String username) {
+//        Cookie cookie = new Cookie("user",username);
+//        return cookie;
 //    }
-
+//
 //    @PostMapping("/loginwithPassword")
 //    @ResponseBody
-//    public ResponseEntity<?> loginwithPassword(@RequestBody HashMap<String, String> data, HttpServletResponse response){
-//        System.out.println("Hello");
-//        HashMap<String,String> result=new HashMap<>();
+//    public ResponseEntity<?> loginwithPassword(@RequestBody HashMap<String, String> data, HttpServletResponse response) {
+//        HashMap<String, String> result = new HashMap<>();
 //        try {
-//            result=godownHeadService.loginwithPassword(data.get("godownHeadName"),data.get("password"));
-//
-//            if (result.containsKey("cookie")){
-//                Cookie cookie=new Cookie("token", result.get("cookie"));
-//                result.put("message","Successfully login.");
-//                return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
+//            result = godownHeadService.loginwithPassword(data.get("username"), data.get("password"));
+//            if (result.containsKey("success")) {
+//                Cookie token = generateToken(data.get("username")); // Replace with actual token generation logic
+//                result.put("message", "Successfully logged in.");
+//                godownHeadService.setAuthToken(token.toString(), data.get("username"));
+//                response.addCookie(token);
+//                return ResponseEntity.accepted().header("Set-Cookie", "token=" + token).body(result);
 //            } else {
-//                result.put("message","Login failed");
-//                return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
+//                return ResponseEntity.badRequest().body(result);
 //            }
-//        } catch (Exception e){
-//            result.put("err", e.getLocalizedMessage());
-//            return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
 //        }
 //    }
-
-
-    @PostMapping("/loginwithPassword")
-    @ResponseBody
-    public ResponseEntity<?> loginwithPassword(@RequestBody HashMap<String, String> data) {
-        System.out.println("Hello");
-        HashMap<String, String> result = new HashMap<>();
-        try {
-            result = godownHeadService.loginwithPassword(data.get("godownHeadName"), data.get("password"));
-            System.out.println(data.get("godownHeadName"));
-            System.out.println(data.get("password"));
-            if (result.containsKey("success")) {
-                String token = data.get("godownHeadName");// Example token generation
-                result.put("message", "Successfully login.");
-                return ResponseEntity.accepted().header("Set-Cookie", "token=" + token).body(result);
-            } else {
-                result.put("message", "Login failed");
-                return ResponseEntity.badRequest().body(result);
-            }
-        } catch (Exception e) {
-            result.put("err", e.getLocalizedMessage());
-            return ResponseEntity.badRequest().body(result);
-        }
-    }
 
 //
 //    @GetMapping("api/listProducts/{godownId}")
@@ -187,8 +130,5 @@ public class GodownHeadController {
 //            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
 //        }
 //    }
-
-
-
-
 }
+

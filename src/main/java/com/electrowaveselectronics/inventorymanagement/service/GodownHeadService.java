@@ -1,7 +1,8 @@
 package com.electrowaveselectronics.inventorymanagement.service;
 
-import com.electrowaveselectronics.inventorymanagement.repository.GodownHeadRepository;
 import com.electrowaveselectronics.inventorymanagement.entity.GodownHead;
+import com.electrowaveselectronics.inventorymanagement.repository.AuthRepository;
+import com.electrowaveselectronics.inventorymanagement.repository.GodownHeadRepository;
 import com.electrowaveselectronics.inventorymanagement.util.EnumRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,9 @@ import java.util.Optional;
 
 @Service
 public class GodownHeadService {
+
+    @Autowired
+    public AuthRepository authRepository;
 
 
     public GodownHeadRepository godownHeadRepository;
@@ -94,18 +98,17 @@ public class GodownHeadService {
         }
     }
 
-    public HashMap<String, String> loginwithPassword(String godownHeadName, String password) {
+    public HashMap<String, String> loginwithPassword(String username, String password) {
         HashMap<String, String> result = new HashMap<>();
         try {
-            GodownHead godownHead = godownHeadRepository.findByGodownHeadName(godownHeadName);
-            if (godownHead != null) {
-                result.put("success", "Successfully login");
+            GodownHead godownHead = godownHeadRepository.findByUsername(username);
+            if (godownHead != null && godownHead.getPassword().equals(password)) {
+                result.put("success", "Successfully logged in");
             } else {
-                result.put("error", "Invalid credentials.");
+                result.put("error", "Invalid username or password");
             }
-
         } catch (Exception e) {
-            result.put("err", "login failed");
+            throw e;
         }
         return result;
     }
@@ -123,6 +126,7 @@ public class GodownHeadService {
         newGodownHead.setUsername(username);
         newGodownHead.setPassword(password);
         newGodownHead.setGodownHeadName(godownHeadName);
+        newGodownHead.setRole(EnumRole.godownhead);
         return godownHeadRepository.save(newGodownHead);
     }
 
