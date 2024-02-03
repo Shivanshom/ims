@@ -10,7 +10,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.SpringServletContainerInitializer;
 
-
 @EnableJpaRepositories(basePackages = "com.electrowaveselectronics.inventorymanagement.repository")
 @EntityScan(basePackages = "com.electrowaveselectronics.inventorymanagement.entity")
 @ComponentScan(basePackages = "com.electrowaveselectronics.inventorymanagement")
@@ -20,6 +19,7 @@ public class InventorymanagementApplication extends SpringBootServletInitializer
 	public static void main(String[] args) {
 
 		SpringApplication.run(InventorymanagementApplication.class, args);
+
 	}
 	@Override
 	protected SpringApplicationBuilder configure (SpringApplicationBuilder builder){

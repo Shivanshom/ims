@@ -21,6 +21,7 @@ public class GodownController {
     @ResponseBody
     public ResponseEntity<?> getAllGodown() {
 
+
         try {
             List<Godown> godowns = godownService.getAllGodown();
             if (!(godowns.isEmpty())) {
@@ -43,7 +44,7 @@ public class GodownController {
                 return new ResponseEntity<>(godown, HttpStatus.ACCEPTED);
             } else {
 
-                return new ResponseEntity<>("Godown does not exist with id: "+ godownId, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Godown does not exist with id: " + godownId, HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
@@ -85,19 +86,18 @@ public class GodownController {
 
     @GetMapping("/api/getCapacity/{godownId}")
     @ResponseBody
-    public ResponseEntity<?> getCapacityByGodownId(@PathVariable int godownId){
-        try{
+    public ResponseEntity<?> getCapacityByGodownId(@PathVariable int godownId) {
+        try {
             int godownCapacity = godownService.getCapacityByGodownId(godownId);
 
-            if (godownCapacity>0) {
-                return new ResponseEntity<>("Capacity of godown "+ godownCapacity + " meters cube", HttpStatus.ACCEPTED);
+            if (godownCapacity > 0) {
+                return new ResponseEntity<>("Capacity of godown " + godownCapacity + " meters cube", HttpStatus.ACCEPTED);
             } else {
 
                 return new ResponseEntity<>("Something went wrong, try again...", HttpStatus.NOT_FOUND);
             }
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -118,18 +118,16 @@ public class GodownController {
     // product
     @GetMapping("api/listProducts/{godownId}")
     @ResponseBody
-    public ResponseEntity<?> listProductByGodownId(@PathVariable int godownId){
-        try{
+    public ResponseEntity<?> listProductByGodownId(@PathVariable int godownId) {
+        try {
             List<Product> productList = godownService.listProductByGodownId(godownId);
-            if(!Objects.isNull(productList)){
+            if (!Objects.isNull(productList)) {
                 return new ResponseEntity<>(productList, HttpStatus.ACCEPTED);
-            }
-            else{
-                return new ResponseEntity<>("No products Found "+godownId, HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>("No products Found " + godownId, HttpStatus.NOT_FOUND);
             }
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -139,7 +137,7 @@ public class GodownController {
         try {
             Product newProduct = godownService.addProductByGodownId(godownId, theproduct);
             if (!Objects.isNull(newProduct)) {
-                return new ResponseEntity<>("Product added "+ newProduct.getProductName(), HttpStatus.ACCEPTED);
+                return new ResponseEntity<>("Product added " + newProduct.getProductName(), HttpStatus.ACCEPTED);
             } else {
 
                 return new ResponseEntity<>("Something went wrong, try again...", HttpStatus.NOT_FOUND);
@@ -154,7 +152,7 @@ public class GodownController {
         try {
             Product newProduct = godownService.setProductByGodownId(godownId, theproduct);
             if (!Objects.isNull(newProduct)) {
-                return new ResponseEntity<>("Product updated "+ newProduct.getProductName(), HttpStatus.ACCEPTED);
+                return new ResponseEntity<>("Product updated " + newProduct.getProductName(), HttpStatus.ACCEPTED);
             } else {
 
                 return new ResponseEntity<>("Something went wrong, try again...", HttpStatus.NOT_FOUND);
@@ -163,11 +161,6 @@ public class GodownController {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-
-
-
-
-
 
 
 }

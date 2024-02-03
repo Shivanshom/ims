@@ -1,8 +1,0 @@
-0:0:0:0:0:0:0:1 - - [31/Jan/2024:11:16:09 +0530] "GET /api/getPurchaseOrderByPurchaseId/3 HTTP/1.1" 404 793
-0:0:0:0:0:0:0:1 - - [31/Jan/2024:11:16:35 +0530] "GET //api/getPurchaseOrderByPurchaseId/3 HTTP/1.1" 404 798
-0:0:0:0:0:0:0:1 - - [31/Jan/2024:11:16:59 +0530] "GET //api/getPurchaseOrderByPurchaseId/3 HTTP/1.1" 404 798
-0:0:0:0:0:0:0:1 - - [31/Jan/2024:11:17:38 +0530] "GET /ims/api/getPurchaseOrderByPurchaseId/3 HTTP/1.1" 404 801
-0:0:0:0:0:0:0:1 - - [31/Jan/2024:11:19:51 +0530] "GET /ims/api/getPurchaseOrderByPurchaseId/3 HTTP/1.1" 404 801
-0:0:0:0:0:0:0:1 - - [31/Jan/2024:11:20:14 +0530] "GET /api/getPurchaseOrderByPurchaseId/3 HTTP/1.1" 404 682
-0:0:0:0:0:0:0:1 - - [31/Jan/2024:11:22:12 +0530] "GET /api/getPurchaseOrderByPurchaseId/3 HTTP/1.1" 404 682
-0:0:0:0:0:0:0:1 - - [31/Jan/2024:11:22:21 +0530] "GET /ims/api/getPurchaseOrderByPurchaseId/3 HTTP/1.1" 404 801

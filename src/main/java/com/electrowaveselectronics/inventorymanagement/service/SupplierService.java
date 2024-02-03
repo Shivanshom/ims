@@ -15,11 +15,16 @@ public class SupplierService {
     private SupplierRepository supplierRepository;
 
 
-    public List<Supplier> getAllSuppliers()throws Exception {
-        try{
-            return supplierRepository.findAll();
-        }catch (Exception e){
 
+
+    public List<Supplier> getAllSuppliers() throws Exception {
+        try {
+            List<Supplier> suppliers = supplierRepository.findAll();
+            if (suppliers.isEmpty()) {
+                throw new IllegalArgumentException("No suppliers found.");
+            }
+            return suppliers;
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -33,7 +38,6 @@ public class SupplierService {
             if (optional.isEmpty()) {
                 throw new Exception("Supplier id not provided in input, please try again");
             }
-
 
 
             Supplier existingSupplier = supplierRepository.findById(theSupplier.getSupplierId()).orElseThrow(() -> new Exception("Supplier not found for provided id"));

@@ -1,5 +1,6 @@
 package com.electrowaveselectronics.inventorymanagement.entity;
 
+import ch.qos.logback.core.boolex.Matcher;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Customer {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
@@ -22,6 +24,7 @@ public class Customer {
 
     @Column(name = "customer_address")
     private String customerAddress;
+
 
     @Column(name = "customer_number")
     private String customerNo;

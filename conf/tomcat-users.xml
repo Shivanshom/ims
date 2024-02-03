@@ -39,7 +39,15 @@
   <user username="admin" password="<must-be-changed>" roles="manager-gui"/>
   <user username="robot" password="<must-be-changed>" roles="manager-script"/>
 -->
+<<<<<<< HEAD
 <user username="admin" password="admin" roles="manager-gui,manager-script "/>
+=======
+<<<<<<< HEAD
+<user username="admin" password="admin" roles="manager-gui,manager-script" />
+=======
+<user username="admin" password="admin"  roles="manager-gui,manager-script"/>
+>>>>>>> 96473df9e7e03941d9bd511f54a705b7590e8b4e
+>>>>>>> 04d997384e49b9a3b6e0f4cffc6980fd137d0e99
 <!--
   The sample user and role entries below are intended for use with the
   examples web application. They are wrapped in a comment and thus are ignored
