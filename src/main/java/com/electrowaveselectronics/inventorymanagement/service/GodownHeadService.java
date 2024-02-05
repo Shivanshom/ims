@@ -1,12 +1,11 @@
 package com.electrowaveselectronics.inventorymanagement.service;
 
-import com.electrowaveselectronics.inventorymanagement.entity.Auth;
+import com.electrowaveselectronics.inventorymanagement.entity.GodownHead;
 import com.electrowaveselectronics.inventorymanagement.repository.AuthRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.GodownHeadRepository;
-import com.electrowaveselectronics.inventorymanagement.entity.GodownHead;
+import com.electrowaveselectronics.inventorymanagement.util.EnumRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -114,14 +113,24 @@ public class GodownHeadService {
         return result;
     }
 
+    public boolean isUsernameTaken(String username) {
+        return godownHeadRepository.findByUsername(username) != null;
+    }
 
-    public void setAuthToken(String token, String username){
-        Auth auth = authRepository.findByUsername(username);
-        if (auth != null) {
-            auth.setToken(token);
-            authRepository.save(auth);
+    public GodownHead registerGodownHead(String username, String password, String godownHeadName) {
+        if (isUsernameTaken(username)) {
+            throw new IllegalArgumentException("Username already taken");
         }
 
+        GodownHead newGodownHead = new GodownHead();
+        newGodownHead.setUsername(username);
+        newGodownHead.setPassword(password);
+        newGodownHead.setGodownHeadName(godownHeadName);
+        newGodownHead.setRole(EnumRole.godownhead);
+        return godownHeadRepository.save(newGodownHead);
+    }
 
+    public EnumRole getRoleByUsername(String username) {
+        return godownHeadRepository.findRoleByUsername(username);
     }
 }

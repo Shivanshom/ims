@@ -3,52 +3,126 @@ package com.electrowaveselectronics.inventorymanagement.service;
 import com.electrowaveselectronics.inventorymanagement.entity.Godown;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
 import com.electrowaveselectronics.inventorymanagement.repository.GodownRepository;
+import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
-
 @org.springframework.stereotype.Service
 public class GodownService {
 
     @Autowired
     private GodownRepository godownRepository;
 
-    public List<Godown> getAllGodown() throws Exception{
+    // Reusable functions
+    private void validateGodown(Godown godown) {
+        if (StringUtils.isEmpty(godown.getAddress())) {
+            throw new IllegalArgumentException("Address must be provided");
+        }
+        if (godown.getVolume() <= 0) {
+            throw new IllegalArgumentException("Volume should have a positive value");
+        }
+    }
+
+    private void validateGodownId(int godownId){
+        if(godownId<=0){
+            throw new IllegalArgumentException("Invalid Godown ID: " + godownId);
+        }
+
+    }
+
+    public long getGodownCount(){
+        return godownRepository.count();
+    }
+
+    public ResponseEntity<?> getAllGodown() throws Exception{
         try {
             List<Godown> godowns = godownRepository.findAll();
-            return godowns;
+            return godowns.isEmpty()
+                    ? new ResponseEntity<>("No Godowns Found", HttpStatus.NOT_FOUND)
+                    : new ResponseEntity<>(godowns, HttpStatus.OK);
+
         }catch (Exception e){
             throw e;
         }
     }
+    // admin
+    public ResponseEntity<?> setGodown(Godown theGodown) throws Exception {
+        validateGodown(theGodown);
 
-    public Godown setGodown(Godown theGodown) throws Exception {
-        try {
-            theGodown.setGodownId(0);
-            return godownRepository.save(theGodown);
-        }catch (Exception e){
-            throw e;
+        int providedGodownId = theGodown.getGodownId();
+        if(providedGodownId>0){
+            Optional<Godown> existingGodownOptional = godownRepository.findById(providedGodownId);
+
+            if (existingGodownOptional.isPresent()) {
+                // Update existing Godown
+                Godown existingGodown = existingGodownOptional.get();
+
+                // Update fields based on the provided Godown
+                existingGodown.setAddress(theGodown.getAddress());
+                existingGodown.setVolume(theGodown.getVolume());
+                existingGodown.setProductList(theGodown.getProductList());
+
+                godownRepository.save(existingGodown);
+                return new ResponseEntity<>("Godown updated", HttpStatus.OK);
+            }
+
         }
 
+        if (godownRepository.existsByAddress(theGodown.getAddress())) {
+            throw new IllegalArgumentException("Godown with similar address already exists");
+        }
+
+        theGodown.setGodownId(0);
+        godownRepository.save(theGodown);
+        return new ResponseEntity<>("Godown created", HttpStatus.CREATED);
     }
 
-    public Godown getGodownByGodownId(int godownId) throws Exception {
+    public ResponseEntity<?> createGodown(Godown theGodown) throws Exception {
+        validateGodown(theGodown);
+
+        if (godownRepository.existsByAddress(theGodown.getAddress())) {
+            throw new IllegalArgumentException("Godown with similar address already exists");
+        }
+
+        theGodown.setGodownId(0);
+        godownRepository.save(theGodown);
+        return new ResponseEntity<>("Godown created", HttpStatus.CREATED);
+    }
+
+
+    public ResponseEntity<?> getGodownByGodownId(int godownId) throws Exception {
         try {
+            validateGodownId(godownId);
+
             Optional<Godown> result = godownRepository.findById(godownId);
-            return result.get();
-        }catch (Exception e){
+            return result.isEmpty()
+                    ? new ResponseEntity<>("Godown with ID " + godownId + " not found", HttpStatus.NOT_FOUND)
+                    : new ResponseEntity<>(result.get(), HttpStatus.OK);
+
+        } catch (Exception e){
             throw e;
         }
 
     }
 
-    public String deleteGodownByGodownId(int godownId)  throws Exception{
+    public ResponseEntity<?> deleteGodownByGodownId(int godownId)  throws Exception{
         try {
-            Godown tempGodown = godownRepository.findById(godownId).get();
+            validateGodownId(godownId);
+
+            Optional<Godown> optionalGodown = godownRepository.findById(godownId);
+            if (optionalGodown.isEmpty()) {
+                throw new IllegalArgumentException("Godown with ID " + godownId + " not found");
+            }
+
             godownRepository.deleteById(godownId);
-            return "Godown Deleted with id: "+ godownId;
+            return new ResponseEntity<>("Godown Deleted with ID: " + godownId, HttpStatus.OK);
+
 
         }catch (Exception e){
             throw e;
@@ -56,20 +130,27 @@ public class GodownService {
 
     }
 
-    public Godown updateGodownByGodownId(Godown theGodown, int godownId) throws Exception {
+    public ResponseEntity<?> updateGodownByGodownId(Godown theGodown, int godownId) throws Exception {
         try {
-            Godown existingGodown = godownRepository.findById(godownId).get();
-            if(!Objects.isNull(theGodown.getCity())){
-                existingGodown.setCity(theGodown.getCity());
+            validateGodownId(godownId);
+
+            Optional<Godown> optionalGodown = godownRepository.findById(godownId);
+            if (optionalGodown.isEmpty()) {
+                throw new NoSuchElementException("Godown with ID " + godownId + " not found");
             }
-            if(!Objects.isNull(theGodown.getState())){
-                existingGodown.setState(theGodown.getState());
+
+            Godown existingGodown = optionalGodown.get();
+
+            if (!Objects.isNull(theGodown.getAddress())) {
+                existingGodown.setAddress(theGodown.getAddress());
             }
-            if(theGodown.getVolume()>0){
+
+            if (theGodown.getVolume() > 0) {
                 existingGodown.setVolume(theGodown.getVolume());
             }
+
             godownRepository.save(existingGodown);
-            return existingGodown;
+            return new ResponseEntity<>("Godown updated", HttpStatus.OK);
 
 
         } catch (Exception e) {
@@ -80,12 +161,21 @@ public class GodownService {
 
     public int getCapacityByGodownId(int godownId)  throws Exception{
         try {
-            Godown tempGodown = godownRepository.findById(godownId).get();
-            List<Product> productList = tempGodown.getProductList();
-            int capacity=0;
-            for(Product product : productList){
-                capacity+=product.getProductVolume()* product.getTotalQuantity();
+            validateGodownId(godownId);
+
+            Optional<Godown> optionalGodown = godownRepository.findById(godownId);
+            if (optionalGodown.isEmpty()) {
+                throw new IllegalArgumentException("Godown with ID " + godownId + " not found");
             }
+
+            Godown tempGodown = optionalGodown.get();
+            List<Product> productList = tempGodown.getProductList();
+            int capacity = 0;
+
+            for (Product product : productList) {
+                capacity += product.getProductVolume() * product.getTotalQuantity();
+            }
+
             return (tempGodown.getVolume() - capacity);
 
         }catch (Exception e){
@@ -95,20 +185,45 @@ public class GodownService {
     }
 
     // Product
-    public Product addProductByGodownId(int godownId, Product theProduct) throws Exception {
+    public ResponseEntity<?> addProductByGodownId(Product theProduct) throws Exception {
         try {
-            Godown tempGodown = godownRepository.findById(godownId).get();
+            int godownId = theProduct.getGodownId();
+            validateGodownId(godownId);
+
+            Optional<Godown> optionalGodown = godownRepository.findById(godownId);
+            if (optionalGodown.isEmpty()) {
+                throw new NoSuchElementException("Godown with ID " + godownId + " not found");
+            }
+
+            if (theProduct.getProductName() == null) {
+                throw new IllegalArgumentException("Product Name must be provided");
+            }
+
+            if (theProduct.getProductVolume()<=0){
+                throw new IllegalArgumentException("Product Volume must be a valid value ");
+            }
+
+            if (theProduct.getPrice()<=0){
+                throw new IllegalArgumentException("Product price must be in valid range");
+            }
+
+            if (theProduct.getTotalQuantity()<=0){
+                throw new IllegalArgumentException("Product totalQuantity must be a positive value");
+            }
+
+            Godown tempGodown = optionalGodown.get();
             Product existingProduct = tempGodown.findProductByProductName(theProduct.getProductName());
-            if(existingProduct==null){
+
+            if (existingProduct == null) {
                 tempGodown.addProducts(theProduct);
-                existingProduct=theProduct;
-            }else{
-                int newTotalQuantity = existingProduct.getTotalQuantity()+ theProduct.getTotalQuantity();
+                existingProduct = theProduct;
+            } else {
+                int newTotalQuantity = existingProduct.getTotalQuantity() + theProduct.getTotalQuantity();
                 existingProduct.setTotalQuantity(newTotalQuantity);
             }
 
             godownRepository.save(tempGodown);
-            return existingProduct;
+            return new ResponseEntity<>("Product added : " + existingProduct.getProductName(), HttpStatus.OK);
 
         }catch (Exception e){
             throw e;
@@ -116,42 +231,69 @@ public class GodownService {
 
     }
 
-    public Product setProductByGodownId(int godownId, Product theProduct) throws Exception{
+    public ResponseEntity<?> updateProductByGodownId(Product theProduct) throws Exception {
         try {
+            int godownId = theProduct.getGodownId();
 
-            Godown tempGodown = godownRepository.findById(godownId).get();
-            Product existingProduct = tempGodown.findProductByProductName(theProduct.getProductName());
-            if(existingProduct==null){
-                throw new EntityNotFoundException("Product not found in godown id: "+godownId);
+            validateGodownId(godownId);
+
+            Optional<Godown> optionalGodown = godownRepository.findById(godownId);
+            if (optionalGodown.isEmpty()) {
+                throw new NoSuchElementException("Godown with ID " + godownId + " not found");
             }
-            if(theProduct.getProductVolume()>0){
+
+            Godown tempGodown = optionalGodown.get();
+            Product existingProduct = tempGodown.findProductByProductName(theProduct.getProductName());
+
+            if (existingProduct == null) {
+                throw new EntityNotFoundException("Product not found in Godown with ID: " + godownId);
+            }
+
+            if (theProduct.getProductVolume() > 0) {
                 existingProduct.setProductVolume(theProduct.getProductVolume());
             }
-            if(theProduct.getPrice()>0){
+
+            if (theProduct.getPrice() > 0) {
                 existingProduct.setPrice(theProduct.getPrice());
             }
-            if(theProduct.getTotalQuantity()>0){
+
+            if (theProduct.getTotalQuantity() > 0) {
                 existingProduct.setTotalQuantity(theProduct.getTotalQuantity());
             }
+
             godownRepository.save(tempGodown);
-            return existingProduct;
-        }catch (Exception e){
-            throw e;
+            return new ResponseEntity<>("Product updated: " + existingProduct.getProductName(), HttpStatus.OK);
 
+        } catch (Exception e) {
+            throw e;
         }
     }
 
+    public ResponseEntity<?> listProductByGodownId(int godownId) throws Exception {
+        try {
+            validateGodownId(godownId);
 
-    public List<Product> listProductByGodownId(int godownId) throws Exception {
-        try{
-            Godown tempGodown = godownRepository.findById(godownId).get();
+            Optional<Godown> optionalGodown = godownRepository.findById(godownId);
+            if (optionalGodown.isEmpty()) {
+                throw new NoSuchElementException("Godown with ID " + godownId + " not found");
+            }
+
+            Godown tempGodown = optionalGodown.get();
             List<Product> productList = tempGodown.getProductList();
-            return productList;
 
-        }
-        catch (Exception e){
+            return productList.isEmpty()
+                    ? new  ResponseEntity<>("Product list is empty for Godown with ID: " + godownId, HttpStatus.OK)
+                    : new  ResponseEntity<>(productList, HttpStatus.OK);
+
+        } catch (Exception e) {
             throw e;
         }
-
     }
+
+    public List<Godown> findGodownsByAddress(String partialAddress) {
+        // Additional validation or checks can be added here if needed
+        return godownRepository.findByAddressLike('%' + partialAddress + '%');
+    }
+
+
 }

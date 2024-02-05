@@ -27,9 +27,6 @@ public class GodownHead {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "token")
-    private String token;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private EnumRole role;

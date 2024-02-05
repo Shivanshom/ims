@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @RestController
-// Adjusted base path
+// Adjusted base pathz
 @RequestMapping("/api")
 public class CustomerController {
 
