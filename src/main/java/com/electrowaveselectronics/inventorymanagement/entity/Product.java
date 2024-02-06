@@ -1,0 +1,40 @@
+package com.electrowaveselectronics.inventorymanagement.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "product")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Product {
+
+    @Column(name = "godown_id")
+    private int godownId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
+    private int productId; // prod id
+
+    @Column(name = "product_name")
+    private String productName;
+
+    @Column(name = "product_volume")
+    private int productVolume;
+
+    @Column(name = "price")
+    private float price;
+
+    @Column(name = "total_quantity")
+    private int totalQuantity;
+    public Product(String productName, int productVolume, float price, int totalQuantity, int godownId) {
+        this.productName = productName;
+        this.productVolume = productVolume;
+        this.price = price;
+        this.totalQuantity = totalQuantity;
+        this.godownId = godownId;
+    }
+
+}
