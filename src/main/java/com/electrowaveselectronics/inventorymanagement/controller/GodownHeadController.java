@@ -1,7 +1,9 @@
 package com.electrowaveselectronics.inventorymanagement.controller;
 
+import com.electrowaveselectronics.inventorymanagement.entity.Godown;
 import com.electrowaveselectronics.inventorymanagement.entity.GodownHead;
 import com.electrowaveselectronics.inventorymanagement.repository.AuthRepository;
+import com.electrowaveselectronics.inventorymanagement.service.AuthService;
 import com.electrowaveselectronics.inventorymanagement.service.GodownHeadService;
 import com.electrowaveselectronics.inventorymanagement.service.GodownService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api")
@@ -21,6 +24,9 @@ public class GodownHeadController {
 
     @Autowired
     GodownService godownService;
+
+    @Autowired
+    AuthService authService;
     private GodownHeadService godownHeadService;
 
     @Autowired
@@ -34,12 +40,24 @@ public class GodownHeadController {
     }
 
     @GetMapping("/getGodownHead/{GodownHeadId}")
-    public GodownHead getGodownHead(@PathVariable int GodownHeadId,@CookieValue(value = "token") String token) throws Exception {
-        GodownHead theGodownHead = godownHeadService.getGodownHead(GodownHeadId);
-        if (theGodownHead == null) {
-            throw new RuntimeException("GodownHead id not found= " + GodownHeadId);
+    public ResponseEntity<?> getGodownHead(@PathVariable int GodownHeadId,@RequestHeader("Authorization") String authorizationHeader) throws Exception {
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+            if (!Objects.isNull(username)
+//                    && "admin".equals(godownHeadService.getRoleByUsername(username).name())
+            ) {
+                GodownHead theGodownHead = godownHeadService.getGodownHead(GodownHeadId);
+                if (theGodownHead == null) {
+                    throw new RuntimeException("GodownHead id not found= " + GodownHeadId);
+                }
+                return new ResponseEntity<>(theGodownHead, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
-        return theGodownHead;
     }
 
     @PostMapping("/setGodownHead")
@@ -49,12 +67,28 @@ public class GodownHeadController {
     }
 
     @PutMapping("/updateGodownHead")
-    public ResponseEntity<?> updateGodownHead(@RequestBody GodownHead theGodownHead,@CookieValue(value = "token") String token) throws Exception {
+    public ResponseEntity<?> updateGodownHead(@RequestBody GodownHead theGodownHead,@RequestHeader("Authorization") String authorizationHeader) throws Exception {
         try {
-            return new ResponseEntity<>(godownHeadService.updateGodownHead(theGodownHead), HttpStatus.ACCEPTED);
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+            if (!Objects.isNull(username)
+//                    && "admin".equals(godownHeadService.getRoleByUsername(username).name())
+            ) {
+                return new ResponseEntity<>(godownHeadService.updateGodownHead(theGodownHead), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+
         } catch (Exception e) {
             return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    private String extractTokenFromAuthorizationHeader(String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        }
+        return null;
     }
 //
 //    private Cookie generateToken(String username) {
