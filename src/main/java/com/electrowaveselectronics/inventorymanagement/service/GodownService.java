@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+
 @org.springframework.stereotype.Service
 public class GodownService {
 
@@ -159,7 +157,7 @@ public class GodownService {
     }
 
 
-    public int getCapacityByGodownId(int godownId)  throws Exception{
+    public ResponseEntity<?> getCapacityByGodownId(int godownId)  throws Exception{
         try {
             validateGodownId(godownId);
 
@@ -176,7 +174,14 @@ public class GodownService {
                 capacity += product.getProductVolume() * product.getTotalQuantity();
             }
 
-            return (tempGodown.getVolume() - capacity);
+            int availableCapacity = tempGodown.getVolume() - capacity;
+
+            // Create a HashMap to store the results
+            HashMap<String, Integer> capacityMap = new HashMap<>();
+            capacityMap.put("totalCapacity", tempGodown.getVolume());
+            capacityMap.put("availableCapacity", availableCapacity);
+
+            return ResponseEntity.ok(capacityMap);
 
         }catch (Exception e){
             throw e;
@@ -209,6 +214,14 @@ public class GodownService {
 
             if (theProduct.getTotalQuantity()<=0){
                 throw new IllegalArgumentException("Product totalQuantity must be a positive value");
+            }
+
+            if (theProduct.getProductType()<0) {
+                throw new IllegalArgumentException("Product Type must be a positive value");
+            }
+
+            if (theProduct.getProductCategory() == null) {
+                throw new IllegalArgumentException("Product Category must be provided");
             }
 
             Godown tempGodown = optionalGodown.get();

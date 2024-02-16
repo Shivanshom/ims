@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
 public class ProductController {
 
     @Autowired
@@ -45,5 +46,10 @@ public class ProductController {
     public Product addProduct(@RequestBody Product thrproduct){
         thrproduct.setProductId(0);
         return productService.save(thrproduct);
+    }
+
+    @DeleteMapping("/deleteProduct/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable int productId) throws Exception {
+        return productService.deleteProduct(productId);
     }
 }
