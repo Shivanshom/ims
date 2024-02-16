@@ -109,25 +109,6 @@ public class GodownService {
 
     }
 
-    public ResponseEntity<?> deleteGodownByGodownId(int godownId)  throws Exception{
-        try {
-            validateGodownId(godownId);
-
-            Optional<Godown> optionalGodown = godownRepository.findById(godownId);
-            if (optionalGodown.isEmpty()) {
-                throw new IllegalArgumentException("Godown with ID " + godownId + " not found");
-            }
-
-            godownRepository.deleteById(godownId);
-            return new ResponseEntity<>("Godown Deleted with ID: " + godownId, HttpStatus.OK);
-
-
-        }catch (Exception e){
-            throw e;
-        }
-
-    }
-
     public ResponseEntity<?> updateGodownByGodownId(Godown theGodown, int godownId) throws Exception {
         try {
             validateGodownId(godownId);

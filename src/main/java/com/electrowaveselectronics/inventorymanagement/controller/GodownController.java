@@ -106,32 +106,6 @@ public class GodownController {
         }
     }
 
-    @DeleteMapping("api/deleteGodown/{godownId}")
-    @ResponseBody
-    public ResponseEntity<?> deleteGodownByGodownId(@PathVariable String godownId, @RequestHeader("Authorization") String authorizationHeader) {
-
-        try {
-            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
-            String username = authService.findUsernameByToken(token);
-            if (!Objects.isNull(username)
-//                    && "admin".equals(godownHeadService.getRoleByUsername(username).name())
-            ) {
-                int parsedGodownId = Integer.parseInt(godownId);
-                return godownService.deleteGodownByGodownId(parsedGodownId);
-            } else {
-                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
-            }
-        }
-        catch (NumberFormatException e) {
-            String errorMessage = "Invalid Godown ID format. Please provide a valid integer.";
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
-
-        }
-        catch (Exception e) {
-            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @GetMapping("/api/getCapacity/{godownId}")
     @ResponseBody
     public ResponseEntity<?> getCapacityByGodownId(@PathVariable String godownId, @RequestHeader("Authorization") String authorizationHeader){

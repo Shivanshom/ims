@@ -45,22 +45,4 @@ public class ProductService {
         return productRepository.findDistinctProductsAndTotalQuantity();
     }
 
-    public ResponseEntity<?> deleteProduct(int productId) throws Exception {
-        try {
-            if(productId<=0){
-                return new ResponseEntity<>("ProductId must be a valid positive integer", HttpStatus.BAD_REQUEST);
-            }
-            Optional<Product> optional = productRepository.findById(productId);
-            if (optional.isEmpty()){
-                return new ResponseEntity<>("Product with given productId not Found", HttpStatus.NOT_FOUND);
-            }
-            Product theProduct = optional.get();
-            productRepository.delete(theProduct);
-            return new ResponseEntity<>("Product deleted", HttpStatus.OK);
-
-        } catch (Exception e){
-            throw e;
-        }
-
-    }
 }

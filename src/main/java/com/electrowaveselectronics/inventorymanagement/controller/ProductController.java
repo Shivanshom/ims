@@ -48,8 +48,4 @@ public class ProductController {
         return productService.save(thrproduct);
     }
 
-    @DeleteMapping("/deleteProduct/{productId}")
-    public ResponseEntity<?> deleteProduct(@PathVariable int productId) throws Exception {
-        return productService.deleteProduct(productId);
-    }
 }
