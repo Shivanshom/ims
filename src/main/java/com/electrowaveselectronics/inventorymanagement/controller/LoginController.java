@@ -49,12 +49,16 @@ public class LoginController {
     }
 
     @PostMapping("/api/register")
-    public ResponseEntity<?> register(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> register(@RequestBody Map<String,String> request) {
         try {
             String username = request.get("username");
             String password = request.get("password");
             String godownHeadName = request.get("godownHeadName");
-            return loginService.register(username, password, godownHeadName);
+            String email=request.get("email");
+            String godownheadNo=request.get("godownHeadNo");
+            String godownId = request.get("godownId");
+            int parsedGodownId = Integer.parseInt(godownId);
+            return loginService.register(username, password, godownHeadName,email,godownheadNo, parsedGodownId);
         }
         catch (Exception e){
             return new ResponseEntity<>("Somehing went wrong ... "+ e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
