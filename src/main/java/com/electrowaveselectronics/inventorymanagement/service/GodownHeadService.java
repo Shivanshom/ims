@@ -84,6 +84,10 @@ public class GodownHeadService {
                 existingGodownHead.setRole(theGodownHead.getRole());
             }
 
+            if (theGodownHead.getAddress() != null) {
+                existingGodownHead.setAddress(theGodownHead.getAddress());
+            }
+
             return setGodownHead(existingGodownHead);
         } catch (Exception e) {
             throw new RuntimeException(e);

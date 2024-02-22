@@ -3,9 +3,13 @@ package com.electrowaveselectronics.inventorymanagement.service;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
 import com.electrowaveselectronics.inventorymanagement.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ProductService {
 
@@ -40,4 +44,5 @@ public class ProductService {
     public List<Object[]> getDistinctProductsAndTotalQuantity() {
         return productRepository.findDistinctProductsAndTotalQuantity();
     }
+
 }

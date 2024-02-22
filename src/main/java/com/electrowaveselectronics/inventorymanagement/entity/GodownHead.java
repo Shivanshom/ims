@@ -34,6 +34,9 @@ public class GodownHead {
     @Column(name = "godown_id")
     private int godownId;
 
+    @Column(name = "address")
+    private String address;
+
     public GodownHead(String godownHeadName,int godownHeadId, String password, EnumRole role, int godownId) {
         this.godownHeadName = godownHeadName;
         this.godownHeadId=godownHeadId;

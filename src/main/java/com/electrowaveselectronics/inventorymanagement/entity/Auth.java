@@ -22,10 +22,10 @@ public class Auth {
     @Column(name = "username")
     private String username;
 
-    @Column(name = "cookie", unique = true, length = 500)
-    private Cookie cookie;
+    @Column(name = "cookie", unique = true, length = 250)
+    private String cookie;
 
-    public Auth(String username, Cookie cookie) {
+    public Auth(String username, String cookie) {
         this.username = username;
         this.cookie = cookie;
     }
