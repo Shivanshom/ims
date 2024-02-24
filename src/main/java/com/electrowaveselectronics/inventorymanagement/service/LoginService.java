@@ -143,9 +143,8 @@ public class LoginService {
         }
     }
 
-
-    public ResponseEntity<?> register(String username, String password, String GodownHeadName) {
-        if (username == null || password == null || GodownHeadName == null) {
+    public ResponseEntity<?> register(String username, String password, String GodownHeadName, String email, String godownheadNo, int GodownId) {
+        if (username == null || password == null || GodownHeadName == null || email==null || godownheadNo==null || GodownId<=0) {
             return ResponseEntity.badRequest().body("Username, password, and GodownHeadName cannot be null or empty");
         }
 
@@ -160,12 +159,38 @@ public class LoginService {
         }
 
         String hashedPassword = passwordEncoder.encode(password);
-        GodownHead newGodownHead = godownHeadService.registerGodownHead(username, hashedPassword, GodownHeadName);
+        GodownHead newGodownHead = godownHeadService.registerGodownHead(username, hashedPassword, GodownHeadName,email,godownheadNo, GodownId);
 
         Cookie cookie = generateUserCookie(username);
 
         authService.createAuthInfo(newGodownHead.getUsername(), cookie.getValue());
 
         return ResponseEntity.ok("Registration successful");
+    }
+
+
+    public ResponseEntity<?> registerAdmin(String username, String password, String GodownHeadName, String email, String godownheadNo) {
+        if (username == null || password == null || GodownHeadName == null || email==null || godownheadNo==null) {
+            return ResponseEntity.badRequest().body("Username, password, and GodownHeadName cannot be null or empty");
+        }
+
+        if (!isValidUsername(username)) {
+            return ResponseEntity.badRequest().body("Invalid username format. " +
+                    "Should not start with any special char or numeric value, " +
+                    "Should not contain whitespace");
+        }
+
+        if (godownHeadRepository.findByUsername(username)!=null) {
+            return ResponseEntity.badRequest().body("Username already taken");
+        }
+
+        String hashedPassword = passwordEncoder.encode(password);
+        GodownHead newGodownHead = godownHeadService.registerAdmin(username, hashedPassword, GodownHeadName, email,godownheadNo);
+
+        Cookie cookie = generateUserCookie(username);
+
+        authService.createAuthInfo(newGodownHead.getUsername(), cookie.getValue());
+
+        return ResponseEntity.ok("Admin registeration successful");
     }
 }
