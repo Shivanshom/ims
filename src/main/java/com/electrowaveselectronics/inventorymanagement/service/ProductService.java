@@ -45,4 +45,20 @@ public class ProductService {
         return productRepository.findDistinctProductsAndTotalQuantity();
     }
 
+    public ResponseEntity<?> listAllProducts() throws Exception{
+       try {
+           List<Product> productList = productRepository.findAll();
+           if(productList.isEmpty()){
+               return new ResponseEntity<>("Product List is Empty", HttpStatus.NOT_FOUND);
+           }
+           return new ResponseEntity<>(productList, HttpStatus.OK);
+       }
+       catch (Exception e){
+           throw e;
+       }
+
+
+
+    }
+
 }
