@@ -76,6 +76,47 @@ public class ProductController {
 
     }
 
+    @GetMapping("/productsCount/{godownId}")
+    public ResponseEntity<?> productsCountByGodownId(@PathVariable String godownId, @RequestHeader("Authorization") String authorizationHeader){
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
+                    ) {
+
+                int parsedGodownId = Integer.parseInt(godownId);
+                return productService.productsCountByGodownId(parsedGodownId);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @GetMapping("/listLowStockProducts")
+    public ResponseEntity<?> listLowStockProductsByGodownId(@RequestParam int godownId, @RequestParam double percentage, @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
+            ) {
+
+                return productService.listLowStockProductsByGodownId(godownId, percentage);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     private String extractTokenFromAuthorizationHeader(String authorizationHeader) {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             return authorizationHeader.substring(7);
