@@ -88,20 +88,83 @@ public class GodownHeadService {
                 existingGodownHead.setAddress(theGodownHead.getAddress());
             }
 
-            return setGodownHead(existingGodownHead);
+            return godownHeadRepository.save(existingGodownHead);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public GodownHead setGodownHead(GodownHead theGodownHead) {
+    public String setGodownHead(GodownHead theGodownHead) {
         try {
-            return godownHeadRepository.save(theGodownHead);
+            Integer godownHeadId = theGodownHead.getGodownHeadId();
+            if (godownHeadId == null) {
+                throw new Exception("Customer id not provided in input, please try again");
+            }
+
+            Optional<GodownHead> optionalGodownHead = godownHeadRepository.findById(theGodownHead.getGodownHeadId());
+
+            if (optionalGodownHead.isPresent()) {
+                // Updating an existing customer
+                GodownHead existingGodownHead = optionalGodownHead.get();
+
+                if (theGodownHead.getGodownHeadName() != null) {
+                    GodownHead duplicateGodownHead = godownHeadRepository.findByName(theGodownHead.getGodownHeadName());
+                    if (duplicateGodownHead != null && !(duplicateGodownHead.getGodownHeadId() == (theGodownHead.getGodownHeadId()))) {
+                        throw new Exception("A customer with the same name already exists");
+                    }
+                    existingGodownHead.setGodownHeadName(theGodownHead.getGodownHeadName());
+                }
+                if (theGodownHead.getGodownheadNo() != null) {
+                    GodownHead duplicateGodownHead = godownHeadRepository.findByContactNumber(theGodownHead.getGodownheadNo());
+                    if (duplicateGodownHead != null && !(duplicateGodownHead.getGodownHeadId() == (theGodownHead.getGodownHeadId()))) {
+                        throw new Exception("A customer with the same contact number already exists");
+                    }
+
+                    if (!theGodownHead.getGodownheadNo().matches("\\d{10}")) {
+                        throw new Exception("Invalid contact number. It should be a 10-digit numeric value.");
+                    }
+                    existingGodownHead.setGodownheadNo(theGodownHead.getGodownheadNo());
+                }
+//                if (theGodownHead.getCustomerAddress() != null) {
+//                    Customer duplicateCustomer = customerRepository.findByAddress(theCustomer.getCustomerAddress());
+//                    if (duplicateCustomer != null && !(duplicateCustomer.getCustomerId() == (theCustomer.getCustomerId()))) {
+//                        throw new Exception("A customer with the same address already exists");
+//                    }
+//                    existingCustomer.setCustomerAddress(theCustomer.getCustomerAddress());
+//                }
+                GodownHead updatedGodownHead = godownHeadRepository.save(existingGodownHead);
+                return "GodownHead updated with id: " + updatedGodownHead.getGodownHeadId();
+            } else {
+                // Adding a new GodownHead
+                if (theGodownHead.getGodownHeadName() != null) {
+                    GodownHead duplicateGodownHead = godownHeadRepository.findByName(theGodownHead.getGodownHeadName());
+                    if (duplicateGodownHead != null) {
+                        throw new Exception("A GodownHead with the same name already exists");
+                    }
+                }
+                if (theGodownHead.getGodownheadNo() != null) {
+                    GodownHead duplicateGodownHead = godownHeadRepository.findByContactNumber(theGodownHead.getGodownheadNo());
+                    if (duplicateGodownHead != null) {
+                        throw new Exception("A GodownHead with the same contact number already exists");
+                    }
+
+                    if (!theGodownHead.getGodownheadNo().matches("\\d{10}")) {
+                        throw new Exception("Invalid contact number. It should be a 10-digit numeric value.");
+                    }
+                }
+//                if (theCustomer.getCustomerAddress() != null) {
+//                    Customer duplicateCustomer = customerRepository.findByAddress(theCustomer.getCustomerAddress());
+//                    if (duplicateCustomer != null) {
+//                        throw new Exception("A customer with the same address already exists");
+//                    }
+//                }
+                GodownHead newGodownHead = godownHeadRepository.save(theGodownHead);
+                return "New GodownHead added with id: " + newGodownHead.getGodownHeadId();
+            }
         } catch (Exception e) {
-            throw e;
+            throw new RuntimeException(e);
         }
     }
-
     public HashMap<String, String> loginwithPassword(String username, String password) {
         HashMap<String, String> result = new HashMap<>();
         try {
@@ -121,7 +184,7 @@ public class GodownHeadService {
         return godownHeadRepository.findByUsername(username) != null;
     }
 
-    public GodownHead registerGodownHead(String username, String password, String godownHeadName) {
+    public GodownHead registerGodownHead(String username, String password, String godownHeadName, String email, String godownheadNo, int GodownId) {
         if (isUsernameTaken(username)) {
             throw new IllegalArgumentException("Username already taken");
         }
@@ -130,11 +193,37 @@ public class GodownHeadService {
         newGodownHead.setUsername(username);
         newGodownHead.setPassword(password);
         newGodownHead.setGodownHeadName(godownHeadName);
+        newGodownHead.setGodownheadNo(godownheadNo);
         newGodownHead.setRole(EnumRole.godownhead);
+        newGodownHead.setEmail(email);
+        newGodownHead.setGodownId(GodownId);
+        return godownHeadRepository.save(newGodownHead);
+    }
+
+    public GodownHead registerAdmin( String username, String password, String godownHeadName, String email, String godownheadNo) {
+        if (isUsernameTaken(username)) {
+            throw new IllegalArgumentException("Username already taken");
+        }
+
+        GodownHead newGodownHead = new GodownHead();
+        newGodownHead.setUsername(username);
+        newGodownHead.setPassword(password);
+        newGodownHead.setGodownHeadName(godownHeadName);
+        newGodownHead.setGodownheadNo(godownheadNo);
+        newGodownHead.setRole(EnumRole.admin);
+        newGodownHead.setEmail(email);
+//        newGodownHead.setGodownId(godownId);
         return godownHeadRepository.save(newGodownHead);
     }
 
     public EnumRole getRoleByUsername(String username) {
         return godownHeadRepository.findRoleByUsername(username);
+    }
+
+    //    public Email getEmailByUsername(String email) {
+//        return godownHeadRepository.findEmailByUsername(email);
+//    }
+    public GodownHead getByContactNumber(String godownheadNo){
+        return godownHeadRepository.findByContactNumber(godownheadNo);
     }
 }

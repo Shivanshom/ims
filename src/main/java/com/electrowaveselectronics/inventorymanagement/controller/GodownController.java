@@ -33,7 +33,7 @@ public class GodownController {
             String token = extractTokenFromAuthorizationHeader(authorizationHeader);
             String username = authService.findUsernameByToken(token);
             if (!Objects.isNull(username)
-//                    && "admin".equals(godownHeadService.getRoleByUsername(username).name())
+                    && "admin".equals(godownHeadService.getRoleByUsername(username).name())
             ) {
                 return godownService.getAllGodown();
             } else {
@@ -75,7 +75,7 @@ public class GodownController {
             String token = extractTokenFromAuthorizationHeader(authorizationHeader);
             String username = authService.findUsernameByToken(token);
             if (!Objects.isNull(username)
-//                    && "admin".equals(godownHeadService.getRoleByUsername(username).name())
+                    && "admin".equals(godownHeadService.getRoleByUsername(username).name())
             ) {
                 ResponseEntity<?> responseEntity = godownService.setGodown(theGodown);
                 return new ResponseEntity<>("Operation successful: " + responseEntity.getBody(), responseEntity.getStatusCode());
@@ -94,7 +94,7 @@ public class GodownController {
             String token = extractTokenFromAuthorizationHeader(authorizationHeader);
             String username = authService.findUsernameByToken(token);
             if (!Objects.isNull(username)
-//                    && "admin".equals(godownHeadService.getRoleByUsername(username).name())
+                    && "admin".equals(godownHeadService.getRoleByUsername(username).name())
             ) {
                 ResponseEntity<?> responseEntity = godownService.createGodown(theGodown);
                 return new ResponseEntity<>("Operation successful: " + responseEntity.getBody(), responseEntity.getStatusCode());
@@ -131,6 +131,18 @@ public class GodownController {
         }
         catch (Exception e) {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/api/getGodwnCount")
+    @ResponseBody
+    public long getGodownCount() {
+        try {
+            return godownService.getGodownCount();
+        } catch (Exception e) {
+            // Log the exception for debugging purposes
+            e.printStackTrace();
+            return -1; // or throw a custom exception
         }
     }
 
@@ -227,7 +239,7 @@ public class GodownController {
             String token = extractTokenFromAuthorizationHeader(authorizationHeader);
             String username = authService.findUsernameByToken(token);
             if (!Objects.isNull(username)
-//                    && "admin".equals(godownHeadService.getRoleByUsername(username).name())
+                    && "admin".equals(godownHeadService.getRoleByUsername(username).name())
             ) {
                 List<Godown> godowns = godownService.findGodownsByAddress(partialAddress);
 

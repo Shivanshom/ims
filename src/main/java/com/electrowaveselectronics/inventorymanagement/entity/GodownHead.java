@@ -37,12 +37,20 @@ public class GodownHead {
     @Column(name = "address")
     private String address;
 
-    public GodownHead(String godownHeadName,int godownHeadId, String password, EnumRole role, int godownId) {
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "godown_head_number")
+    private String godownheadNo;
+
+    public GodownHead(String godownHeadName,int godownHeadId, String password, EnumRole role, int godownId, String email, String godownheadNo) {
         this.godownHeadName = godownHeadName;
         this.godownHeadId=godownHeadId;
         this.password = password;
         this.role = role;
         this.godownId=godownId;
+        this.email=email;
+        this.godownheadNo=godownheadNo;
     }
 }
 
