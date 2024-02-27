@@ -4,12 +4,17 @@ import com.electrowaveselectronics.inventorymanagement.dto.DeliveryOrderDTO;
 import com.electrowaveselectronics.inventorymanagement.dto.ProductDTO;
 import com.electrowaveselectronics.inventorymanagement.entity.Customer;
 import com.electrowaveselectronics.inventorymanagement.entity.DeliveryOrder;
+import com.electrowaveselectronics.inventorymanagement.entity.Godown;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
 import com.electrowaveselectronics.inventorymanagement.repository.CustomerRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.DeliveryRepository;
+import com.electrowaveselectronics.inventorymanagement.repository.GodownRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
@@ -27,6 +32,10 @@ public class DeliveryOrderService {
     ProductRepository productRepository;
     @Autowired
     GodownService godownService;
+
+    @Autowired
+    GodownRepository godownRepository;
+
 
     public List<DeliveryOrder> getAllDeliveryOrders() throws Exception {
         try {
@@ -131,11 +140,47 @@ public class DeliveryOrderService {
 
 //////////////////////////////////////////////
 
+    public ResponseEntity<?> DeliveryOrderCountByGodownId(int godownId) throws Exception{
+        try {
+            validateGodownId(godownId);
+            long saleOrdersCount = deliveryRepository.getTotalSalesCountByGodownID(godownId);
+            long totalQuantitiesSold = deliveryRepository.getTotalProductsOrderedByGodownId(godownId);
 
+            HashMap<String, Long> result = new HashMap<>();
+            result.put("saleOrdersCount", saleOrdersCount);
+            result.put("totalQuantitiesSold", totalQuantitiesSold);
+            return new ResponseEntity<>(result, HttpStatus.OK);
 
+        }
+        catch (Exception e){
+            throw e;
+        }
+    }
 
+    public ResponseEntity<?> getTotalSalesOrdersByGodownIDAndDate(int godownID, Date date) throws Exception {
+        try {
+            validateGodownId(godownID);
+            HashMap<String, Long> result = new HashMap<>();
+            long salesOnDate = deliveryRepository.getTotalSalesOrdersByGodownIDAndDate(godownID, date);
+            long totalQuantitiesSoldOnDate = deliveryRepository.getTotalProductsOrderedByGodownIdAndDate(godownID, date);
+            result.put("salesByDate", salesOnDate);
+            result.put("totalQuantitiesSoldByDate", totalQuantitiesSoldOnDate);
+            return new ResponseEntity<>( result, HttpStatus.OK);
+        }
+        catch (Exception e){
+            throw e;
+        }
+    }
 
+    private void validateGodownId(int godownId){
+        if(godownId<=0){
+            throw new IllegalArgumentException("Invalid Godown ID: " + godownId);
+        }
 
+        if(godownRepository.findById(godownId).isEmpty()){
+            throw new IllegalArgumentException("Godown with godownId: "+ godownId + " does not exists.");
+        }
+    }
 
 
 }
