@@ -172,6 +172,22 @@ public class DeliveryOrderService {
         }
     }
 
+    public ResponseEntity<?> getTopSellingProducts(int godownId) throws Exception{
+        try {
+            validateGodownId(godownId);
+            List<Object[]> objectList = deliveryRepository.findProductNameAndQuantitySumByGodownIdOrderedBySumDesc(godownId);
+            if (objectList.isEmpty()){
+                return new ResponseEntity<>("No orders found", HttpStatus.NOT_FOUND);
+            }
+            return  new ResponseEntity<>(objectList, HttpStatus.OK);
+
+        }
+        catch (Exception e){
+            throw e;
+        }
+
+    }
+
     private void validateGodownId(int godownId){
         if(godownId<=0){
             throw new IllegalArgumentException("Invalid Godown ID: " + godownId);

@@ -214,4 +214,26 @@ public class DeliveryOrderController {
         }
 
     }
+
+    @GetMapping("/getTopSellingProducts/{godownId}")
+    public ResponseEntity<?> getTopSellingProductsByGodownId(@PathVariable String godownId, @RequestHeader("Authorization") String authorizationHeader){
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
+            ) {
+                int parsedGodownId = Integer.parseInt(godownId);
+                return deliveryOrderService.getTopSellingProducts(parsedGodownId);
+            }
+            else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("FAILED TO FETCH ORDER DETAILS", HttpStatus.BAD_REQUEST);
+        }
+
+    }
 }

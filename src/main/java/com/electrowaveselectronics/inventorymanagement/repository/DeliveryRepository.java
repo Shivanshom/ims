@@ -1,5 +1,6 @@
 package com.electrowaveselectronics.inventorymanagement.repository;
 
+import com.electrowaveselectronics.inventorymanagement.dto.ProductDTO;
 import com.electrowaveselectronics.inventorymanagement.entity.DeliveryOrder;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,4 +31,14 @@ public  interface DeliveryRepository extends JpaRepository<DeliveryOrder,Integer
 
     @Query("SELECT SUM(do.orderQuantity) FROM DeliveryOrder do WHERE do.godownId = :godownId AND DATE(do.orderDate) = :date")
     long getTotalProductsOrderedByGodownIdAndDate(@Param("godownId") int godownId, @Param("date") Date date);
+
+    @Query("SELECT d.products FROM DeliveryOrder d WHERE d.godownId = :godownId")
+    List<ProductDTO> findProductsByGodownId(@Param("godownId") int godownId);
+
+    @Query("SELECT p.productName, SUM(p.orderQuantity) " +
+            "FROM DeliveryOrder d JOIN d.products p " +
+            "WHERE d.godownId = :godownId " +
+            "GROUP BY p.productName " +
+            "ORDER BY SUM(p.orderQuantity) DESC")
+    List<Object[]> findProductNameAndQuantitySumByGodownIdOrderedBySumDesc(@Param("godownId") int godownId);
 }
