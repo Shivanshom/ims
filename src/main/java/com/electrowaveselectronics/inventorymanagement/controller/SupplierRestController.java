@@ -35,6 +35,7 @@ public class SupplierRestController {
         try {
             String token = extractTokenFromAuthorizationHeader(authorizationHeader);
             String username = authService.findUsernameByToken(token);
+
             if (!Objects.isNull(username) &&
                     ("admin".equals(godownHeadService.getRoleByUsername(username).name())
                             || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
