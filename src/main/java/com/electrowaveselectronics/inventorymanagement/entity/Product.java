@@ -29,12 +29,29 @@ public class Product {
 
     @Column(name = "total_quantity")
     private int totalQuantity;
+
+    @Column(name = "product_type")
+    private float productType;
+
+    @Column(name = "product_category")
+    private String productCategory;
+
     public Product(String productName, int productVolume, float price, int totalQuantity, int godownId) {
         this.productName = productName;
         this.productVolume = productVolume;
         this.price = price;
         this.totalQuantity = totalQuantity;
         this.godownId = godownId;
+    }
+
+    public Product(int godownId, String productName, int productVolume, float price, int totalQuantity, float productType, String productCategory) {
+        this.godownId = godownId;
+        this.productName = productName;
+        this.productVolume = productVolume;
+        this.price = price;
+        this.totalQuantity = totalQuantity;
+        this.productType = productType;
+        this.productCategory = productCategory;
     }
 
 }

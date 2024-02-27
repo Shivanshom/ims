@@ -11,9 +11,8 @@ public class AuthService {
     @Autowired
     private AuthRepository authRepository;
 
-    public void createAuthInfo(String username, Cookie cookie) {
+    public void createAuthInfo(String username, String  cookie) {
         Auth existingAuth = authRepository.findByUsername(username);
-
         if (existingAuth != null) {
             // Update the existing authentication info if needed
             existingAuth.setCookie(cookie);
@@ -26,4 +25,10 @@ public class AuthService {
             authRepository.save(auth);
         }
     }
+
+    public String findUsernameByToken(String token) throws Exception{
+        return authRepository.findByToken(token);
+
+    }
+
 }

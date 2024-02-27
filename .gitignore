@@ -1,7 +1,8 @@
 HELP.md
 target/
 conf/
-*.properties
+
+logs/
 
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

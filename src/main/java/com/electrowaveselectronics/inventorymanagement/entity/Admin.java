@@ -24,4 +24,9 @@ public class Admin {
     @Column(name = "admin_password")
     private String adminPassword;
 
+    public Admin(String adminUserame, String adminPassword) {
+        this.adminUserame = adminUserame;
+        this.adminPassword = adminPassword;
+    }
+
 }

@@ -34,12 +34,23 @@ public class GodownHead {
     @Column(name = "godown_id")
     private int godownId;
 
-    public GodownHead(String godownHeadName,int godownHeadId, String password, EnumRole role, int godownId) {
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "godown_head_number")
+    private String godownheadNo;
+
+    public GodownHead(String godownHeadName,int godownHeadId, String password, EnumRole role, int godownId, String email, String godownheadNo) {
         this.godownHeadName = godownHeadName;
         this.godownHeadId=godownHeadId;
         this.password = password;
         this.role = role;
         this.godownId=godownId;
+        this.email=email;
+        this.godownheadNo=godownheadNo;
     }
 }
 
