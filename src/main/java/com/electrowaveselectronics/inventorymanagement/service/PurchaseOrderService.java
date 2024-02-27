@@ -10,12 +10,11 @@ import com.electrowaveselectronics.inventorymanagement.repository.ProductReposit
 import com.electrowaveselectronics.inventorymanagement.repository.PurchaseOrderRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.SupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PurchaseOrderService {
@@ -113,4 +112,25 @@ public class PurchaseOrderService {
 //        return Optional.ofNullable(thePurchaseOrder
 //    }
 
+    public ResponseEntity<?> getPurchaseOrderCountByGodownId(int godownId) throws Exception {
+        try {
+            validateGodownId(godownId);
+            HashMap<String, Integer> result = new HashMap<>();
+            int purchaseOrderCount = purchaseOrderRepository.countByGodownId(godownId);
+            result.put("purchaseOrderCount", purchaseOrderCount);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        }
+        catch (Exception e){
+            throw e;
+        }
+
+    }
+
+    private void validateGodownId(int godownId){
+        if(godownId<=0){
+            throw new IllegalArgumentException("Invalid Godown ID: " + godownId);
+        }
+
+    }
 }

@@ -131,5 +131,26 @@ public class PurchaseOrderRestController {
         return null;
     }
 
+    @GetMapping("/getPurchaseOrderCount/{godownId}")
+    public ResponseEntity<?> getPurchaseOrderCountByGodownId(@PathVariable String godownId, @RequestHeader("Authorization") String authorizationHeader){
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
+
+                int parsedGodownId = Integer.parseInt(godownId);
+                return purchaseOrderService.getPurchaseOrderCountByGodownId(parsedGodownId);
+            }else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 }
