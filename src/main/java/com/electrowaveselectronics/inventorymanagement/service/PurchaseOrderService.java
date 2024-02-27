@@ -44,7 +44,7 @@ public class PurchaseOrderService {
 
     public String createPurchaseOrder(PurchaseOrderDTO thepurchaseOrderDTO) {
         try {
-            if ((thepurchaseOrderDTO.getSupplierId() <= 0) || (thepurchaseOrderDTO.getGodownId() <= 0)) {
+            if ((thepurchaseOrderDTO.getSupplierId() <= 0) || (thepurchaseOrderDTO.getGodownId() < 0)) {
                 throw new IllegalArgumentException("Supplier ID and Godown ID must be provided.");
             }
 
@@ -55,6 +55,7 @@ public class PurchaseOrderService {
             Supplier supplier = supplierOptional.get();
             PurchaseOrder thepurchaseOrder = new PurchaseOrder();
             thepurchaseOrder.setPurchaseDate(new Date());
+            thepurchaseOrder.setGodownId(thepurchaseOrderDTO.getGodownId());
             thepurchaseOrder.setSupplierId(thepurchaseOrderDTO.getSupplierId());
 
             List<PurchaseProductDTO> products = thepurchaseOrderDTO.getProducts();
@@ -73,7 +74,7 @@ public class PurchaseOrderService {
                     product.setTotalQuantity(product.getTotalQuantity() + purchaseProductDTO.getPurchaseQuantity());
                     productRepository.save(product);
                 } else {
-                    Product product1 = new Product(purchaseProductDTO.getProductName(), purchaseProductDTO.getProductVolume(), purchaseProductDTO.getCostPrice(), purchaseProductDTO.getPurchaseQuantity(), thepurchaseOrderDTO.getGodownId());
+                    Product product1 = new Product(thepurchaseOrderDTO.getGodownId(),purchaseProductDTO.getProductName(), purchaseProductDTO.getProductVolume(), purchaseProductDTO.getCostPrice(), purchaseProductDTO.getPurchaseQuantity(), purchaseProductDTO.getProductType(),purchaseProductDTO.getProductCategory());
                     productRepository.save(product1);
                 }
             }
