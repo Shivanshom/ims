@@ -14,5 +14,13 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p WHERE p.godownId = :godownId AND p.productName = :productName")
     Product findProductByGodownIdAndProductName(@Param("godownId") int godownId, @Param("productName") String productName);
 
+    @Query("SELECT COUNT(p) FROM Product p WHERE p.godownId = :godownId")
+    int countByGodownId(int godownId);
+
+    @Query("SELECT SUM(p.totalQuantity) FROM Product p WHERE p.godownId = :godownId")
+    Integer sumTotalQuantityByGodownId(int godownId);
+
+    @Query("SELECT p FROM Product p WHERE (p.totalQuantity * p.productVolume) < (:percentage * :godownCapacity) AND p.godownId = :godownId")
+    List<Product> findProductsUnderCapacityThreshold(int godownId, double percentage, int godownCapacity);
 
 }

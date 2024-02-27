@@ -34,18 +34,20 @@ public class PurchaseOrder {
     @Column(name = "purchase_quantity")
     private int purchaseQuantity;
 
-
+@Column
+private int godownId;
 
 
     @Column
     private int supplierId;
 
 
-    public PurchaseOrder(Date purchaseDate, int totalCostPrice, int purchaseQuantity, int supplierId) {
+    public PurchaseOrder(Date purchaseDate, int totalCostPrice, int purchaseQuantity, int supplierId , int godownId) {
         this.purchaseDate = purchaseDate;
         this.totalCostPrice = totalCostPrice;
         this.purchaseQuantity = purchaseQuantity;
         this.supplierId = supplierId;
+        this.godownId = godownId;
     }
 
     @ElementCollection

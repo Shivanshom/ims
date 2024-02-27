@@ -10,12 +10,11 @@ import com.electrowaveselectronics.inventorymanagement.repository.ProductReposit
 import com.electrowaveselectronics.inventorymanagement.repository.PurchaseOrderRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.SupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PurchaseOrderService {
@@ -44,7 +43,7 @@ public class PurchaseOrderService {
 
     public String createPurchaseOrder(PurchaseOrderDTO thepurchaseOrderDTO) {
         try {
-            if ((thepurchaseOrderDTO.getSupplierId() <= 0) || (thepurchaseOrderDTO.getGodownId() <= 0)) {
+            if ((thepurchaseOrderDTO.getSupplierId() <= 0) || (thepurchaseOrderDTO.getGodownId() < 0)) {
                 throw new IllegalArgumentException("Supplier ID and Godown ID must be provided.");
             }
 
@@ -55,6 +54,7 @@ public class PurchaseOrderService {
             Supplier supplier = supplierOptional.get();
             PurchaseOrder thepurchaseOrder = new PurchaseOrder();
             thepurchaseOrder.setPurchaseDate(new Date());
+            thepurchaseOrder.setGodownId(thepurchaseOrderDTO.getGodownId());
             thepurchaseOrder.setSupplierId(thepurchaseOrderDTO.getSupplierId());
 
             List<PurchaseProductDTO> products = thepurchaseOrderDTO.getProducts();
@@ -73,7 +73,7 @@ public class PurchaseOrderService {
                     product.setTotalQuantity(product.getTotalQuantity() + purchaseProductDTO.getPurchaseQuantity());
                     productRepository.save(product);
                 } else {
-                    Product product1 = new Product(purchaseProductDTO.getProductName(), purchaseProductDTO.getProductVolume(), purchaseProductDTO.getCostPrice(), purchaseProductDTO.getPurchaseQuantity(), thepurchaseOrderDTO.getGodownId());
+                    Product product1 = new Product(thepurchaseOrderDTO.getGodownId(),purchaseProductDTO.getProductName(), purchaseProductDTO.getProductVolume(), purchaseProductDTO.getCostPrice(), purchaseProductDTO.getPurchaseQuantity(), purchaseProductDTO.getProductType(),purchaseProductDTO.getProductCategory());
                     productRepository.save(product1);
                 }
             }
@@ -112,4 +112,25 @@ public class PurchaseOrderService {
 //        return Optional.ofNullable(thePurchaseOrder
 //    }
 
+    public ResponseEntity<?> getPurchaseOrderCountByGodownId(int godownId) throws Exception {
+        try {
+            validateGodownId(godownId);
+            HashMap<String, Integer> result = new HashMap<>();
+            int purchaseOrderCount = purchaseOrderRepository.countByGodownId(godownId);
+            result.put("purchaseOrderCount", purchaseOrderCount);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        }
+        catch (Exception e){
+            throw e;
+        }
+
+    }
+
+    private void validateGodownId(int godownId){
+        if(godownId<=0){
+            throw new IllegalArgumentException("Invalid Godown ID: " + godownId);
+        }
+
+    }
 }
