@@ -57,6 +57,16 @@ public class DeliveryOrderService {
 
     }
 
+    public List<DeliveryOrder> getDeliveryOrderByGodownId(int godown_id){
+        try {
+
+            return deliveryRepository.findByGodownId(godown_id);
+        } catch (Exception e) {
+            throw e;
+        }
+
+    }
+
 
     public DeliveryOrder setOrder(int customerId, DeliveryOrderDTO deliveryOrderDTO) {
         try {
@@ -76,8 +86,7 @@ public class DeliveryOrderService {
             for (int godownId = 1; godownId <= (int)godownService.getGodownCount(); godownId++) {
                 List<ProductDTO> products = deliveryOrderDTO.getProducts();
                 boolean orderPlaced = true;
-                for (int i = 0; i < products.size(); i++) {
-                    ProductDTO productDTO = products.get(i);
+                for (ProductDTO productDTO : products) {
                     // Validate order quantity
                     if (productDTO.getOrderQuantity() <= 0) {
                         throw new IllegalArgumentException("Order quantity must be a positive integer");
@@ -86,7 +95,7 @@ public class DeliveryOrderService {
                     totalQuantity += productDTO.getOrderQuantity();
                     totalSellprice += productDTO.getSellPrice() * productDTO.getOrderQuantity();
 
-                    deliveryOrder.addProduct(products.get(i));
+                    deliveryOrder.addProduct(productDTO);
 
                     Product product = productRepository.findProductByGodownIdAndProductName(godownId, productDTO.getProductName());
                     int prodQuantityNeeded = productDTO.getOrderQuantity();
@@ -108,6 +117,7 @@ public class DeliveryOrderService {
                     deliveryOrder.setTotalSellPrice((int) totalSellprice);
                     deliveryOrder.setOrderQuantity(totalQuantity);
                     deliveryOrder.setCustomer(customer);
+                    deliveryOrder.setGodownId(godownId);
                     return deliveryRepository.save(deliveryOrder);
                 }
             }

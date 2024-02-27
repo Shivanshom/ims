@@ -47,5 +47,8 @@ public class ProductController {
         thrproduct.setProductId(0);
         return productService.save(thrproduct);
     }
-
+    @GetMapping("/getDistinctProduct")
+    public List<String> getDistinctProductNames() {
+        return productService.getDistinctProductNames();
+    }
 }

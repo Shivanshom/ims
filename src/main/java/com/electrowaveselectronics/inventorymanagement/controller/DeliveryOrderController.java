@@ -13,6 +13,8 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
+
 @RestController
 @RequestMapping("/api")
 public class DeliveryOrderController {
@@ -78,6 +80,23 @@ public class DeliveryOrderController {
             }
             else {
                 return new ResponseEntity<>("YOU DIDN'T PLACED ANY ORDER", HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("FAILED TO FETCH ORDER DETAILS", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/getDeliveryOrdersByGodownId/{godownId}")
+    public ResponseEntity<?> deliveryOrderDetails(@PathVariable int godownId) {
+        try {
+
+            List<DeliveryOrder> newDeliveryOrder = deliveryOrderService.getDeliveryOrderByGodownId(godownId);
+
+            if (!newDeliveryOrder.isEmpty()) { // Corrected from !newDeliveryOrder.isEmpty()
+                return new ResponseEntity<>(newDeliveryOrder, HttpStatus.OK); // Return the actual object inside Optional
+            }
+            else {
+                return new ResponseEntity<>("YOU DIDN'T HAVE ANY DELIVERY ORDER", HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
             return new ResponseEntity<>("FAILED TO FETCH ORDER DETAILS", HttpStatus.BAD_REQUEST);

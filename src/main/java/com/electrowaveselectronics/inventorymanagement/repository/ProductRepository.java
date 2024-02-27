@@ -14,5 +14,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p WHERE p.godownId = :godownId AND p.productName = :productName")
     Product findProductByGodownIdAndProductName(@Param("godownId") int godownId, @Param("productName") String productName);
 
+    @Query("SELECT DISTINCT p.productName FROM Product p")
+    List<String> findDistinctProductNames();
 
 }
