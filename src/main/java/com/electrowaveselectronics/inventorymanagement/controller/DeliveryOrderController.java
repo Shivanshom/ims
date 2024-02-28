@@ -104,7 +104,7 @@ public class DeliveryOrderController {
                 return new ResponseEntity<>("Access denied. Please login as Admin.", HttpStatus.UNAUTHORIZED);
             }
         }catch (Exception e) {
-            return new ResponseEntity<>("FAILED TO PLACE ORDER", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.BAD_REQUEST);
         }
     }
 

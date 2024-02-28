@@ -54,6 +54,10 @@ public class DeliveryOrder {
 
     private int godownId;
 
+    private String godownHeadName;
+
+    private String godownAddress;
+
     public void addProduct(ProductDTO product){
         products.add(product);
     }

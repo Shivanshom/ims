@@ -65,7 +65,8 @@ public class BillService {
             bill.setProductDTOList(productDTOList);
             bill.setOrderDate(deliveryOrder.getOrderDate());
             bill.setTotalSellPrice(deliveryOrder.getTotalSellPrice());
-            bill.setGodownHeadName("Rahul");
+            bill.setGodownHeadName(deliveryOrder.getGodownHeadName());
+            bill.setGodownAddress(deliveryOrder.getGodownAddress());
 
             return new ResponseEntity<>(bill, HttpStatus.OK);
         } catch (Exception e) {

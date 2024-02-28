@@ -2,11 +2,10 @@
 package com.electrowaveselectronics.inventorymanagement.service;
 import com.electrowaveselectronics.inventorymanagement.dto.DeliveryOrderDTO;
 import com.electrowaveselectronics.inventorymanagement.dto.ProductDTO;
-import com.electrowaveselectronics.inventorymanagement.entity.Customer;
-import com.electrowaveselectronics.inventorymanagement.entity.DeliveryOrder;
-import com.electrowaveselectronics.inventorymanagement.entity.Product;
+import com.electrowaveselectronics.inventorymanagement.entity.*;
 import com.electrowaveselectronics.inventorymanagement.repository.CustomerRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.DeliveryRepository;
+import com.electrowaveselectronics.inventorymanagement.repository.GodownRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +26,11 @@ public class DeliveryOrderService {
     ProductRepository productRepository;
     @Autowired
     GodownService godownService;
+
+    @Autowired
+    GodownRepository godownRepository;
+    @Autowired
+    GodownHeadService godownHeadService;
 
     public List<DeliveryOrder> getAllDeliveryOrders() throws Exception {
         try {
@@ -118,6 +122,9 @@ public class DeliveryOrderService {
                     deliveryOrder.setOrderQuantity(totalQuantity);
                     deliveryOrder.setCustomer(customer);
                     deliveryOrder.setGodownId(godownId);
+                    GodownHead godownHead = godownHeadService.getGodownHeadDetailsByGodownId(godownId);
+                    deliveryOrder.setGodownHeadName(godownHead.getGodownHeadName());
+                    deliveryOrder.setGodownAddress(godownRepository.findById(godownId).get().getAddress());
                     return deliveryRepository.save(deliveryOrder);
                 }
             }
