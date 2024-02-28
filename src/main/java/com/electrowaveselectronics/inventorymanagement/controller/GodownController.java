@@ -254,6 +254,29 @@ public class GodownController {
         }
     }
 
+    @GetMapping("/api/findGodownsByGodownHead")
+    public ResponseEntity<?> findGodownsByGodownHead(@RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+            if (!Objects.isNull(username)
+                    && "admin".equals(godownHeadService.getRoleByUsername(username).name())
+            ) {
+                System.out.println("admin exist");
+                List<Object[]> godowns = godownService.findGodownsByGodownHead();
+                System.out.println(godowns);
+
+                return godowns.isEmpty()
+                        ? new ResponseEntity<>("No Godowns found for the provided address", HttpStatus.NOT_FOUND)
+                        : new ResponseEntity<>(godowns, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     private String extractTokenFromAuthorizationHeader(String authorizationHeader) {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             return authorizationHeader.substring(7);

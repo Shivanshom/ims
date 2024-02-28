@@ -41,11 +41,9 @@ public class CustomerController {
                     && "admin".equals(godownHeadService.getRoleByUsername(username).name())
             ) {
                 List<Customer> customers = customerService.getAllCustomers();
-                if (!customers.isEmpty()) {
+
                     return new ResponseEntity<>(customers, HttpStatus.ACCEPTED);
-                } else {
-                    return new ResponseEntity<>("Customer list is empty", HttpStatus.BAD_REQUEST);
-                }
+
 
             } else {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);

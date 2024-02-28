@@ -184,7 +184,7 @@ public class GodownHeadService {
         return godownHeadRepository.findByUsername(username) != null;
     }
 
-    public GodownHead registerGodownHead(String username, String password, String godownHeadName, String email, String godownheadNo, int GodownId) {
+    public GodownHead registerGodownHead(String username, String password, String godownHeadName, String email, String godownheadNo, int GodownId, String address) {
         if (isUsernameTaken(username)) {
             throw new IllegalArgumentException("Username already taken");
         }
@@ -197,6 +197,7 @@ public class GodownHeadService {
         newGodownHead.setRole(EnumRole.godownhead);
         newGodownHead.setEmail(email);
         newGodownHead.setGodownId(GodownId);
+        newGodownHead.setAddress(address);
         return godownHeadRepository.save(newGodownHead);
     }
 

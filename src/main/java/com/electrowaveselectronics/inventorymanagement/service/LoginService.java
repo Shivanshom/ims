@@ -143,7 +143,7 @@ public class LoginService {
         }
     }
 
-    public ResponseEntity<?> register(String username, String password, String GodownHeadName, String email, String godownheadNo, int GodownId) {
+    public ResponseEntity<?> register(String username, String password, String GodownHeadName, String email, String godownheadNo, int GodownId,String address) {
         if (username == null || password == null || GodownHeadName == null || email==null || godownheadNo==null || GodownId<=0) {
             return ResponseEntity.badRequest().body("Username, password, and GodownHeadName cannot be null or empty");
         }
@@ -159,7 +159,7 @@ public class LoginService {
         }
 
         String hashedPassword = passwordEncoder.encode(password);
-        GodownHead newGodownHead = godownHeadService.registerGodownHead(username, hashedPassword, GodownHeadName,email,godownheadNo, GodownId);
+        GodownHead newGodownHead = godownHeadService.registerGodownHead(username, hashedPassword, GodownHeadName,email,godownheadNo, GodownId, address);
 
         Cookie cookie = generateUserCookie(username);
 
