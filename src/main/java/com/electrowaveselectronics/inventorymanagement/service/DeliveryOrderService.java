@@ -1,15 +1,12 @@
 
 package com.electrowaveselectronics.inventorymanagement.service;
+
 import com.electrowaveselectronics.inventorymanagement.dto.DeliveryOrderDTO;
 import com.electrowaveselectronics.inventorymanagement.dto.ProductDTO;
-<<<<<<< HEAD
-import com.electrowaveselectronics.inventorymanagement.entity.*;
-=======
 import com.electrowaveselectronics.inventorymanagement.entity.Customer;
 import com.electrowaveselectronics.inventorymanagement.entity.DeliveryOrder;
-import com.electrowaveselectronics.inventorymanagement.entity.Godown;
+import com.electrowaveselectronics.inventorymanagement.entity.GodownHead;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
->>>>>>> 819200b77cc0e13aeba3e56c064deaa3c05accfd
 import com.electrowaveselectronics.inventorymanagement.repository.CustomerRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.DeliveryRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.GodownRepository;
@@ -18,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
 
