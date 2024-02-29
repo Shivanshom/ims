@@ -1,8 +1,6 @@
 package com.electrowaveselectronics.inventorymanagement.controller;
 
 import com.electrowaveselectronics.inventorymanagement.entity.Customer;
-import com.electrowaveselectronics.inventorymanagement.entity.Godown;
-import com.electrowaveselectronics.inventorymanagement.repository.CustomerRepository;
 import com.electrowaveselectronics.inventorymanagement.service.AuthService;
 import com.electrowaveselectronics.inventorymanagement.service.CustomerService;
 import com.electrowaveselectronics.inventorymanagement.service.GodownHeadService;
@@ -13,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-
 @CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
 @RestController
 // Adjusted base pathz

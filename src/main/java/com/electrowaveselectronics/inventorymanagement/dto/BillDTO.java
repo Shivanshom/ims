@@ -26,5 +26,6 @@ public class BillDTO {
     private Date invoiceDate;
 
     private String GodownHeadName;
+    private String GodownAddress;
 
 }

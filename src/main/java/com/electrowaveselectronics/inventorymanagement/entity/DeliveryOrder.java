@@ -52,6 +52,12 @@ public class DeliveryOrder {
     @Column(name = "product")
     List<ProductDTO> products=new ArrayList<>();
 
+    private int godownId;
+
+    private String godownHeadName;
+
+    private String godownAddress;
+
     public void addProduct(ProductDTO product){
         products.add(product);
     }

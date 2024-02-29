@@ -57,6 +57,12 @@ public class ProductController {
         return productService.save(thrproduct);
     }
 
+    @GetMapping("/getDistinctProduct")
+    public List<String> getDistinctProductNames() {
+        return productService.getDistinctProductNames();
+    }
+
+
     @GetMapping("/listAllProducts")
     public ResponseEntity<?> listAllProducts(@RequestHeader("Authorization") String authorizationHeader){
         try{
@@ -123,6 +129,7 @@ public class ProductController {
         }
         return null;
     }
+
 
 
 }
