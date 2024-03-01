@@ -72,7 +72,6 @@ public class LoginService {
                 result.put("godownHeadId", String.valueOf(godownHead.getGodownHeadId()));
                 result.put("role", godownHead.getRole().name());
 
-                System.out.println(cookie);
                 return ResponseEntity.accepted().body(result);
             } else {
                 Map<String, String> result = new HashMap<>();
