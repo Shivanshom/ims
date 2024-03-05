@@ -55,10 +55,11 @@ public class LoginController {
             String password = request.get("password");
             String godownHeadName = request.get("godownHeadName");
             String email=request.get("email");
+            String address=request.get("address");
             String godownheadNo=request.get("godownHeadNo");
             String godownId = request.get("godownId");
             int parsedGodownId = Integer.parseInt(godownId);
-            return loginService.register(username, password, godownHeadName,email,godownheadNo, parsedGodownId);
+            return loginService.register(username, password, godownHeadName,email,godownheadNo, parsedGodownId,address);
         }
         catch (Exception e){
             return new ResponseEntity<>("Somehing went wrong ... "+ e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

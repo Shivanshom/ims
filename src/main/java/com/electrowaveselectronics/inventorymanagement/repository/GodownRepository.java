@@ -15,4 +15,8 @@ public interface GodownRepository extends JpaRepository<Godown, Integer> {
 
     List<Godown> findByAddressLike(String partialAddress);
 
+    @Query("SELECT g.godownId, g.address, g.volume, gh.godownHeadName, gh.username, gh.address, gh.email, gh.godownheadNo FROM GodownHead gh JOIN Godown g ON g.godownId = gh.godownId WHERE gh.role != 'admin'")
+
+    List<Object[]> findGodownWithHeadName();
+
 }

@@ -290,4 +290,9 @@ public class GodownService {
     }
 
 
+
+    public List<Object[]> findGodownsByGodownHead() {
+        // Additional validation or checks can be added here if needed
+        return godownRepository.findGodownWithHeadName();
+    }
 }

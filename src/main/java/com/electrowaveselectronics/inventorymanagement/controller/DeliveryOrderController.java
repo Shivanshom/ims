@@ -10,13 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
-
 @RestController
 @RequestMapping("/api")
 public class DeliveryOrderController {
@@ -42,11 +39,7 @@ public class DeliveryOrderController {
                             || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
             ) {
                 List<DeliveryOrder> deliveryOrders = deliveryOrderService.getAllDeliveryOrders();
-                if (!deliveryOrders.isEmpty()) {
-                    return new ResponseEntity<>(deliveryOrders, HttpStatus.ACCEPTED);
-                } else {
-                    return new ResponseEntity<>("No Delivery Orders found", HttpStatus.NOT_FOUND);
-                }
+                return new ResponseEntity<>(deliveryOrders, HttpStatus.ACCEPTED);
             } else {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
             }
@@ -170,6 +163,72 @@ public class DeliveryOrderController {
         return null;
     }
 
+    @GetMapping("/getTotalSalesCount/{godownId}")
+    public ResponseEntity<?> deliveryOrderCountByGodownId(@PathVariable String godownId, @RequestHeader("Authorization") String authorizationHeader){
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
 
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
+            ) {
+                int parsedGodownId = Integer.parseInt(godownId);
+                return deliveryOrderService.DeliveryOrderCountByGodownId(parsedGodownId);
 
+            }
+            else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("FAILED TO FETCH ORDER DETAILS", HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @GetMapping("/getSalesByDate")
+    public ResponseEntity<?> getSalesOnDateByGodownId(@RequestParam("godownId") int godownId, @RequestParam("date") String date, @RequestHeader("Authorization") String authorizationHeader){
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
+            ) {
+                Date parsedDate;
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                parsedDate = dateFormat.parse(date);
+                return deliveryOrderService.getTotalSalesOrdersByGodownIDAndDate(godownId, parsedDate);
+            }
+            else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("FAILED TO FETCH ORDER DETAILS", HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @GetMapping("/getTopSellingProducts/{godownId}")
+    public ResponseEntity<?> getTopSellingProductsByGodownId(@PathVariable String godownId, @RequestHeader("Authorization") String authorizationHeader){
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
+            ) {
+                int parsedGodownId = Integer.parseInt(godownId);
+                return deliveryOrderService.getTopSellingProducts(parsedGodownId);
+            }
+            else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("FAILED TO FETCH ORDER DETAILS", HttpStatus.BAD_REQUEST);
+        }
+
+    }
 }

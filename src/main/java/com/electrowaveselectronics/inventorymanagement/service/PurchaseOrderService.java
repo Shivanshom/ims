@@ -6,6 +6,7 @@ import com.electrowaveselectronics.inventorymanagement.dto.PurchaseProductDTO;
 import com.electrowaveselectronics.inventorymanagement.entity.Product;
 import com.electrowaveselectronics.inventorymanagement.entity.PurchaseOrder;
 import com.electrowaveselectronics.inventorymanagement.entity.Supplier;
+import com.electrowaveselectronics.inventorymanagement.repository.GodownRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.ProductRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.PurchaseOrderRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.SupplierRepository;
@@ -27,6 +28,9 @@ public class PurchaseOrderService {
 
     @Autowired
     private SupplierRepository supplierRepository;
+
+    @Autowired
+    private GodownRepository godownRepository;
 
     public List<PurchaseOrder> getAllPurchaseOrders() throws Exception{
         return purchaseOrderRepository.findAll();
@@ -130,6 +134,10 @@ public class PurchaseOrderService {
     private void validateGodownId(int godownId){
         if(godownId<=0){
             throw new IllegalArgumentException("Invalid Godown ID: " + godownId);
+        }
+
+        if(godownRepository.findById(godownId).isEmpty()){
+            throw new IllegalArgumentException("Godown with godownId: "+ godownId + " does not exists.");
         }
 
     }
