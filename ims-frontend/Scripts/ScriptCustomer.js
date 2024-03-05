@@ -1,0 +1,67 @@
+function extractCookie() {
+
+  const cookieRow = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("cookie=="));
+  return cookieRow ? cookieRow.split("==")[1] : "";
+}
+//global data
+
+document.addEventListener("DOMContentLoaded", function () {
+  const cookie = extractCookie();
+
+  fetch("http://localhost:8080/api/getAllCustomers", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${cookie}`,
+    },
+    withCredentials: true,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      //insert  initial data
+      //call the next function to fill the remaining data
+        //func 2
+          //
+      const tbody = document.querySelector("#tbody");
+      console.log(tbody);
+      data.forEach((customer) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+                      <td>${customer.customerId}</td>
+                      <td>${customer.customerName}</td>
+                      <td>${customer.customerAddress}</td>
+                      <td>${customer.customerNo}</td>
+                      <td>
+                        <a class="btn btn-info1 btn-sm" href = "./updateForm.html?customerId= ${customer.customerId}">Update</a>
+                        <a class="btn btn-info1 btn-sm" href="./AddDeliveryOrder.html?customerId=${customer.customerId}">Generate Order</a>
+                      </td>
+                  `;
+        tbody.appendChild(row);
+      });
+      // Initialize DataTable if needed
+      $("#myTable").DataTable();
+      
+    })
+    .catch((error) => console.log( error));
+});
+
+function onNavItemClick(itemId, url) {
+  // Your existing code...
+
+  if (url) {
+    window.location.href = url;
+  }
+}
+
+// const toggleButton = document.getElementById("nav-toggle");
+// const navLinks = document.getElementById("nav-links");
+
+// toggleButton.addEventListener("click", () => {
+//   console.log("hello");
+//   navLinks.classList.toggle("active");
+// });
+
+// // initialize DataTable
+// $("#myTable").DataTable();
