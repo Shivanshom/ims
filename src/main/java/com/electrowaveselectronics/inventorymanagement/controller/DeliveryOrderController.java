@@ -39,11 +39,7 @@ public class DeliveryOrderController {
                             || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
             ) {
                 List<DeliveryOrder> deliveryOrders = deliveryOrderService.getAllDeliveryOrders();
-                if (!deliveryOrders.isEmpty()) {
-                    return new ResponseEntity<>(deliveryOrders, HttpStatus.ACCEPTED);
-                } else {
-                    return new ResponseEntity<>("No Delivery Orders found", HttpStatus.NOT_FOUND);
-                }
+                return new ResponseEntity<>(deliveryOrders, HttpStatus.ACCEPTED);
             } else {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
             }
