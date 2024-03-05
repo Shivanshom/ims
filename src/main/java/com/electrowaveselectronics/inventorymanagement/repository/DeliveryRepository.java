@@ -16,4 +16,8 @@ public  interface DeliveryRepository extends JpaRepository<DeliveryOrder,Integer
     @Query("SELECT d FROM DeliveryOrder d WHERE d.customer.customerId = :customerId")
     List<DeliveryOrder> findByCustomerCustomerId(@Param("customerId")int customerId);
 
+   List<DeliveryOrder> findByGodownId(@Param("godownId")int godownId);
+
+
+
 }

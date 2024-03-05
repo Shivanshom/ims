@@ -18,4 +18,7 @@ public interface GodownHeadRepository extends JpaRepository<GodownHead, Integer>
 
     @Query("SELECT g FROM GodownHead g WHERE g.godownheadNo = :godownheadNo")
     GodownHead findByContactNumber(String godownheadNo);
+
+    GodownHead findByGodownId(int godownId);
+
 }

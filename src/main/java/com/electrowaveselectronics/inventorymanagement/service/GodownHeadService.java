@@ -226,4 +226,7 @@ public class GodownHeadService {
     public GodownHead getByContactNumber(String godownheadNo){
         return godownHeadRepository.findByContactNumber(godownheadNo);
     }
+    public GodownHead getGodownHeadDetailsByGodownId(int godownId) {
+        return godownHeadRepository.findByGodownId(godownId);
+    }
 }

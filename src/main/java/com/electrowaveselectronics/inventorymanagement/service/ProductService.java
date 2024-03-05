@@ -52,6 +52,9 @@ public class ProductService {
     public List<Object[]> getDistinctProductsAndTotalQuantity() {
         return productRepository.findDistinctProductsAndTotalQuantity();
     }
+    public List<String> getDistinctProductNames() {
+        return productRepository.findDistinctProductNames();
+    }
 
     public ResponseEntity<?> listAllProducts() throws Exception{
        try {

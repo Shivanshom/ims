@@ -2,11 +2,10 @@
 package com.electrowaveselectronics.inventorymanagement.service;
 import com.electrowaveselectronics.inventorymanagement.dto.DeliveryOrderDTO;
 import com.electrowaveselectronics.inventorymanagement.dto.ProductDTO;
-import com.electrowaveselectronics.inventorymanagement.entity.Customer;
-import com.electrowaveselectronics.inventorymanagement.entity.DeliveryOrder;
-import com.electrowaveselectronics.inventorymanagement.entity.Product;
+import com.electrowaveselectronics.inventorymanagement.entity.*;
 import com.electrowaveselectronics.inventorymanagement.repository.CustomerRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.DeliveryRepository;
+import com.electrowaveselectronics.inventorymanagement.repository.GodownRepository;
 import com.electrowaveselectronics.inventorymanagement.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +26,11 @@ public class DeliveryOrderService {
     ProductRepository productRepository;
     @Autowired
     GodownService godownService;
+
+    @Autowired
+    GodownRepository godownRepository;
+    @Autowired
+    GodownHeadService godownHeadService;
 
     public List<DeliveryOrder> getAllDeliveryOrders() throws Exception {
         try {
@@ -57,6 +61,16 @@ public class DeliveryOrderService {
 
     }
 
+    public List<DeliveryOrder> getDeliveryOrderByGodownId(int godown_id){
+        try {
+
+            return deliveryRepository.findByGodownId(godown_id);
+        } catch (Exception e) {
+            throw e;
+        }
+
+    }
+
 
     public DeliveryOrder setOrder(int customerId, DeliveryOrderDTO deliveryOrderDTO) {
         try {
@@ -76,8 +90,7 @@ public class DeliveryOrderService {
             for (int godownId = 1; godownId <= (int)godownService.getGodownCount(); godownId++) {
                 List<ProductDTO> products = deliveryOrderDTO.getProducts();
                 boolean orderPlaced = true;
-                for (int i = 0; i < products.size(); i++) {
-                    ProductDTO productDTO = products.get(i);
+                for (ProductDTO productDTO : products) {
                     // Validate order quantity
                     if (productDTO.getOrderQuantity() <= 0) {
                         throw new IllegalArgumentException("Order quantity must be a positive integer");
@@ -86,7 +99,7 @@ public class DeliveryOrderService {
                     totalQuantity += productDTO.getOrderQuantity();
                     totalSellprice += productDTO.getSellPrice() * productDTO.getOrderQuantity();
 
-                    deliveryOrder.addProduct(products.get(i));
+                    deliveryOrder.addProduct(productDTO);
 
                     Product product = productRepository.findProductByGodownIdAndProductName(godownId, productDTO.getProductName());
                     int prodQuantityNeeded = productDTO.getOrderQuantity();
@@ -108,6 +121,10 @@ public class DeliveryOrderService {
                     deliveryOrder.setTotalSellPrice((int) totalSellprice);
                     deliveryOrder.setOrderQuantity(totalQuantity);
                     deliveryOrder.setCustomer(customer);
+                    deliveryOrder.setGodownId(godownId);
+                    GodownHead godownHead = godownHeadService.getGodownHeadDetailsByGodownId(godownId);
+                    deliveryOrder.setGodownHeadName(godownHead.getGodownHeadName());
+                    deliveryOrder.setGodownAddress(godownRepository.findById(godownId).get().getAddress());
                     return deliveryRepository.save(deliveryOrder);
                 }
             }
