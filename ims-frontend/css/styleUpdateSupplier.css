@@ -26,6 +26,11 @@ p {
     line-height: 1.4rem;
 }
 
+.nav-item.active{
+    color: #264653 !important;
+    scale: 1.2;
+    font-weight: 700;
+}
 
 
 
@@ -101,10 +106,6 @@ nav {
 
 .hover-link:active{
     color: #FFAFCC !important;
-}
-
-.nav-item.active {
-    color: var(--accent-color);
 }
 
 .btn-primary {

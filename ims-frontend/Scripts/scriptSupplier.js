@@ -54,7 +54,7 @@ function refreshTable() {
                 cell2.textContent = item.supplierName;
                 cell3.textContent = item.address;
                 cell4.textContent = item.contactNumber;
-                cell5.innerHTML = `<a class=" btn-info1" href="updatesupplier.html?id=${item.supplierId}">Update</a>`
+                cell5.innerHTML = `<a class="btn" title="Update Supplier"  href="updatesupplier.html?id=${item.supplierId}"><i class="fa-solid fa-xl fa-pen-to-square"></i></a>`
 
             });
             $('#myTable').DataTable();

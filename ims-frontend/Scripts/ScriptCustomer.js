@@ -34,8 +34,8 @@ document.addEventListener("DOMContentLoaded", function () {
                       <td>${customer.customerAddress}</td>
                       <td>${customer.customerNo}</td>
                       <td>
-                        <a class="btn btn-info1 btn-sm" href = "./updateForm.html?customerId= ${customer.customerId}">Update</a>
-                        <a class="btn btn-info1 btn-sm" href="./AddDeliveryOrder.html?customerId=${customer.customerId}">Generate Order</a>
+                        <a title="Update Customer" class="btn" href = "./updateForm.html?customerId= ${customer.customerId}"><i class="fa-solid fa-xl fa-pen-to-square"></i></a>
+                        <a title="Generate Order" class="btn" href="./AddDeliveryOrder.html?customerId=${customer.customerId}"><i class="fa-solid fa-xl fa-cart-plus"></i></a>
                       </td>
                   `;
         tbody.appendChild(row);

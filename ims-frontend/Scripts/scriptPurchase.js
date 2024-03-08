@@ -149,8 +149,12 @@ function populatePurchaseTable(purchaseOrders) {
 
         var actionCell = document.createElement('td');
         var button = document.createElement('button');
-        button.className='btn-info1'
-        button.textContent = 'Order details';
+        button.className='btn'
+        button.title = "Order Details"
+        var icon = document.createElement('i');
+        icon.className = 'fa-regular fa-xl fa-file-lines';
+        
+        button.appendChild(icon);
         button.onclick = function() {
           location.href = `purchaseDetails.html?id=${order.purchaseId}`;
         };

@@ -20,8 +20,41 @@ function extractCookie() {
 const godownId = parseInt(JSON.parse(localStorage.getItem('user')).godownId);
 const cookie = extractCookie();
 
-// When the page loads, fetch the current data of the supplier
-window.onload = function() {
+function checkCookie() {
+    var cookies = document.cookie.split(";");
+    var cookieExists = false;
+
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i].trim();
+      if (cookie.indexOf("cookie==") === 0) {
+        cookieExists = true;
+        break;
+      }
+    }
+
+    if (cookieExists && localStorage.getItem("user") != null) {
+      var expirationDate = new Date(
+        document.cookie.replace(
+          /(?:(?:^|.;\s)cookie\s*\==\s*([^;]).$)|^.*$/,
+          "$1"
+        )
+      );
+      if (expirationDate && expirationDate < new Date()) {
+        console.log("Cookie is expired.");
+        alert("Your session has expired. Please login again.");
+        localStorage.clear();
+        window.location.href = "login.html";
+      } else {
+        document.getElementById("updatesupplierbody").style.display = "block";
+      }
+    } else {
+      window.location.href = "login.html";
+      alert("Please login first.");
+    }
+  }
+
+  
+  function FetchSupplierData(){
     fetch('http://localhost:8080/api/getSupplierBySupplierId/' + supplierId ,{
         headers:{
             "Content-Type": "application/json",
@@ -35,7 +68,10 @@ window.onload = function() {
             document.querySelector('input[placeholder="Contact Number"]').value = data.contactNumber;
             console.log(data);
         });
-};
+  }
+
+
+// When the page loads, fetch the current data of the supplier
 
 // Define the handleFormSubmit function
 const handleFormSubmit = event => {
@@ -78,9 +114,9 @@ const handleFormSubmit = event => {
 document.querySelector('form').addEventListener('submit', handleFormSubmit);
 
 
-const toggleButton = document.getElementById('nav-toggle');
-const navLinks = document.getElementById('nav-links');
+// const toggleButton = document.getElementById('nav-toggle');
+// const navLinks = document.getElementById('nav-links');
 
-toggleButton.addEventListener('click', () => {
-    navLinks.classList.toggle('active')
-})
+// toggleButton.addEventListener('click', () => {
+//     navLinks.classList.toggle('active')
+// })

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Supplier</title>
+    <title>Supplier</title>
     <link rel="stylesheet" href="../css/styleUpdateSupplier.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -23,7 +23,7 @@
             
 
             <div class="nav-links flex ulm" id="nav-links">
-                <ul class="flex ">
+                <ul class="flex " id="nav-item">
                     <li class="hover-link nav-item" id="home" onclick="onNavItemClick('home','Home.html')">Home</li>
                     <li class="hover-link nav-item" id="products" onclick="onNavItemClick('products','Products.html')">Products</li>
                     <li class="hover-link nav-item" id="customer" onclick="onNavItemClick('Delivery','DeliveryOrder.html')">Delivery</li>
@@ -85,50 +85,18 @@
 
 
 </body>
+<script src="../Scripts/navbar.js"></script>
 <script src="https://kit.fontawesome.com/5cbfac4b1e.js" crossorigin="anonymous"></script>
 <script src="../Scripts/updateSupplier.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="../Scripts/Logout.js"></script>
 <script>
-    function checkCookie() {
-    var cookies = document.cookie.split(";");
-    var cookieExists = false;
-
-    for (var i = 0; i < cookies.length; i++) {
-      var cookie = cookies[i].trim();
-      if (cookie.indexOf("cookie==") === 0) {
-        cookieExists = true;
-        break;
-      }
-    }
-
-    if (cookieExists && localStorage.getItem("user") != null) {
-      var expirationDate = new Date(
-        document.cookie.replace(
-          /(?:(?:^|.;\s)cookie\s*\==\s*([^;]).$)|^.*$/,
-          "$1"
-        )
-      );
-      if (expirationDate && expirationDate < new Date()) {
-        console.log("Cookie is expired.");
-        alert("Your session has expired. Please login again.");
-        localStorage.clear();
-        window.location.href = "login.html";
-      } else {
-        document.getElementById("updatesupplierbody").style.display = "block";
-      }
-    } else {
-      window.location.href = "login.html";
-      alert("Please login first.");
-    }
-  }
-
-  
-
-window.onload = ()=>{
+window.onload = function() {
     checkCookie()
-    
+    FetchSupplierData()
 };
-</script>
+document.addEventListener("DOMContentLoaded", () => {
+  setActivePage();
+})</script>
 
 </html>
