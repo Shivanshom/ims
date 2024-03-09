@@ -25,7 +25,7 @@
         });
     </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial  -scale=1.0">
     <title>Purchase</title>
     <link rel="stylesheet" href="../css/DeliveryOrder.css">
     <style>
@@ -218,11 +218,11 @@
     <div class="container" style="margin-top: 34px;">
         <div class="bill-section">
             <div class="page-content container">
-                <div class="page-header text-blue-d2">
+                <!-- <div class="page-header text-blue-d2">
                     <h1 class="page-title text-secondary-d1">
                         Purchase Details
                     </h1>
-                </div>
+                </div> -->
 
                 <div class="container px-0" id="getPurchaseDetails">
                     <div class="row mt-4">
@@ -253,8 +253,11 @@
                                         <div class="col-6 text-right">
                                             Purchase Date:
                                         </div>
-                                        <div class="col-6">
+                                        <div class="col-2">
                                             <span class="text-120 text-secondary-d1 purchase-date"></span>
+                                        </div>
+                                        <div class="col-4">
+                                            <span class="text-120 text-secondary-d1 purchase-time"></span>
                                         </div>
                                     </div>
                                     <div class="row mt-4" id="products-container">
@@ -305,67 +308,96 @@
             }
 
             function updatePurchaseDetails(purchaseData) {
+                const purchaseDate = new Date(purchaseData.purchaseDate);
+                const day = purchaseDate.getDate();
+                const month = purchaseDate.getMonth() + 1; // Months are zero-based, so we add 1
+                const year = purchaseDate.getFullYear();
+                const formattedDate = `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year.toString().slice(-2)}`;
+
+                const hours24 = purchaseDate.getHours();
+                let hours12 = hours24 % 12 || 12; // Convert 0 to 12 for 12-hour format
+                const minutes = purchaseDate.getMinutes();
+                const seconds = purchaseDate.getSeconds();
+                const ampm = hours24 >= 12 ? 'PM' : 'AM';
+                const formattedTime = `${hours12 < 10 ? '0' + hours12 : hours12}:${minutes < 10 ? '0' + minutes : minutes} ${ampm}`;
+
                 // Update HTML elements with purchase details
                 document.querySelector('.purchase-id').textContent = purchaseData.purchaseId;
-                document.querySelector('.purchase-date').textContent = purchaseData.purchaseDate;
+                document.querySelector('.purchase-date').textContent = formattedDate;
+                document.querySelector('.purchase-time').textContent = formattedTime;
 
                 // Update product details
                 const productsContainer = document.getElementById('products-container');
                 productsContainer.innerHTML = ''; // Clear existing content
 
-                purchaseData.products.forEach(product => {
+                purchaseData.products.forEach((product, index) => {
                     const productDiv = document.createElement('div');
                     productDiv.classList.add('product-details');
 
                     productDiv.innerHTML = `
-            <div class="row my-2">
-                <div class="col-6 text-right">
-                    Product Name:
-                </div>
-                <div class="col-6">
-                    <span class="text-120 text-secondary-d1">${product.productName}</span>
-                </div>
-            </div>
-            <div class="row my-2">
-                <div class="col-6 text-right">
-                    Purchase Quantity:
-                </div>
-                <div class="col-6">
-                    <span class="text-120 text-secondary-d1">${product.purchaseQuantity}</span>
-                </div>
-            </div>
-            <div class="row my-2">
-                <div class="col-6 text-right">
-                    Cost Price:
-                </div>
-                <div class="col-6">
-                    <span class="text-120 text-secondary-d1">${product.costPrice}</span>
-                </div>
-            </div>
-            <div class="row my-2">
-                <div class="col-6 text-right">
-                    Product Volume:
-                </div>
-                <div class="col-6">
-                    <span class="text-120 text-secondary-d1">${product.productVolume}</span>
-                </div>
-            </div>
-            <div class="row my-2">
-                <div class="col-6 text-right">
-                    Product Volume:
-                </div>
-                <div class="col-6">
-                    <span class="text-120 text-secondary-d1">${product.productCategory}</span>
-                </div>
-            </div>
-            <div class="row my-2">
-                <div class="col-6 text-right">
-                    Product Volume:
-                </div>
-                <div class="col-6">
-                    <span class="text-120 text-secondary-d1">${product.productType}</span>
-                </div>
-            </div>
+                    <div class="accordion" id="accordionExample_${index}>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_${index}" aria-expanded="true" aria-controls="collapse_${index}">
+                                    ${product.productName}
+                                </button>
+
+                            </h2>
+                            <div id="collapse_${index}" class="accordion-collapse collapse" data-bs-parent="#accordionExample_${index}">
+                            <div class="accordion-body">
+                                <div class="row my-2">
+                                    <div class="col-6 text-right">
+                                        Product Name:
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="text-120 text-secondary-d1">${product.productName}</span>
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-6 text-right">
+                                        Purchase Quantity:
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="text-120 text-secondary-d1">${product.purchaseQuantity}</span>
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-6 text-right">
+                                        Cost Price:
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="text-120 text-secondary-d1">${product.costPrice}</span>
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-6 text-right">
+                                        Product Volume:
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="text-120 text-secondary-d1">${product.productVolume}</span>
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-6 text-right">
+                                        Product Volume:
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="text-120 text-secondary-d1">${product.productCategory}</span>
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-6 text-right">
+                                        Product Volume:
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="text-120 text-secondary-d1">${product.productType}</span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            </div>
+                        </div>
+                    </div>
         `;
 
                     productsContainer.appendChild(productDiv);
