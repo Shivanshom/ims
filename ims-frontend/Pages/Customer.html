@@ -112,6 +112,66 @@
             <tbody id="tbody" class="text-center"></tbody>
           </table>
         </div>
+
+        <!-- modal  -->
+
+        <div class="modal fade" id="updateCustomerModal" tabindex="-1" aria-labelledby="updateCustomerModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" style="margin-left: 3%;" id="updateCustomerModalLabel">Update Customer</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <form id="updateCustomer">
+                    <div class="container">
+                        
+                        <div class="row pt-2">
+                            
+                            <div class="col-md-12 form-floating ">
+                              <input type="text"
+                              id="updatedName"
+                              class="form-control mb-4"
+                              placeholder="Name"
+                              pattern="[A-Za-z ]+"
+                              title="Name should contain only alphabets and spaces"
+                              required >
+                              <label for="updatedName" style="margin-left: 2%;">Name</label>                              
+                            </div>
+
+                            <div class="col-md-12 form-floating">
+                              <input type="text"
+                                  id="updatedAddress"
+                                  class="form-control mb-4"
+                                  placeholder="Address"
+                                  required>
+                              <label for="updatedAddress" style="margin-left: 2%;">Address</label>                              
+                            </div>
+
+                            <div class="col-md-12 form-floating">
+                              <input  type="text"
+                                  id="updatedContactNo"
+                                  class="form-control mb-4"
+                                  placeholder="ContactNo"
+                                  pattern="[0-9]{10}"
+                                  title="Contact No should contain 10 digits"
+                                  required>
+                              <label for="updatedContactNo" style="margin-left: 2%;">ContactNo</label>                           
+                            </div>
+
+                            <div class="col-md-12 d-flex justify-content-center">
+                                <button  class="btn btn-primary text-center"
+                                    type="submit"
+                                    id="button1">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>    
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   </body>
@@ -157,6 +217,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
   <script src="../Scripts/ScriptCustomer.js"></script>
+  <script src="../Scripts/UG.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
   <script
@@ -175,4 +236,5 @@
       setActivePage();
     });
   </script>
+  
 </html>
