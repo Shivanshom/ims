@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -270,46 +269,48 @@
 <script src="../Scripts/Products.js"></script>
 <script src="../Scripts/navbar.js"></script>
 <script src="../Scripts/Logout.js"></script>
-<script>
-  function checkCookie() {
-    var cookies = document.cookie.split(';');
-    var cookieExists = false;
+  <script>
+    function checkCookie() {
+      var cookies = document.cookie.split(';');
+      var cookieExists = false;
 
-    for (var i = 0; i < cookies.length; i++) {
+      for (var i = 0; i < cookies.length; i++) {
         var cookie = cookies[i].trim();
         if (cookie.indexOf('cookie==') === 0) {
-            cookieExists = true;
-            break;
+          cookieExists = true;
+          break;
         }
-    }
+      }
 
-    if (cookieExists && localStorage.getItem("user")!=null) {
+      if (cookieExists && localStorage.getItem("user") != null) {
         var expirationDate = new Date(document.cookie.replace(/(?:(?:^|.*;\s*)cookie\s*\==\s*([^;]*).*$)|^.*$/, "$1"));
         if (expirationDate && expirationDate < new Date()) {
-            console.log("Cookie is expired.");
-            alert("Your session has expired. Please login again.");
-            localStorage.clear();
-            window.location.href = "login.html"; 
+          console.log("Cookie is expired.");
+          alert("Your session has expired. Please login again.");
+          localStorage.clear();
+          window.location.href = "login.html";
         } else {
-            document.getElementById('products').style.display = 'block';
-            
+          document.getElementById('products').style.display = 'block';
+
         }
-    } else {
-        window.location.href = "login.html"; 
-         alert("Please login first.");
+      } else {
+        window.location.href = "login.html";
+        alert("Please login first.");
+      }
     }
-}
 
-  window.onload = checkCookie;
-</script>
-<script>
+    window.onload = checkCookie;
+  </script>
+  <script>
 
-document.addEventListener("DOMContentLoaded", function () {0
-  addProduct();  
-  editProduct();  
-  setActivePage();
-});
-</script>
+    document.addEventListener("DOMContentLoaded", function () {
+      0
+      addProduct();
+      editProduct();
+      setActivePage();
+    });
+  </script>
 
 </body>
+
 </html>
