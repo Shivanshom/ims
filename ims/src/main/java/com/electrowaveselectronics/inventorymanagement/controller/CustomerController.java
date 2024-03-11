@@ -134,7 +134,7 @@ public class CustomerController {
                     ("admin".equals(godownHeadService.getRoleByUsername(username).name())
                             || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
             ) {
-                if (customerService.isContactNumberExists(NewDataCustomer.getCustomerNo())) {
+                if (customerService.isContactNumberExistsExceptCustomerId(NewDataCustomer.getCustomerNo(), customerId)) {
                     return new ResponseEntity<>("Contact number already exists. Please use a different one.", HttpStatus.BAD_REQUEST);
                 } else {
                     Customer newCustomer = customerService.updateCustomer(customerId,NewDataCustomer);
