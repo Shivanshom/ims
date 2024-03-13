@@ -155,8 +155,14 @@ function populatePurchaseTable(purchaseOrders) {
         icon.className = 'fa-regular fa-xl fa-file-lines';
         
         button.appendChild(icon);
+        // button.onclick = function() {
+        //   location.href = `purchaseDetails.html?id=${order.purchaseId}`;
+        // };
+
+        button.setAttribute('data-bs-toggle', 'modal');
+        button.setAttribute('data-bs-target', '#purchaseDetailsModal');
         button.onclick = function() {
-          location.href = `purchaseDetails.html?id=${order.purchaseId}`;
+            fetchPurchaseDetails(order.purchaseId);
         };
         actionCell.appendChild(button);
         row.appendChild(actionCell);
@@ -187,6 +193,121 @@ function conditionalRendering() {
         
        
     }
+}
+
+function fetchPurchaseDetails(purchaseId) {
+    console.log(purchaseId)
+    const cookie = extractCookie();
+    fetch('http://localhost:8080/api/getPurchaseOrderByPurchaseId/' + purchaseId, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${cookie}`
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Update purchase details using the fetched data
+            updatePurchaseDetails(data);
+        })
+        .catch(error => console.error('Error fetching purchase details:', error));
+}
+
+function updatePurchaseDetails(purchaseData) {
+    const purchaseDate = new Date(purchaseData.purchaseDate);
+    const day = purchaseDate.getDate();
+    const month = purchaseDate.getMonth() + 1; // Months are zero-based, so we add 1
+    const year = purchaseDate.getFullYear();
+    const formattedDate = `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year.toString().slice(-2)}`;
+
+    const hours24 = purchaseDate.getHours();
+    let hours12 = hours24 % 12 || 12; // Convert 0 to 12 for 12-hour format
+    const minutes = purchaseDate.getMinutes();
+    const seconds = purchaseDate.getSeconds();
+    const ampm = hours24 >= 12 ? 'PM' : 'AM';
+    const formattedTime = `${hours12 < 10 ? '0' + hours12 : hours12}:${minutes < 10 ? '0' + minutes : minutes} ${ampm}`;
+
+    // Update HTML elements with purchase details
+    document.querySelector('.purchase-id').textContent = purchaseData.purchaseId;
+    document.querySelector('.purchase-date').textContent = formattedDate;
+    document.querySelector('.purchase-time').textContent = formattedTime;
+
+    // Update product details
+    const productsContainer = document.getElementById('products-container');
+    productsContainer.innerHTML = ''; // Clear existing content
+
+    purchaseData.products.forEach((product, index) => {
+        const productDiv = document.createElement('div');
+        productDiv.classList.add('product-details');
+
+        productDiv.innerHTML = `
+        <div class="accordion" id="accordionExample_${index}>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_${index}" aria-expanded="true" aria-controls="collapse_${index}">
+                        ${product.productName}
+                    </button>
+
+                </h2>
+                <div id="collapse_${index}" class="accordion-collapse collapse" data-bs-parent="#accordionExample_${index}">
+                <div class="accordion-body">
+                    <div class="row my-2">
+                        <div class="col-6 text-right">
+                            Product Name:
+                        </div>
+                        <div class="col-6">
+                            <span class="text-120 text-secondary-d1">${product.productName}</span>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-6 text-right">
+                            Purchase Quantity:
+                        </div>
+                        <div class="col-6">
+                            <span class="text-120 text-secondary-d1">${product.purchaseQuantity}</span>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-6 text-right">
+                            Cost Price:
+                        </div>
+                        <div class="col-6">
+                            <span class="text-120 text-secondary-d1">${product.costPrice}</span>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-6 text-right">
+                            Product Volume:
+                        </div>
+                        <div class="col-6">
+                            <span class="text-120 text-secondary-d1">${product.productVolume}</span>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-6 text-right">
+                            Product Volume:
+                        </div>
+                        <div class="col-6">
+                            <span class="text-120 text-secondary-d1">${product.productCategory}</span>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-6 text-right">
+                            Product Volume:
+                        </div>
+                        <div class="col-6">
+                            <span class="text-120 text-secondary-d1">${product.productType}</span>
+                        </div>
+                    </div>
+                    
+                </div>
+                </div>
+            </div>
+        </div>
+`;
+
+        productsContainer.appendChild(productDiv);
+    });
 }
 
 
