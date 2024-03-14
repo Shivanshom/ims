@@ -285,7 +285,7 @@ function updatePurchaseDetails(purchaseData) {
                     </div>
                     <div class="row my-2">
                         <div class="col-6 text-right">
-                            Product Volume:
+                            Product Category:
                         </div>
                         <div class="col-6">
                             <span class="text-120 text-secondary-d1">${product.productCategory}</span>
@@ -293,10 +293,10 @@ function updatePurchaseDetails(purchaseData) {
                     </div>
                     <div class="row my-2">
                         <div class="col-6 text-right">
-                            Product Volume:
+                            Product Type:
                         </div>
                         <div class="col-6">
-                            <span class="text-120 text-secondary-d1">${product.productType}</span>
+                            <span class="text-120 text-secondary-d1">${product.productType} kw</span>
                         </div>
                     </div>
                     
