@@ -123,7 +123,7 @@
             // res.cookie('cookie', cookie, { maxAge: 86400});
             const user = {username, godownId, godownHeadId, role};
             
-            document.cookie = `cookie==${cookie}; max-age=86400; path=/; SameSite=None; Secure`;
+            document.cookie = `cookie==${cookie}; path=/; SameSite=None; Secure`;
             // localStorage.setItem("cookie", cookie);
             localStorage.setItem("user", JSON.stringify(user));
 
