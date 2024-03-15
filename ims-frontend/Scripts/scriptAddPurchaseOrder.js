@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 document.getElementById('productForm').addEventListener('submit', handleFormSubmit);
   
 
@@ -88,7 +90,8 @@ function populateSupplierDropdown(suppliers) {
 function placeOrder() {
     // Check if the cart is empty
     if (cart.length === 0) {
-        alert('Your cart is empty. Please add items before placing an order.');
+        // alert('Your cart is empty. Please add items before placing an order.');
+        Notify('Your cart is empty. Please add items before placing an order.', 'danger');
         return;
     }
 
@@ -169,25 +172,29 @@ function handleFormSubmit(event) {
     // Check if all fields are filled
     if (godownId.trim() === '' || supplierName.trim() === '' || productName.trim() === '' ||
         productVolume.trim() === '' || price.trim() === '' || quantity.trim() === '' || productCategory.trim() === '' || productType.trim() === '') {
-        alert('Please fill in all fields.');
+        // alert('Please fill in all fields.');
+        // Notify('Please fill in all fields.', 'danger');
         return;
     }
 
     // Check if product volume is a valid integer
     if (!isValidInteger(productVolume)) {
-        alert('Product volume must be a whole number.');
+        // alert('Product volume must be a whole number.');
+        Notify('Product volume must be a whole number.', 'danger');
         return;
     }
 
     // Check if price is a valid integer
     if (!isValidInteger(price)) {
-        alert('Price must be a whole number.');
+        // alert('Price must be a whole number.');
+        Notify('Price must be a whole number.', 'danger');
         return;
     }
 
     // Check if quantity is a valid integer
     if (!isValidInteger(quantity)) {
-        alert('Quantity must be a whole number.');
+        // alert('Quantity must be a whole number.');
+        Notify('Quantity must be a whole number.', 'danger');
         return;
     }
 

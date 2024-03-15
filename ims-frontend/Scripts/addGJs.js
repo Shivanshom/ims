@@ -54,7 +54,8 @@ function addGodown(event) {
     })
     .then((data) => {
       console.log("Response from server:", data);
-      alert(data); // Show the response message in an alert box
+      // alert(data); // Show the response message in an alert box
+      Notify(data, "success");
     })
     .catch((error) => {
       console.error("There was a problem adding the Godown:", error);

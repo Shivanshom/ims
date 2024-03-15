@@ -36,13 +36,19 @@ function updateStatus() {
           })
           .then((response) => {
             console.log(response.data);
-            alert("GodownHead details saved successfully!");
+            // alert("GodownHead details saved successfully!");
+            Notify("GodownHead details saved successfully!", "success");
             // You can redirect the user to another page here if needed
-            window.location.href = "Godown.html";
+            // window.location.href = "Godown.html";
+            setTimeout(() => {
+              window.location.href = "Godown.html";
+            }, 1000);
+
           })
           .catch((error) => {
             console.error("Error:", error);
-            alert("Username is already taken, Please use another username");
+            // alert("Username is already taken, Please use another username");
+            Notify("Username is already taken, Please use another username", "danger");
           });
       });
   }
@@ -71,13 +77,18 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(response => {
             console.log(response.data);
-            alert('GodownHead details saved successfully!');
+            // alert('GodownHead details saved successfully!');
+            Notify('GodownHead details saved successfully!', 'success');
             // You can redirect the user to another page here if needed
-            window.location.href = "Godown.html";
+            // window.location.href = "Godown.html";
+            setTimeout(() => {
+                window.location.href = "Godown.html";
+            }, 1000);
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Username is already taken, Please use another username');
+            // alert('Username is already taken, Please use another username');
+            Notify('Username is already taken, Please use another username', 'danger');
         });
     });
 });

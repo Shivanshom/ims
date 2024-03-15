@@ -1,24 +1,5 @@
 const baseURL = SERVER_URL;
 
-function Notify(message, type) {
-    const toastLiveExample = document.getElementById('liveToast');
-    const toastBody = toastLiveExample.querySelector('.toast-body');
-    
-    toastBody.innerText = message;
-    toastLiveExample.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
-
-    if (type === 'success') {
-        toastLiveExample.classList.add('bg-success');
-    } else if (type === 'danger') {
-        toastLiveExample.classList.add('bg-danger');
-    } else if (type === 'warning') {
-        toastLiveExample.classList.add('bg-warning');
-    }
-
-    const toastBootstrap = new bootstrap.Toast(toastLiveExample);
-    toastBootstrap.show();
-}
-
 function capitalizeFirstLetter(str) {
     return str.toLowerCase().replace(/(^|\s)\S/g, function (match) {
       return match.toUpperCase();
@@ -70,7 +51,8 @@ function getUserData() {
     })
     .catch( error => {
         console.error('Error fetching user data:', error);
-        alert('Error fetching user data');
+        // alert('Error fetching user data');
+        Notify('Error fetching user data', 'danger');
     });
 
 }

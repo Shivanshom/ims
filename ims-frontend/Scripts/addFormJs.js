@@ -58,8 +58,11 @@ function addCustomer(event) {
     .then((data) => {
       console.log("Response from server:", data);
       // Optionally, you can handle the response here, for example, show a message to the user
-      alert(data); // Show the response message in an alert box
-      window.location.href = "customer.html"; // Redirect the user to the customer list page
+      // alert(data); // Show the response message in an alert box
+      Notify(data, "success");
+      setTimeout(() => {
+        window.location.href = "customer.html";
+      }, 1000);
     })
     .catch((error) => {
       console.log(error);
