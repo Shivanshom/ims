@@ -1,6 +1,8 @@
 var table;
 var table1;
 
+const baseURL = SERVER_URL;
+
 function extractCookie() {
     const cookieRow = document.cookie.split('; ').find(row => row.startsWith('cookie=='));
     return cookieRow ? cookieRow.split('==')[1] : '';
@@ -29,7 +31,7 @@ function Notify(message, type) {
 function generateProductRows(godownId) {
     const cookie = extractCookie();
 
-    axios.get(`http://localhost:8080/api/listProducts/${godownId}`, {
+    axios.get(`${baseURL}/api/listProducts/${godownId}`, {
         headers: {
             'Content-Type': 'application/json', 
             'Authorization': `Bearer ${cookie}`
@@ -104,7 +106,7 @@ function generateProductRows(godownId) {
 function generateProductRowsAdmin() {
     const cookie = extractCookie();
 
-    axios.get('http://localhost:8080/api/listAllProducts', {
+    axios.get(`${baseURL}/api/listAllProducts`, {
         headers: {
             'Content-Type': 'application/json', 
             'Authorization': `Bearer ${cookie}`
@@ -286,7 +288,7 @@ async function addProduct() {
                 };
 
                 try {
-                    const response = await axios.post("http://localhost:8080/api/addProduct", data, {
+                    const response = await axios.post(`${baseURL}/api/addProduct`, data, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${cookie}`
@@ -313,7 +315,7 @@ async function addProduct() {
 
 function fillEditProductModal(productId) {
     const cookie = extractCookie();
-    axios.get(`http://localhost:8080/api/getProduct/${productId}`, {
+    axios.get(`${baseURL}/api/getProduct/${productId}`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${cookie}`
@@ -399,7 +401,7 @@ async function editProduct() {
                 };
 
                 try {
-                    const response = await axios.patch("http://localhost:8080/api/updateProduct", data, {
+                    const response = await axios.patch(`${baseURL}/api/updateProduct`, data, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${cookie}`
@@ -428,7 +430,7 @@ async function editProduct() {
 async function getAvailableGodownCapacity(godownId) {
     try {
         const cookie = extractCookie();
-        const response = await axios.get(`http://localhost:8080/api/getCapacity/${godownId}`, {
+        const response = await axios.get(`${baseURL}/api/getCapacity/${godownId}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${cookie}`

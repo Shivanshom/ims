@@ -1,5 +1,7 @@
 let sId = 0;
 
+const baseURL = SERVER_URL;
+
 function Notify(message, type) {
   const toastLiveExample = document.getElementById('liveToast');
   const toastBody = toastLiveExample.querySelector('.toast-body');
@@ -20,7 +22,7 @@ function Notify(message, type) {
 }
 
 function refreshTable() {
-  fetch('http://localhost:8080/api/getAllSuppliers', {
+  fetch(`${baseURL}/api/getAllSuppliers`, {
       headers: {
           "Content-Type": "application/json",
           'Authorization': `Bearer ${cookie}`
@@ -108,7 +110,7 @@ window.onload = ()=>{
 
 function FetchSupplierData(supplierId){
   sId=supplierId;
-  fetch('http://localhost:8080/api/getSupplierBySupplierId/' + supplierId ,{
+  fetch(`${baseURL}/api/getSupplierBySupplierId/` + supplierId ,{
       headers:{
           "Content-Type": "application/json",
           'Authorization': `Bearer ${cookie}`
@@ -136,7 +138,7 @@ function handleFormSubmit (event) {
   var contactNumber = document.querySelector('input[placeholder="Contact Number"]').value;
 
   // Call the Update API
-  fetch('http://localhost:8080/api/updateSuppliers', {
+  fetch(`${baseURL}/api/updateSuppliers`, {
       method: 'PUT',
       headers: {
           'Content-Type': 'application/json',

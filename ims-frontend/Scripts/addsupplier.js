@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 function Notify(message, type) {
     const toastLiveExample = document.getElementById('liveToast');
     const toastBody = toastLiveExample.querySelector('.toast-body');
@@ -53,7 +55,7 @@ function handleFormSubmit(event) {
 
 
     // Call the Add Supplier API
-    fetch('http://localhost:8080/api/createSupplier', {
+    fetch(`${baseURL}/api/createSupplier`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
