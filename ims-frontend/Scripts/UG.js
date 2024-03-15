@@ -21,10 +21,14 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log(`${name}`);
     const address = document.getElementById("updatedAddress").value;
     const contactNo = document.getElementById("updatedContactNo").value;
-    console.log(name, address, contactNo);
+    // console.log(name, address, contactNo);
+
     // Extract customerId from URL query parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const customerId = urlParams.get("customerId");
+    // const urlParams = new URLSearchParams(window.location.search);
+    // const customerId = urlParams.get("customerId");
+
+    const customerId = localStorage.getItem("customerId");
+    localStorage.removeItem("customerId");
     const cookie = extractCookie();
 
     // Make an AJAX request to the API endpoint

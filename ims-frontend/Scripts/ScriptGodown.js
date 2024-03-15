@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>${godown[7]}</td>`;
         tableBody.appendChild(row);
       });
+      $("#myTable").DataTable();
     })
     .catch((error) => {
       console.error("Error fetching data:", error);

@@ -7,6 +7,27 @@ function extractCookie() {
 }
 //global data
 
+function getCustomerById(customerId) {
+  const cookie = extractCookie();
+  axios.get(`http://localhost:8080/api/getCustomerById/${customerId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${cookie}`,
+    },
+    withCredentials: true,
+  })
+  .then(response => {
+      const customer = response.data;
+      document.getElementById('updatedName').value = customer.customerName;
+      document.getElementById('updatedAddress').value = customer.customerAddress;
+      document.getElementById('updatedContactNo').value = customer.customerNo;
+  })
+  .catch(error => {
+      console.error('Error fetching customer details:', error);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const cookie = extractCookie();
 
@@ -34,14 +55,23 @@ document.addEventListener("DOMContentLoaded", function () {
                       <td>${customer.customerAddress}</td>
                       <td>${customer.customerNo}</td>
                       <td>
-                        <a title="Update Customer" class="btn" href = "./updateForm.html?customerId= ${customer.customerId}"><i class="fa-solid fa-xl fa-pen-to-square"></i></a>
+                        <a id="updateCustomerLink" title="Update Customer" class="btn" data-bs-toggle="modal" data-bs-target="#updateCustomerModal" data-customer-id="${customer.customerId}"><i class="fa-solid fa-xl fa-pen-to-square"></i></a>
                         <a title="Generate Order" class="btn" href="./AddDeliveryOrder.html?customerId=${customer.customerId}"><i class="fa-solid fa-xl fa-cart-plus"></i></a>
                       </td>
                   `;
+                  // href = "./updateForm.html?customerId= ${customer.customerId}"
         tbody.appendChild(row);
       });
-      // Initialize DataTable if needed
       $("#myTable").DataTable();
+
+      document.querySelectorAll('#updateCustomerLink').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const customerId = this.getAttribute('data-customer-id');
+            localStorage.setItem('customerId', customerId);
+            getCustomerById(customerId);
+        });
+      });
       
     })
     .catch((error) => console.log( error));
@@ -65,3 +95,4 @@ function onNavItemClick(itemId, url) {
 
 // // initialize DataTable
 // $("#myTable").DataTable();
+

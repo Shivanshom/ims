@@ -57,7 +57,7 @@ function generateProductRows(godownId) {
                     }
                 });
                 
-                var actionCellContent = '<a title="Update Product" class="btn " data-bs-toggle="modal" data-bs-target="#editProductModal" id="editProductBtn" ><i class="fa-solid fa-xl fa-pen-to-square"></i></a> ';
+                var actionCellContent = '<a title="Update Product" class="btn " data-bs-toggle="modal" data-bs-target="#editProductModal" id="editProductBtn" ><i class="fa-solid fa-xl fa-pen-to-square" style="pointer-events: none;"></i></a> ';
                 rowData.push(actionCellContent);
 
                 table.row.add(rowData).draw();
@@ -285,18 +285,46 @@ async function addProduct() {
     });
 }
 
+function fillEditProductModal(productId) {
+    const cookie = extractCookie();
+    axios.get(`http://localhost:8080/api/getProduct/${productId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${cookie}`
+        },
+        withCredentials: true
+    })
+    .then(function(response) {
+        const product = response.data;
+        const productVolume = product.productVolume;
+        const productQuantity = product.totalQuantity;
+        const costPrice = product.price;
+        console.log(costPrice);
+        const editProductModal = document.getElementById('editProductModal');
+        editProductModal.querySelector('#productVolume').value = productVolume;
+        editProductModal.querySelector('#productQuantity').value = productQuantity;
+        editProductModal.querySelector('#costprice').value = costPrice;
+    })
+    .catch(function(error) {
+        console.error('Error fetching product:', error);
+    });
 
+}
 
 function handleEditProductClick(){
     document.getElementById('product-table').addEventListener('click', function(e) { 
         if(e.target.id.includes('editProductBtn')) {
             var row = e.target.closest( "tr" );
+            const productId = row.cells[0].textContent;
+
             const productName = row.cells[1].textContent;
             localStorage.setItem('productName', productName);
             const productVolume = row.cells[5].textContent;
             localStorage.setItem('productVolume', productVolume);
             const productQuantity = row.cells[4].textContent;
             localStorage.setItem('productQuantity', productQuantity);
+            
+            fillEditProductModal(productId);
         }
 
         

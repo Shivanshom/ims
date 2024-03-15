@@ -63,10 +63,6 @@ public class CustomerService {
 
     }
 
-    public boolean isContactNumberExists(String customerNo) {
-        return customerRepository.existsByCustomerNo(customerNo);
-    }
-
     public boolean isIdExists(int id) {
         return customerRepository.existsById(id);
     }
@@ -144,4 +140,11 @@ public class CustomerService {
     }
 
 
+    public boolean isContactNumberExistsExceptCustomerId(String customerNo, int customerId) {
+        return customerRepository.isContactNumberExistsExceptCustomerId(customerNo,customerId);
+    }
+
+    public boolean isContactNumberExists(String customerNo) {
+        return customerRepository.existsByCustomerNo(customerNo);
+    }
 }
