@@ -36,6 +36,7 @@ function updateStatus() {
             console.log(response.data);
             alert("GodownHead details saved successfully!");
             // You can redirect the user to another page here if needed
+            window.location.href = "Godown.html";
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -70,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(response.data);
             alert('GodownHead details saved successfully!');
             // You can redirect the user to another page here if needed
+            window.location.href = "Godown.html";
         })
         .catch(error => {
             console.error('Error:', error);
