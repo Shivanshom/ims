@@ -101,7 +101,6 @@ public class LoginService {
         String data = username + System.currentTimeMillis() + secretKey;
         String token = generateToken(data);
         Cookie cookie = new Cookie("token", token);
-        cookie.setMaxAge(3600); // Cookie expiry time in seconds i.e. 1 hour
         cookie.setPath("/");
 //        cookie.setSecure(true);
 //        cookie.setHttpOnly(true);
