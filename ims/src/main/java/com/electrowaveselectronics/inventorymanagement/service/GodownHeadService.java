@@ -5,6 +5,7 @@ import com.electrowaveselectronics.inventorymanagement.repository.AuthRepository
 import com.electrowaveselectronics.inventorymanagement.repository.GodownHeadRepository;
 import com.electrowaveselectronics.inventorymanagement.util.EnumRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -76,9 +77,9 @@ public class GodownHeadService {
                 existingGodownHead.setGodownHeadName(theGodownHead.getGodownHeadName());
             }
 
-            if (theGodownHead.getPassword() != null) {
-                existingGodownHead.setPassword(theGodownHead.getPassword());
-            }
+//            if (theGodownHead.getPassword() != null) {
+//                existingGodownHead.setPassword(theGodownHead.getPassword());
+//            }
 
             if (theGodownHead.getRole() != null) {
                 existingGodownHead.setRole(theGodownHead.getRole());
@@ -229,5 +230,23 @@ public class GodownHeadService {
     }
     public GodownHead getGodownHeadDetailsByGodownId(int godownId) {
         return godownHeadRepository.findByGodownId(godownId);
+    }
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public boolean updatePassword(String username, String oldPassword, String newPassword) {
+        GodownHead godownHead = godownHeadRepository.findByUsername(username);
+        if (godownHead!=null) {
+            if (validatePassword(godownHead, oldPassword)) {
+                godownHead.setPassword(passwordEncoder.encode(newPassword));
+                godownHeadRepository.save(godownHead);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean validatePassword(GodownHead godownHead, String password) {
+        return passwordEncoder.matches(password, godownHead.getPassword());
     }
 }

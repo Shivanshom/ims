@@ -57,7 +57,7 @@ function generateProductRows(godownId) {
                     }
                 });
                 
-                var actionCellContent = '<a class="btn btn-info1 m-1 " data-bs-toggle="modal" data-bs-target="#editProductModal" id="editProductBtn" >Update</a> ';
+                var actionCellContent = '<a title="Update Product" class="btn " data-bs-toggle="modal" data-bs-target="#editProductModal" id="editProductBtn" ><i class="fa-solid fa-xl fa-pen-to-square"></i></a> ';
                 rowData.push(actionCellContent);
 
                 table.row.add(rowData).draw();

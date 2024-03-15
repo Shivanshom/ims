@@ -54,3 +54,50 @@ function getUserData() {
 
 }
 
+function updatePassword() {
+    const username = JSON.parse(localStorage.getItem('user')).username;
+    const cookie = extractCookie();
+
+    const oldPasswordInput = document.getElementById('oldPassword');
+    const newPasswordInput = document.getElementById('newPassword');
+
+    const changePasswordModal = document.getElementById('changePasswordModal');
+    changePasswordModal.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        oldPasswordInput.classList.remove('is-invalid');
+
+        const formData = new FormData(e.target);
+        const oldPassword = formData.get('oldPassword');
+        const newPassword = formData.get('newPassword');
+
+        const requestData = {
+            username: username,
+            oldPassword: oldPassword,
+            newPassword: newPassword
+        };
+
+        try {
+            const response = await axios.put('http://localhost:8080/api/updatePassword', requestData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + cookie
+                }
+            });
+            const responseData = response.data;
+            alert(responseData);
+            window.location.href = 'profile.html';
+
+        } catch (error) {
+            oldPasswordInput.classList.add('is-invalid');
+            
+            console.error('Error updating password:', error); 
+            alert('Error updating password: ' + error.response.data);
+        }
+    })
+}
+
+
+
+
+
+

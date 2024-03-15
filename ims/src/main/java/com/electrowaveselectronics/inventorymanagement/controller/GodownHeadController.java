@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -81,6 +82,39 @@ public class GodownHeadController {
 
         } catch (Exception e) {
             return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/updatePassword")
+    public ResponseEntity<String> updatePassword(@RequestBody HashMap<String, String> requestMap, @RequestHeader("Authorization") String authorizationHeader) throws Exception {
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String authenticatedUsername = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(authenticatedUsername) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(authenticatedUsername).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(authenticatedUsername).name()))
+            ) {
+                String username = requestMap.get("username");
+                String oldPassword = requestMap.get("oldPassword");
+                String newPassword = requestMap.get("newPassword");
+
+                if (username != null && oldPassword != null && newPassword != null) {
+                    boolean passwordUpdated = godownHeadService.updatePassword(username, oldPassword, newPassword);
+                    if (passwordUpdated) {
+                        return ResponseEntity.ok("Password updated successfully");
+                    } else {
+                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Old password doesn't match");
+                    }
+                } else {
+                    return ResponseEntity.badRequest().body("Missing username, old password, or new password");
+                }
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -244,10 +244,11 @@ ul {
   color: #ffafcc;
 }
 
-.nav-item.active {
-  color: var(--accent-color);
+.nav-item.active{
+  color: #264653 !important;
+  scale: 1.2;
+  font-weight: 700;
 }
-
 .nav-toggle {
   display: none;
 }
