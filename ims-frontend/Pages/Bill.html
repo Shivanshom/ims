@@ -176,6 +176,11 @@
         .align-bottom {
             vertical-align: bottom !important;
         }
+
+        .bill-section-margin {
+            border: 1px solid black;
+            padding: 2rem;
+        }
     </style>
 </head>
 
@@ -218,11 +223,20 @@
     </nav>
 
     <div class="container" style="margin-top: 34px;">
+        <div class="page-tools d-flex justify-content-center">
+            <div class="action-buttons">
+
+                <button class="btn bg-white btn-light mx-1px text-95" id="downloadPdf">
+                    <i class="mr-1 fa fa-file-pdf-o text-danger-m1 text-120 w-2"></i>
+                    Export
+                </button>
+            </div>
+        </div>
 
 
-        <div class="bill-section">
+        <div class="bill-section bill-section-margin">
             <div class="page-content container">
-                <div class="page-header text-blue-d2">
+                <!-- <div class="page-header text-blue-d2">
                     <h1 class="page-title text-secondary-d1">
                         Invoice
                         <small class="page-info">
@@ -240,7 +254,7 @@
                             </button>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="container px-0" id="getInvoice">
                     <div class="row mt-4">
@@ -280,12 +294,12 @@
                                 <div class="text-95 col-sm-6 align-self-start d-sm-flex justify-content-end">
                                     <hr class="d-sm-none" />
                                     <div class="text-grey-m2">
-                                        <div class="mt-1 mb-2 text-secondary-m1 text-600 text-125">
+                                        <!-- <div class="mt-1 mb-2 text-secondary-m1 text-600 text-125">
                                             Invoice
-                                        </div>
+                                        </div> -->
 
                                         <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span
-                                                class="text-600 text-90">ID:</span> <span class="invoiceId"></span>
+                                                class="text-600 text-90">Invoice:</span> <span id="invoiceId"></span>
                                         </div>
 
                                         <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span
@@ -372,6 +386,16 @@
             </div>
         </div>
 
+        <!-- <div class="page-tools d-flex justify-content-center mt-4 mb-4">
+            <div class="action-buttons">
+
+                <button class="btn bg-white btn-light mx-1px text-95" id="downloadPdf">
+                    <i class="mr-1 fa fa-file-pdf-o text-danger-m1 text-120 w-2"></i>
+                    Export
+                </button>
+            </div>
+        </div> -->
+
         <!-- Toast -->
 
         <div class="toast-container position-fixed bottom-0 end-0 p-3">
@@ -429,7 +453,7 @@ var role = JSON.parse(localStorage.getItem('user')).role; // Get the role from t
                 document.querySelector('.total-amount').textContent = `₹${orderData.totalSellPrice + (orderData.totalSellPrice * 0.18)}`;
                 document.querySelector('.customer-address').textContent = orderData.customerAddress;
                 document.querySelector('.phone-number').textContent = orderData.customerContactNo;
-                document.querySelector('.invoiceId').textContent = orderData.invoiceNo;
+                // document.querySelector('.invoiceId').textContent = orderData.invoiceNo;
                 document.querySelector('.invoice-date').textContent = orderData.orderDate.slice(0, 10);
                 document.querySelector('.godown-head').textContent = orderData.godownHeadName;
                 document.querySelector('.godown-address').textContent = orderData.godownAddress;
@@ -475,7 +499,8 @@ var role = JSON.parse(localStorage.getItem('user')).role; // Get the role from t
                         filename: "invoice.pdf",
                         image: { type: "jpeg", quality: 1 },
 
-                        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+                        html2canvas: { scale: 1, logging: true, scrollY: -window.scrollY },
+                        jsPDF: { unit: "in", format: "A4", orientation: "portrait" }
                     };
 
                     // Then call html2pdf with the element and options
