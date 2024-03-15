@@ -59,7 +59,7 @@ if (godownIdInput) {
 var cart = []; // Array to store the cart items
 
 function fetchSuppliers() {
-    fetch('http://localhost:8080/api/getAllSuppliers',{
+    fetch(`${baseURL}/api/getAllSuppliers`,{
     headers:{
         "Content-Type": "application/json",
         'Authorization': `Bearer ${cookie}`
@@ -107,7 +107,7 @@ function placeOrder() {
 
 
     // Send a POST request
-    fetch('http://localhost:8080/api/createPurchaseOrder', {
+    fetch(`${baseURL}/api/createPurchaseOrder`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

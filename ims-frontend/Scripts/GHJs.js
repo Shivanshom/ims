@@ -16,7 +16,7 @@ function saveGodownHead() {
     };
 
     // Send data to backend API
-    fetch('http://localhost:8080/api/setGodownHead', {
+    fetch(`${basURL}/api/setGodownHead`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

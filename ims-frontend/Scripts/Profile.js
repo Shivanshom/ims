@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 function Notify(message, type) {
     const toastLiveExample = document.getElementById('liveToast');
     const toastBody = toastLiveExample.querySelector('.toast-body');
@@ -35,7 +37,7 @@ function getUserData() {
     const godownHeadId = parseInt(userData.godownHeadId);
     const cookie = extractCookie();
     
-    axios.get(`http://localhost:8080/api/getGodownHead/${godownHeadId}`, {
+    axios.get(`${baseURL}/api/getGodownHead/${godownHeadId}`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${cookie}`
@@ -92,7 +94,7 @@ function updatePassword() {
         };
 
         try {
-            const response = await axios.put('http://localhost:8080/api/updatePassword', requestData, {
+            const response = await axios.put(`${baseURL}/api/updatePassword`, requestData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + cookie

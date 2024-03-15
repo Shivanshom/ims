@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 function extractCookie() {
   const cookieRow = document.cookie
     .split("; ")
@@ -35,7 +37,7 @@ function addGodown(event) {
   };
 
   // Send data to backend
-  fetch("http://localhost:8080/api/createGodown", {
+  fetch(`${baseURL}/api/createGodown`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

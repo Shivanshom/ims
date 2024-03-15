@@ -1,4 +1,5 @@
 // Wait for the DOM content to load
+const baseURL = SERVER_URL;
 
 function extractCookie() {
   const cookieRow = document.cookie
@@ -34,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Make an AJAX request to the API endpoint
     axios
       .put(
-        `http://localhost:8080/api/updateCustomerById/${customerId}`,
+        `${baseURL}/api/updateCustomerById/${customerId}`,
         {
           customerName: name,
           customerAddress: address,

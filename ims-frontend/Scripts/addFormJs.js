@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 // Function to get create a Godown
 document.addEventListener("DOMContentLoaded", function () {
   // Add event listener once the DOM content is loaded
@@ -23,7 +25,7 @@ function extractCookie() {
 function addCustomer(event) {
   // Get form values
   const name = document.getElementById("name").value;
-  const address = document.getElementById("address").value;
+  const address = document.getElementById("address").value; 
   const contactNo = document.getElementById("contactNo").value;
 
   // Prepare data to send
@@ -35,7 +37,7 @@ function addCustomer(event) {
 
   const cookie = extractCookie();
   // Send data to backend
-  fetch("http://localhost:8080/api/createCustomer", {
+  fetch(`${baseURL}/api/createCustomer`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -57,6 +59,7 @@ function addCustomer(event) {
       console.log("Response from server:", data);
       // Optionally, you can handle the response here, for example, show a message to the user
       alert(data); // Show the response message in an alert box
+      window.location.href = "customer.html"; // Redirect the user to the customer list page
     })
     .catch((error) => {
       console.log(error);

@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 document.getElementById('productForm').addEventListener('submit', handleFormSubmit);
 
 
@@ -22,7 +24,7 @@ const cookie = extractCookie();
 var role = JSON.parse(localStorage.getItem('user')).role; // Get the role from the local storage
 function fetchProducts() {
   
-    fetch('http://localhost:8080/api/getDistinctProduct', { headers:{
+    fetch(`${baseURL}/api/getDistinctProduct`, { headers:{
         "Content-Type": "application/json",
         'Authorization': `Bearer ${cookie}`
  } })
@@ -64,7 +66,7 @@ function placeOrder() {
 
     console.log(data);
     // Send a POST request
-    fetch(`http://localhost:8080/api/placeOrder/${customerId}`, {
+    fetch(`${baseURL}/api/placeOrder/${customerId}`, {
        
         method: 'POST',
         headers: {

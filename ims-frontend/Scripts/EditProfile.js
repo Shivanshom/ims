@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 function Notify(message, type) {
     const toastLiveExample = document.getElementById('liveToast');
     const toastBody = toastLiveExample.querySelector('.toast-body');
@@ -226,7 +228,7 @@ function editProfile() {
             formData.append("address", address);
             formData.append("godownHeadId", godownHeadId);
 
-            axios.put(`http://localhost:8080/api/updateGodownHead`, formData, {
+            axios.put(`${baseURL}/api/updateGodownHead`, formData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${cookie}`

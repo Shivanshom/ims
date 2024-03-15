@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 // Handle navigation item clicks
 function onNavItemClick(itemId, url) {
   if (url) {
@@ -27,7 +29,7 @@ function updateStatus() {
 
         // Send data to backend API using Axios
         axios
-          .post("http://localhost:8080/api/register", formData, {
+          .post(`${baseURL}/api/register`, formData, {
             headers: {
               "Content-Type": "application/json",
             },
@@ -62,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(formData);
     
         // Send data to backend API using Axios
-        axios.post('http://localhost:8080/api/register', formData, {
+        axios.post(`${baseURL}/api/register`, formData, {
             headers: {
                 'Content-Type': 'application/json'
             }
