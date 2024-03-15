@@ -130,8 +130,9 @@ public class DeliveryOrderService {
                     GodownHead godownHead = godownHeadService.getGodownHeadDetailsByGodownId(godownId);
                     deliveryOrder.setGodownHeadName(godownHead.getGodownHeadName());
                     deliveryOrder.setGodownAddress(godownRepository.findById(godownId).get().getAddress());
-                    return deliveryRepository.save(deliveryOrder);
+
                 }
+                return deliveryRepository.save(deliveryOrder);
             }
             return null; // Order could not be placed in any godown
         } catch (Exception e) {
