@@ -1,3 +1,4 @@
+
 function NotifyLogout(message, type) {
     const toastLiveExample = document.getElementById('liveToast');
     const toastBody = toastLiveExample.querySelector('.toast-body');
@@ -26,7 +27,7 @@ function logout(buttonId) {
     document.getElementById(buttonId).addEventListener("click", function(e) {
         e.preventDefault();
         const cookie = extractCookie();
-        axios.post('http://localhost:8080/api/logout', null, {
+        axios.post(`${baseURL}/api/logout`, null, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${cookie}`

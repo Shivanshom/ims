@@ -1,21 +1,4 @@
-function Notify(message, type) {
-    const toastLiveExample = document.getElementById('liveToast');
-    const toastBody = toastLiveExample.querySelector('.toast-body');
-    
-    toastBody.innerText = message;
-    toastLiveExample.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
-
-    if (type === 'success') {
-        toastLiveExample.classList.add('bg-success');
-    } else if (type === 'danger') {
-        toastLiveExample.classList.add('bg-danger');
-    } else if (type === 'warning') {
-        toastLiveExample.classList.add('bg-warning');
-    }
-
-    const toastBootstrap = new bootstrap.Toast(toastLiveExample);
-    toastBootstrap.show();
-}
+const baseURL = SERVER_URL;
 
 function extractCookie() {
     const cookieRow = document.cookie.split('; ').find(row => row.startsWith('cookie=='));
@@ -226,7 +209,7 @@ function editProfile() {
             formData.append("address", address);
             formData.append("godownHeadId", godownHeadId);
 
-            axios.put(`http://localhost:8080/api/updateGodownHead`, formData, {
+            axios.put(`${baseURL}/api/updateGodownHead`, formData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${cookie}`

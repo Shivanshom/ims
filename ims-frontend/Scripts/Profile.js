@@ -1,21 +1,4 @@
-function Notify(message, type) {
-    const toastLiveExample = document.getElementById('liveToast');
-    const toastBody = toastLiveExample.querySelector('.toast-body');
-    
-    toastBody.innerText = message;
-    toastLiveExample.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
-
-    if (type === 'success') {
-        toastLiveExample.classList.add('bg-success');
-    } else if (type === 'danger') {
-        toastLiveExample.classList.add('bg-danger');
-    } else if (type === 'warning') {
-        toastLiveExample.classList.add('bg-warning');
-    }
-
-    const toastBootstrap = new bootstrap.Toast(toastLiveExample);
-    toastBootstrap.show();
-}
+const baseURL = SERVER_URL;
 
 function capitalizeFirstLetter(str) {
     return str.toLowerCase().replace(/(^|\s)\S/g, function (match) {
@@ -35,7 +18,7 @@ function getUserData() {
     const godownHeadId = parseInt(userData.godownHeadId);
     const cookie = extractCookie();
     
-    axios.get(`http://localhost:8080/api/getGodownHead/${godownHeadId}`, {
+    axios.get(`${baseURL}/api/getGodownHead/${godownHeadId}`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${cookie}`
@@ -68,7 +51,8 @@ function getUserData() {
     })
     .catch( error => {
         console.error('Error fetching user data:', error);
-        alert('Error fetching user data');
+        // alert('Error fetching user data');
+        Notify('Error fetching user data', 'danger');
     });
 
 }
@@ -92,7 +76,7 @@ function updatePassword() {
         };
 
         try {
-            const response = await axios.put('http://localhost:8080/api/updatePassword', requestData, {
+            const response = await axios.put(`${baseURL}/api/updatePassword`, requestData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + cookie

@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 function extractCookie() {
   const cookieRow = document.cookie
     .split("; ")
@@ -9,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const cookie = extractCookie();
   console.log(cookie);
 
-  fetch("http://localhost:8080/api/findGodownsByGodownHead", {
+  fetch(`${baseURL}/api/findGodownsByGodownHead`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
