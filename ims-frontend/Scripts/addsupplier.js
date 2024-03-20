@@ -1,3 +1,21 @@
+function Notify(message, type) {
+    const toastLiveExample = document.getElementById('liveToast');
+    const toastBody = toastLiveExample.querySelector('.toast-body');
+    
+    toastBody.innerText = message;
+    toastLiveExample.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
+
+    if (type === 'success') {
+        toastLiveExample.classList.add('bg-success');
+    } else if (type === 'danger') {
+        toastLiveExample.classList.add('bg-danger');
+    } else if (type === 'warning') {
+        toastLiveExample.classList.add('bg-warning');
+    }
+
+    const toastBootstrap = new bootstrap.Toast(toastLiveExample);
+    toastBootstrap.show();
+}
 
 function onNavItemClick(itemId, url) {
 
@@ -7,7 +25,6 @@ function onNavItemClick(itemId, url) {
         window.location.href = url;
     }
 }
-
 
 function extractCookie() {
     const cookieRow = document.cookie.split('; ').find(row => row.startsWith('cookie=='));
@@ -51,14 +68,15 @@ function handleFormSubmit(event) {
     .then(response => response.text())
     .then(data => {
         // Handle the response...
-        console.log(data);
-        alert('Supplier added successfully!');
-        
-        window.location.href = 'supplier.html'; // Redirect to the suppliers page
+        Notify('Supplier added successfully!', 'success');
+        setTimeout(() => {
+            window.location.href = 'supplier.html';
+        }, 1000);
+
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred while adding the supplier.');
+        Notify('An error occurred while adding the supplier.', 'danger');
     });
 }
 

@@ -1,5 +1,24 @@
 let sId = 0;
 
+function Notify(message, type) {
+  const toastLiveExample = document.getElementById('liveToast');
+  const toastBody = toastLiveExample.querySelector('.toast-body');
+  
+  toastBody.innerText = message;
+  toastLiveExample.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
+
+  if (type === 'success') {
+      toastLiveExample.classList.add('bg-success');
+  } else if (type === 'danger') {
+      toastLiveExample.classList.add('bg-danger');
+  } else if (type === 'warning') {
+      toastLiveExample.classList.add('bg-warning');
+  }
+
+  const toastBootstrap = new bootstrap.Toast(toastLiveExample);
+  toastBootstrap.show();
+}
+
 function refreshTable() {
   fetch('http://localhost:8080/api/getAllSuppliers', {
       headers: {
@@ -133,13 +152,15 @@ function handleFormSubmit (event) {
   .then(response => response.text()) 
   .then(data => {
       // Handle the response...
-      console.log(data);
-      alert('Supplier updated successfully!');
-      window.location.href = 'supplier.html'; // Redirect to the suppliers page
+      $('#editSupplierModal').modal('hide');
+      Notify('Supplier updated successfully!', 'success');
+      setTimeout(() => {
+          window.location.href = 'supplier.html';
+      }, 1000);
   })
   .catch(error => {
       console.error('Error:', error);
-      alert('An error occurred while updating the supplier.');
+      Notify('An error occurred while updating the supplier.', 'danger');
   });
 };
 

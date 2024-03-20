@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
                       <td>${customer.customerNo}</td>
                       <td>
                         <a id="updateCustomerLink" title="Update Customer" class="btn" data-bs-toggle="modal" data-bs-target="#updateCustomerModal" data-customer-id="${customer.customerId}"><i class="fa-solid fa-xl fa-pen-to-square"></i></a>
-                        <a title="Generate Order" class="btn" href="./AddDeliveryOrder.html?customerId=${customer.customerId}"><i class="fa-solid fa-xl fa-cart-plus"></i></a>
+                        <a title="Generate Order" class="btn" href="./AddDeliveryOrder.html?customerId=${customer.customerId}"><i class="fa-solid fa-xl fa-plus"></i></a>
                       </td>
                   `;
                   // href = "./updateForm.html?customerId= ${customer.customerId}"

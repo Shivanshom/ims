@@ -6,6 +6,26 @@ function extractCookie() {
     return cookieRow ? cookieRow.split('==')[1] : '';
 }
 
+function Notify(message, type) {
+    const toastLiveExample = document.getElementById('liveToast');
+    const toastBody = toastLiveExample.querySelector('.toast-body');
+    
+    toastBody.innerText = message;
+    toastLiveExample.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
+
+    if (type === 'success') {
+        toastLiveExample.classList.add('bg-success');
+    } else if (type === 'danger') {
+        toastLiveExample.classList.add('bg-danger');
+    } else if (type === 'warning') {
+        toastLiveExample.classList.add('bg-warning');
+    }
+
+    const toastBootstrap = new bootstrap.Toast(toastLiveExample);
+    toastBootstrap.show();
+}
+
+
 function generateProductRows(godownId) {
     const cookie = extractCookie();
 
@@ -251,7 +271,9 @@ async function addProduct() {
             const availableGodownCapacity = await getAvailableGodownCapacity(godownId);
 
             if (newTotalVolume > availableGodownCapacity) {
-                window.alert("The new product quantity and volume would exceed the available godown capacity. Please decrease the quantity, volume, or choose another godown.");
+                // window.alert("The new product quantity and volume would exceed the available godown capacity. Please decrease the quantity, volume, or choose another godown.");
+                $('#addProductModal').modal('hide');
+                Notify("The new product quantity & volume would exceed the available godown capacity.", "warning");
             } else {
                 const data = {
                     godownId: godownId,
@@ -271,11 +293,15 @@ async function addProduct() {
                         }
                     });
 
-                    window.alert("Product added successfully");
-                    window.location.href = "Products.html";
+                    // window.location.href = "Products.html";
+                    $('#addProductModal').modal('hide');
+
+                    Notify("Product added successfully", "success");
+                    generateProductTable();
                 } catch (error) {
                     console.error('Error adding product:', error);
-                    window.alert("Failed to add product: "+ error.response.data.message);
+                    $('#addProductModal').modal('hide');
+                    Notify("Failed to add product: "+ error.response.data.message, "danger");
                 }
             }
         } else {
@@ -361,7 +387,8 @@ async function editProduct() {
             const availableGodownCapacity = await getAvailableGodownCapacity(godownId);
 
             if (netVolumeChange > availableGodownCapacity) {
-                window.alert("The new product quantity and volume would exceed the available godown capacity. Please decrease the quantity, volume, or choose another godown.");
+                $('#editProductModal').modal('hide');
+                Notify("The new product quantity & volume would exceed the available godown capacity.", "warning");
             } else {
                 const data = {
                     godownId: godownId,
@@ -380,11 +407,14 @@ async function editProduct() {
                         withCredentials: true
                     });
 
-                    window.alert("Product edited successfully");
-                    window.location.href = "Products.html";
+                    // window.alert("Product edited successfully");
+                    $('#editProductModal').modal('hide');
+                    Notify("Product edited successfully", "success");
+                    generateProductTable();
                 } catch (error) {
                     console.error('Error editing product:', error);
-                    window.alert("Failed to edit product: " + error.response.data.message);
+                    $('#editProductModal').modal('hide');
+                    Notify("Failed to edit product: "+ error.response.data.message, "danger");
                 }
             }
         } else {
@@ -448,9 +478,6 @@ document.addEventListener("DOMContentLoaded", function() {
     table = new DataTable('#product-table');
     table1 = new DataTable('#product-table-1');
     generateProductTable();
-  
-    
-    
 });
 
 

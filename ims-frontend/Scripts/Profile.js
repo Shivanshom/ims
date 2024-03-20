@@ -1,3 +1,22 @@
+function Notify(message, type) {
+    const toastLiveExample = document.getElementById('liveToast');
+    const toastBody = toastLiveExample.querySelector('.toast-body');
+    
+    toastBody.innerText = message;
+    toastLiveExample.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
+
+    if (type === 'success') {
+        toastLiveExample.classList.add('bg-success');
+    } else if (type === 'danger') {
+        toastLiveExample.classList.add('bg-danger');
+    } else if (type === 'warning') {
+        toastLiveExample.classList.add('bg-warning');
+    }
+
+    const toastBootstrap = new bootstrap.Toast(toastLiveExample);
+    toastBootstrap.show();
+}
+
 function capitalizeFirstLetter(str) {
     return str.toLowerCase().replace(/(^|\s)\S/g, function (match) {
       return match.toUpperCase();
@@ -58,13 +77,9 @@ function updatePassword() {
     const username = JSON.parse(localStorage.getItem('user')).username;
     const cookie = extractCookie();
 
-    const oldPasswordInput = document.getElementById('oldPassword');
-    const newPasswordInput = document.getElementById('newPassword');
-
     const changePasswordModal = document.getElementById('changePasswordModal');
     changePasswordModal.addEventListener('submit', async (e) => {
         e.preventDefault();
-        oldPasswordInput.classList.remove('is-invalid');
 
         const formData = new FormData(e.target);
         const oldPassword = formData.get('oldPassword');
@@ -84,14 +99,14 @@ function updatePassword() {
                 }
             });
             const responseData = response.data;
-            alert(responseData);
-            window.location.href = 'profile.html';
+            Notify(responseData, 'success');
+            setTimeout(() => {
+                window.location.href = 'Profile.html';
+            }, 500);
 
         } catch (error) {
-            oldPasswordInput.classList.add('is-invalid');
-            
             console.error('Error updating password:', error); 
-            alert('Error updating password: ' + error.response.data);
+            Notify('Error updating password: '+ error.response.data, 'danger');
         }
     })
 }
