@@ -95,7 +95,6 @@ function fetchPurchaseOrders() {
             .then(purchaseOrders => {
                 localStorage.setItem("purchaseOrders",purchaseOrders.length);
                 populatePurchaseTable(purchaseOrders);
-
             });
         } else {
             // Invalid role, handle accordingly
