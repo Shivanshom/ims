@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 function extractCookie() {
 
   const cookieRow = document.cookie
@@ -9,7 +11,7 @@ function extractCookie() {
 
 function getCustomerById(customerId) {
   const cookie = extractCookie();
-  axios.get(`http://localhost:8080/api/getCustomerById/${customerId}`, {
+  axios.get(`${baseURL}/api/getCustomerById/${customerId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -31,7 +33,7 @@ function getCustomerById(customerId) {
 document.addEventListener("DOMContentLoaded", function () {
   const cookie = extractCookie();
 
-  fetch("http://localhost:8080/api/getAllCustomers", {
+  fetch(`${baseURL}/api/getAllCustomers`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

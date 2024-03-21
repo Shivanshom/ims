@@ -1,6 +1,6 @@
 // let table = new DataTable('#myTable');
 
-
+const baseURL = SERVER_URL;
  
 
 
@@ -34,7 +34,7 @@ function fetchPurchaseOrders() {
     const godownId = parseInt(JSON.parse(localStorage.getItem('user')).godownId);
     const cookie = extractCookie();
     var role = JSON.parse(localStorage.getItem('user')).role; // Get the role from the local storage
-    fetch('http://localhost:8080/api/getAllPurchaseOrders', {
+    fetch(`${baseURL}/api/getAllPurchaseOrders`, {
         headers:{
             "Content-Type": "application/json",
             'Authorization': `Bearer ${cookie}`
@@ -46,7 +46,7 @@ function fetchPurchaseOrders() {
             // Proceed as before, no filtering needed
             // Fetch the supplier name for each purchase order
             var supplierPromises = data.map(function(order) {
-                return fetch('http://localhost:8080/api/getSupplierBySupplierId/' + order.supplierId, {
+                return fetch(`${baseURL}/api/getSupplierBySupplierId/` + order.supplierId, {
                     headers:{
                         "Content-Type": "application/json",
                         'Authorization': `Bearer ${cookie}`
@@ -76,7 +76,7 @@ function fetchPurchaseOrders() {
 
             // Fetch the supplier name for each purchase order
             var supplierPromises = filteredData.map(function(order) {
-                return fetch('http://localhost:8080/api/getSupplierBySupplierId/' + order.supplierId, {
+                return fetch(`${baseURL}/api/getSupplierBySupplierId/` + order.supplierId, {
                     headers:{
                         "Content-Type": "application/json",
                         'Authorization': `Bearer ${cookie}`
@@ -95,7 +95,6 @@ function fetchPurchaseOrders() {
             .then(purchaseOrders => {
                 localStorage.setItem("purchaseOrders",purchaseOrders.length);
                 populatePurchaseTable(purchaseOrders);
-
             });
         } else {
             // Invalid role, handle accordingly
@@ -198,7 +197,7 @@ function conditionalRendering() {
 function fetchPurchaseDetails(purchaseId) {
     console.log(purchaseId)
     const cookie = extractCookie();
-    fetch('http://localhost:8080/api/getPurchaseOrderByPurchaseId/' + purchaseId, {
+    fetch(`${baseURL}/api/getPurchaseOrderByPurchaseId/` + purchaseId, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

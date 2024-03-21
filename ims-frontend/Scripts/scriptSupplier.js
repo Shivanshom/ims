@@ -1,26 +1,9 @@
 let sId = 0;
 
-function Notify(message, type) {
-  const toastLiveExample = document.getElementById('liveToast');
-  const toastBody = toastLiveExample.querySelector('.toast-body');
-  
-  toastBody.innerText = message;
-  toastLiveExample.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
-
-  if (type === 'success') {
-      toastLiveExample.classList.add('bg-success');
-  } else if (type === 'danger') {
-      toastLiveExample.classList.add('bg-danger');
-  } else if (type === 'warning') {
-      toastLiveExample.classList.add('bg-warning');
-  }
-
-  const toastBootstrap = new bootstrap.Toast(toastLiveExample);
-  toastBootstrap.show();
-}
+const baseURL = SERVER_URL;
 
 function refreshTable() {
-  fetch('http://localhost:8080/api/getAllSuppliers', {
+  fetch(`${baseURL}/api/getAllSuppliers`, {
       headers: {
           "Content-Type": "application/json",
           'Authorization': `Bearer ${cookie}`
@@ -108,7 +91,7 @@ window.onload = ()=>{
 
 function FetchSupplierData(supplierId){
   sId=supplierId;
-  fetch('http://localhost:8080/api/getSupplierBySupplierId/' + supplierId ,{
+  fetch(`${baseURL}/api/getSupplierBySupplierId/` + supplierId ,{
       headers:{
           "Content-Type": "application/json",
           'Authorization': `Bearer ${cookie}`
@@ -136,7 +119,7 @@ function handleFormSubmit (event) {
   var contactNumber = document.querySelector('input[placeholder="Contact Number"]').value;
 
   // Call the Update API
-  fetch('http://localhost:8080/api/updateSuppliers', {
+  fetch(`${baseURL}/api/updateSuppliers`, {
       method: 'PUT',
       headers: {
           'Content-Type': 'application/json',

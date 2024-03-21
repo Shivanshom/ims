@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 function extractCookie() {
     const cookieRow = document.cookie.split('; ').find(row => row.startsWith('cookie=='));
     return cookieRow ? cookieRow.split('==')[1] : '';
@@ -6,7 +8,7 @@ function extractCookie() {
 const cookie = extractCookie();
 
 const instance = axios.create({
-    baseURL: 'http://localhost:8080/api/',
+    baseURL: `${baseURL}/api/`,
     headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${cookie}`

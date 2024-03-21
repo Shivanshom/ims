@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 document.getElementById('productForm').addEventListener('submit', handleFormSubmit);
 
 
@@ -22,7 +24,7 @@ const cookie = extractCookie();
 var role = JSON.parse(localStorage.getItem('user')).role; // Get the role from the local storage
 function fetchProducts() {
   
-    fetch('http://localhost:8080/api/getDistinctProduct', { headers:{
+    fetch(`${baseURL}/api/getDistinctProduct`, { headers:{
         "Content-Type": "application/json",
         'Authorization': `Bearer ${cookie}`
  } })
@@ -51,7 +53,8 @@ function populateSupplierDropdown(suppliers) {
 function placeOrder() {
     // Check if the cart is empty
     if (cart.length === 0) {
-        alert('Your cart is empty. Please add items before placing an order.');
+        // alert('Your cart is empty. Please add items before placing an order.');
+        Notify('Your cart is empty. Please add items before placing an order.', 'danger');
         return;
     }
 
@@ -64,7 +67,7 @@ function placeOrder() {
 
     console.log(data);
     // Send a POST request
-    fetch(`http://localhost:8080/api/placeOrder/${customerId}`, {
+    fetch(`${baseURL}/api/placeOrder/${customerId}`, {
        
         method: 'POST',
         headers: {
@@ -79,8 +82,11 @@ function placeOrder() {
             console.log('Success:', data);
             cart = [];
             // Redirect to Purchase.html
-            alert('ORDER HAS BEEN PLACED SUCESSFULLY')
-            window.location.href = 'DeliveryOrder.html';
+            // alert('ORDER HAS BEEN PLACED SUCESSFULLY')
+            Notify('ORDER HAS BEEN PLACED SUCESSFULLY', 'success');
+            setTimeout(() => {
+                window.location.href = 'DeliveryOrder.html';
+            }, 1000)
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -116,7 +122,8 @@ function handleFormSubmit(event) {
 
     // Check if all fields are filled
     if (productName.trim() === '' ||  price.trim() === '' || quantity.trim() === '') {
-        alert('Please fill in all fields.');
+        // alert('Please fill in all fields.');
+        Notify('Please fill in all fields.', 'danger');
         return;
     }
 

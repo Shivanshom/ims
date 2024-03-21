@@ -10,6 +10,7 @@
 //   login_btn.addEventListener('click', function() {
 //       user_container.classList.remove('login-section--display');
 //   });
+const baseURL = SERVER_URL;
 
   // Function to handle registration form submission
   document.querySelector('.registeration-form-1').addEventListener('submit', function(event) {
@@ -109,7 +110,7 @@
     formData.append('password', document.getElementById('password1').value);
     // console.log(formData);
     // Make AJAX request to login endpoint using Axios
-    axios.post('http://localhost:8080/api/login', formData, 
+    axios.post(`${baseURL}/api/login`, formData, 
     {
         headers:{
             'Content-Type':'application/json',
@@ -127,14 +128,19 @@
             // localStorage.setItem("cookie", cookie);
             localStorage.setItem("user", JSON.stringify(user));
 
-            alert("login-successful");
+            // alert("login-successful");
+            Notify(message, 'success');
             // Redirect to a new page or perform other actions
             
-            window.location.href = role==="admin"? "Home.html" : "Home.html"; 
+            // window.location.href = role==="admin"? "Home.html" : "Home.html"; 
+            setTimeout(() => {
+              window.location.href = "Home.html";
+            });
         })
         .catch(error => {
             console.error('Error:', error);
-            alert(error.response.data.message)
+            // alert(error.response.data.message)
+            Notify(error.response.data.message, 'danger');
         });
 });
 
