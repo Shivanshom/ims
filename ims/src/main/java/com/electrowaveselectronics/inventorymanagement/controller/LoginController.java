@@ -62,7 +62,7 @@ public class LoginController {
             return loginService.register(username, password, godownHeadName,email,godownheadNo, parsedGodownId,address);
         }
         catch (Exception e){
-            return new ResponseEntity<>("Somehing went wrong ... "+ e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
