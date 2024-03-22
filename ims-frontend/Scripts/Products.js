@@ -155,7 +155,7 @@ function validateCostPrice(costPrice, costPriceInput) {
 
 function validateProductVolume(productVolume, volumeInput) {
     var volumeInput = volumeInput;
-    if (!Number.isInteger(parseInt(productVolume))) {
+    if (isNaN(parseFloat(productVolume))) {
         volumeInput.classList.add('is-invalid');
         volumeInput.classList.remove('is-valid');
         return false;
@@ -165,6 +165,7 @@ function validateProductVolume(productVolume, volumeInput) {
         return true;
     }
 }
+
 
 function validateProductQuantity(productQuantity, quantityInput) {
     var quantityInput = quantityInput;
