@@ -1,7 +1,9 @@
 let sId = 0;
 
+const baseURL = SERVER_URL;
+
 function refreshTable() {
-  fetch('http://localhost:8080/api/getAllSuppliers', {
+  fetch(`${baseURL}/api/getAllSuppliers`, {
       headers: {
           "Content-Type": "application/json",
           'Authorization': `Bearer ${cookie}`
@@ -89,7 +91,7 @@ window.onload = ()=>{
 
 function FetchSupplierData(supplierId){
   sId=supplierId;
-  fetch('http://localhost:8080/api/getSupplierBySupplierId/' + supplierId ,{
+  fetch(`${baseURL}/api/getSupplierBySupplierId/` + supplierId ,{
       headers:{
           "Content-Type": "application/json",
           'Authorization': `Bearer ${cookie}`
@@ -117,7 +119,7 @@ function handleFormSubmit (event) {
   var contactNumber = document.querySelector('input[placeholder="Contact Number"]').value;
 
   // Call the Update API
-  fetch('http://localhost:8080/api/updateSuppliers', {
+  fetch(`${baseURL}/api/updateSuppliers`, {
       method: 'PUT',
       headers: {
           'Content-Type': 'application/json',
@@ -133,13 +135,15 @@ function handleFormSubmit (event) {
   .then(response => response.text()) 
   .then(data => {
       // Handle the response...
-      console.log(data);
-      alert('Supplier updated successfully!');
-      window.location.href = 'supplier.html'; // Redirect to the suppliers page
+      $('#editSupplierModal').modal('hide');
+      Notify('Supplier updated successfully!', 'success');
+      setTimeout(() => {
+          window.location.href = 'supplier.html';
+      }, 1000);
   })
   .catch(error => {
       console.error('Error:', error);
-      alert('An error occurred while updating the supplier.');
+      Notify('An error occurred while updating the supplier.', 'danger');
   });
 };
 

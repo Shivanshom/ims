@@ -1,6 +1,8 @@
 var table;
 var table1;
 
+const baseURL = SERVER_URL;
+
 function extractCookie() {
     const cookieRow = document.cookie.split('; ').find(row => row.startsWith('cookie=='));
     return cookieRow ? cookieRow.split('==')[1] : '';
@@ -9,7 +11,7 @@ function extractCookie() {
 function generateProductRows(godownId) {
     const cookie = extractCookie();
 
-    axios.get(`http://localhost:8080/api/listProducts/${godownId}`, {
+    axios.get(`${baseURL}/api/listProducts/${godownId}`, {
         headers: {
             'Content-Type': 'application/json', 
             'Authorization': `Bearer ${cookie}`
@@ -84,7 +86,7 @@ function generateProductRows(godownId) {
 function generateProductRowsAdmin() {
     const cookie = extractCookie();
 
-    axios.get('http://localhost:8080/api/listAllProducts', {
+    axios.get(`${baseURL}/api/listAllProducts`, {
         headers: {
             'Content-Type': 'application/json', 
             'Authorization': `Bearer ${cookie}`
@@ -252,7 +254,9 @@ async function addProduct() {
             const availableGodownCapacity = await getAvailableGodownCapacity(godownId);
 
             if (newTotalVolume > availableGodownCapacity) {
-                window.alert("The new product quantity and volume would exceed the available godown capacity. Please decrease the quantity, volume, or choose another godown.");
+                // window.alert("The new product quantity and volume would exceed the available godown capacity. Please decrease the quantity, volume, or choose another godown.");
+                $('#addProductModal').modal('hide');
+                Notify("The new product quantity & volume would exceed the available godown capacity.", "warning");
             } else {
                 const data = {
                     godownId: godownId,
@@ -265,18 +269,22 @@ async function addProduct() {
                 };
 
                 try {
-                    const response = await axios.post("http://localhost:8080/api/addProduct", data, {
+                    const response = await axios.post(`${baseURL}/api/addProduct`, data, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${cookie}`
                         }
                     });
 
-                    window.alert("Product added successfully");
-                    window.location.href = "Products.html";
+                    // window.location.href = "Products.html";
+                    $('#addProductModal').modal('hide');
+
+                    Notify("Product added successfully", "success");
+                    generateProductTable();
                 } catch (error) {
                     console.error('Error adding product:', error);
-                    window.alert("Failed to add product: "+ error.response.data.message);
+                    $('#addProductModal').modal('hide');
+                    Notify("Failed to add product: "+ error.response.data.message, "danger");
                 }
             }
         } else {
@@ -288,7 +296,7 @@ async function addProduct() {
 
 function fillEditProductModal(productId) {
     const cookie = extractCookie();
-    axios.get(`http://localhost:8080/api/getProduct/${productId}`, {
+    axios.get(`${baseURL}/api/getProduct/${productId}`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${cookie}`
@@ -362,7 +370,8 @@ async function editProduct() {
             const availableGodownCapacity = await getAvailableGodownCapacity(godownId);
 
             if (netVolumeChange > availableGodownCapacity) {
-                window.alert("The new product quantity and volume would exceed the available godown capacity. Please decrease the quantity, volume, or choose another godown.");
+                $('#editProductModal').modal('hide');
+                Notify("The new product quantity & volume would exceed the available godown capacity.", "warning");
             } else {
                 const data = {
                     godownId: godownId,
@@ -373,7 +382,7 @@ async function editProduct() {
                 };
 
                 try {
-                    const response = await axios.patch("http://localhost:8080/api/updateProduct", data, {
+                    const response = await axios.patch(`${baseURL}/api/updateProduct`, data, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${cookie}`
@@ -381,11 +390,14 @@ async function editProduct() {
                         withCredentials: true
                     });
 
-                    window.alert("Product edited successfully");
-                    window.location.href = "Products.html";
+                    // window.alert("Product edited successfully");
+                    $('#editProductModal').modal('hide');
+                    Notify("Product edited successfully", "success");
+                    generateProductTable();
                 } catch (error) {
                     console.error('Error editing product:', error);
-                    window.alert("Failed to edit product: " + error.response.data.message);
+                    $('#editProductModal').modal('hide');
+                    Notify("Failed to edit product: "+ error.response.data.message, "danger");
                 }
             }
         } else {
@@ -399,7 +411,7 @@ async function editProduct() {
 async function getAvailableGodownCapacity(godownId) {
     try {
         const cookie = extractCookie();
-        const response = await axios.get(`http://localhost:8080/api/getCapacity/${godownId}`, {
+        const response = await axios.get(`${baseURL}/api/getCapacity/${godownId}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${cookie}`
@@ -449,9 +461,6 @@ document.addEventListener("DOMContentLoaded", function() {
     table = new DataTable('#product-table');
     table1 = new DataTable('#product-table-1');
     generateProductTable();
-  
-    
-    
 });
 
 

@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 document.getElementById('productForm').addEventListener('submit', handleFormSubmit);
   
 
@@ -54,12 +56,13 @@ var godownIdInput = document.querySelector('input[placeholder="Godown Id"]');
 // Set the value of the input field to the fetched GodownId
 if (godownIdInput) {
     godownIdInput.value = "Godown Id: " + godownId;
+    console.log(godownIdInput.value);
 }
 
 var cart = []; // Array to store the cart items
 
 function fetchSuppliers() {
-    fetch('http://localhost:8080/api/getAllSuppliers',{
+    fetch(`${baseURL}/api/getAllSuppliers`,{
     headers:{
         "Content-Type": "application/json",
         'Authorization': `Bearer ${cookie}`
@@ -88,13 +91,13 @@ function populateSupplierDropdown(suppliers) {
 function placeOrder() {
     // Check if the cart is empty
     if (cart.length === 0) {
-        alert('Your cart is empty. Please add items before placing an order.');
+        // alert('Your cart is empty. Please add items before placing an order.');
+        Notify('Your cart is empty. Please add items before placing an order.', 'danger');
         return;
     }
 
     // Get godownId and supplierId from the form
-    var godownIdString = document.querySelector('input[placeholder="Godown Id"]').value;
-    var godownId = parseInt(godownIdString.split(': ')[1]);
+   
 
     var supplierId = document.querySelector('select[name="supplierName"]').value;
 
@@ -105,9 +108,9 @@ function placeOrder() {
         products: cart
     };
 
-
+console.log(data);
     // Send a POST request
-    fetch('http://localhost:8080/api/createPurchaseOrder', {
+    fetch(`${baseURL}/api/createPurchaseOrder`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -169,25 +172,29 @@ function handleFormSubmit(event) {
     // Check if all fields are filled
     if (godownId.trim() === '' || supplierName.trim() === '' || productName.trim() === '' ||
         productVolume.trim() === '' || price.trim() === '' || quantity.trim() === '' || productCategory.trim() === '' || productType.trim() === '') {
-        alert('Please fill in all fields.');
+        // alert('Please fill in all fields.');
+        // Notify('Please fill in all fields.', 'danger');
         return;
     }
 
     // Check if product volume is a valid integer
     if (!isValidInteger(productVolume)) {
-        alert('Product volume must be a whole number.');
+        // alert('Product volume must be a whole number.');
+        Notify('Product volume must be a whole number.', 'danger');
         return;
     }
 
     // Check if price is a valid integer
     if (!isValidInteger(price)) {
-        alert('Price must be a whole number.');
+        // alert('Price must be a whole number.');
+        Notify('Price must be a whole number.', 'danger');
         return;
     }
 
     // Check if quantity is a valid integer
     if (!isValidInteger(quantity)) {
-        alert('Quantity must be a whole number.');
+        // alert('Quantity must be a whole number.');
+        Notify('Quantity must be a whole number.', 'danger');
         return;
     }
 

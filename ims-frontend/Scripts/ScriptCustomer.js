@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 function extractCookie() {
 
   const cookieRow = document.cookie
@@ -9,7 +11,7 @@ function extractCookie() {
 
 function getCustomerById(customerId) {
   const cookie = extractCookie();
-  axios.get(`http://localhost:8080/api/getCustomerById/${customerId}`, {
+  axios.get(`${baseURL}/api/getCustomerById/${customerId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -31,7 +33,7 @@ function getCustomerById(customerId) {
 document.addEventListener("DOMContentLoaded", function () {
   const cookie = extractCookie();
 
-  fetch("http://localhost:8080/api/getAllCustomers", {
+  fetch(`${baseURL}/api/getAllCustomers`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -56,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
                       <td>${customer.customerNo}</td>
                       <td>
                         <a id="updateCustomerLink" title="Update Customer" class="btn" data-bs-toggle="modal" data-bs-target="#updateCustomerModal" data-customer-id="${customer.customerId}"><i class="fa-solid fa-xl fa-pen-to-square"></i></a>
-                        <a title="Generate Order" class="btn" href="./AddDeliveryOrder.html?customerId=${customer.customerId}"><i class="fa-solid fa-xl fa-cart-plus"></i></a>
+                        <a title="Generate Order" class="btn" href="./AddDeliveryOrder.html?customerId=${customer.customerId}"><i class="fa-solid fa-xl fa-plus"></i></a>
                       </td>
                   `;
                   // href = "./updateForm.html?customerId= ${customer.customerId}"
