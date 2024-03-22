@@ -201,5 +201,27 @@ public class DeliveryOrderService {
         }
     }
 
+    public List<DeliveryOrder> getOrdersForYear(int godownId, int year) {
+        // Set start date to the first day of the year
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, Calendar.JANUARY);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date startDate = calendar.getTime();
 
+        // Set end date to the last day of the year
+        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
+        calendar.set(Calendar.DAY_OF_MONTH, 31);
+        Date endDate = calendar.getTime();
+
+        return deliveryRepository.getOrdersByDateRange(godownId, startDate, endDate);
+    }
+
+    public List<DeliveryOrder> getOrdersByDateRange(int godownId, Date startDate, Date endDate) {
+        return deliveryRepository.getOrdersByDateRange(godownId, startDate, endDate);
+    }
+
+    public List<DeliveryOrder> getProductsForYear(int godownId, int year) {
+        return deliveryRepository.getOrdersForYear(godownId,year);
+    }
 }
