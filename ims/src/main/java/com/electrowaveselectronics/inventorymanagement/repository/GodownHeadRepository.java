@@ -34,4 +34,11 @@ public interface GodownHeadRepository extends JpaRepository<GodownHead, Integer>
 
     GodownHead findByGodownId(int godownId);
 
+    boolean existsByEmail(String email);
+
+    boolean existsByGodownheadNo(String godownheadNo);
+
+    @Query("SELECT g FROM GodownHead g WHERE g.email = :email")
+    GodownHead findByEmail(String email);
+
 }
