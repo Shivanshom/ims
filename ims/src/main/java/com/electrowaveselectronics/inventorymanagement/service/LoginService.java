@@ -2,6 +2,7 @@ package com.electrowaveselectronics.inventorymanagement.service;
 
 import com.electrowaveselectronics.inventorymanagement.entity.GodownHead;
 import com.electrowaveselectronics.inventorymanagement.repository.GodownHeadRepository;
+import com.electrowaveselectronics.inventorymanagement.repository.OtpRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
@@ -29,7 +28,16 @@ public class LoginService {
     @Autowired
     AuthService authService;
 
+    @Autowired
+    OtpService otpService;
+
+    @Autowired
+    OtpRepository otpRepository;
+
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    private final Map<String, String> otpMap = new HashMap<>();
 
     public ResponseEntity<?> login(String username, String password, HttpServletResponse response) throws Exception {
         try {
@@ -191,5 +199,53 @@ public class LoginService {
         authService.createAuthInfo(newGodownHead.getUsername(), cookie.getValue());
 
         return ResponseEntity.ok("Admin registeration successful");
+    }
+
+    private String generateOtp() {
+        Random random = new Random();
+        int otpValue = 100000 + random.nextInt(900000);
+        return String.valueOf(otpValue);
+    }
+
+
+    public ResponseEntity<?> forgotPassword(String godownheadNo) {
+
+        try {
+            System.out.println(godownheadNo);
+            Map<String, String> otpMap = new HashMap<>();
+
+            GodownHead godownHead = godownHeadRepository.findByContactNumber(godownheadNo);
+            System.out.println(godownHead);
+            if (Objects.nonNull(godownHead)) {
+                // Generate OTP
+                String otp = generateOtp();
+                otpMap.put(godownheadNo,otp); // Store OTP in map for verification
+                otpService.saveOtp(godownheadNo,otp);
+
+                // Send OTP to user via SMS or email (implement this part)
+
+                return ResponseEntity.ok("OTP sent successfully.");
+            } else {
+                return ResponseEntity.badRequest().body("Invalid contact number.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Something went wrong... " + e.getLocalizedMessage());
+        }
+    }
+
+    public ResponseEntity<?> resetpassword(String godownheadNo, String newPassword) {
+        try {
+            GodownHead godownHead = godownHeadRepository.findByContactNumber(godownheadNo);
+            if (godownHead != null) {
+                godownHead.setPassword(newPassword);
+                godownHeadRepository.save(godownHead);
+                return ResponseEntity.ok("Password reset successfully.");
+            }
+            return ResponseEntity.badRequest().body("Invalid godown head number.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Something went wrong... " + e.getLocalizedMessage());
+        }
+
+
     }
 }
