@@ -1,6 +1,10 @@
 package com.electrowaveselectronics.inventorymanagement.service;
 
+import com.electrowaveselectronics.inventorymanagement.dto.BillDTO;
+import com.electrowaveselectronics.inventorymanagement.dto.ProductDTO;
 import com.electrowaveselectronics.inventorymanagement.entity.Customer;
+import com.electrowaveselectronics.inventorymanagement.entity.DeliveryOrder;
+import com.electrowaveselectronics.inventorymanagement.repository.DeliveryRepository;
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
@@ -11,6 +15,7 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -19,21 +24,26 @@ import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class BillPdfService {
 
+    @Autowired
+    DeliveryRepository deliveryRepository;
     private Logger logger = LoggerFactory.getLogger(BillPdfService.class);
-    public ByteArrayInputStream createPdf(){
+    public ByteArrayInputStream createPdf(int orderId){
         logger.info("Create PDF Started");
 
 
         // Sample data for demonstration
-        String sellerName = "Vijay kumar";
-        String godownAddress = "Industrial Area Phase 1, Panchkula, Haryana 134113";
-        String invoiceNumber = "INV-001";
-        String invoiceDate = "2024-01-17";
-        String totalAmount = "$100.00";
+//        String sellerName = "Vijay kumar";
+//        String godownAddress = "Industrial Area Phase 1, Panchkula, Haryana 134113";
+//        String invoiceNumber = "INV-001";
+//        String invoiceDatee = "2024-01-17";
+//        String totalAmount = "100.00";
+//        int totalQuantity = 5;
 //        String title = "Bn gya bill";
 //        String contenet = "product List";
 //        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD,25);
@@ -55,12 +65,28 @@ public class BillPdfService {
 //
 //        document.close();
         try {
-            Resource resource = new ClassPathResource("assets/pyramidLogo.png");
+            DeliveryOrder deliveryOrder = deliveryRepository.findById(orderId).orElseThrow(() -> new Exception("Order not found"));
+            if (orderId <= 0) {
+                throw new IllegalArgumentException("Invalid order ID");
+            }
+            ////////////  DATA //////////////////
+            Customer customer = deliveryOrder.getCustomer();
+            List<ProductDTO> productDTOList = deliveryOrder.getProducts();
+
+            String customerAddress = customer.getCustomerAddress();
+            String customerName = customer.getCustomerName();
+            int invoiceNumber = orderId;
+            int totalQuantity = deliveryOrder.getOrderQuantity();
+            Date orderDate = deliveryOrder.getOrderDate();
+            int totalAmount =  deliveryOrder.getTotalSellPrice();
+            String sellerName = deliveryOrder.getGodownHeadName();
+            String godownAddress = deliveryOrder.getGodownAddress();
+            ///////////////////////////////////////////////////
             Document document = new Document();
             PdfWriter writer = PdfWriter.getInstance(document, out);
             PdfWriter.getInstance(document, out);
             document.open();
-
+            Font totalFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
             // Title
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 25);
             PdfPCell titleCell = new PdfPCell(new Paragraph("TAX Invoice", titleFont));
@@ -95,11 +121,11 @@ public class BillPdfService {
             Font sellerFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
             Paragraph sellerPara = new Paragraph();
             sellerPara.setFont(sellerFont);
-            sellerPara.add("Sold By"+ "\n");
-            sellerPara.add( sellerName + "\n");
+            sellerPara.add(new Chunk("Sold By"+ "\n", totalFont));
+            sellerPara.add(sellerName + "\n");
             sellerPara.add(godownAddress + "\n");
-            sellerPara.add("Order Id : "+invoiceNumber + "\n");
-            sellerPara.add("Invoice Date: " + invoiceDate + "\n");
+            sellerPara.add("Order Id : INV-"+invoiceNumber + "\n");
+            sellerPara.add("Invoice Date: " + orderDate.toString().substring(0, 10) + "\n");
             sellerPara.setSpacingAfter(10f);
             document.add(sellerPara);
 
@@ -107,59 +133,81 @@ public class BillPdfService {
             Font customerFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
             Paragraph customerPara = new Paragraph();
             customerPara.setFont(customerFont);
-            customerPara.add("Invoice To"+ "\n");
-            customerPara.add("Name : "+ sellerName + "\n");
-            customerPara.add("Address : "+ godownAddress + "\n");
+            customerPara.add(new Chunk("Invoice To"+ "\n",totalFont));
+            customerPara.add("Name : "+ customerName + "\n");
+            customerPara.add("Address : "+ customerAddress + "\n");
 
             customerPara.setSpacingAfter(10f);
             document.add(customerPara);
 
-            // Invoice Items (Sample)
+            // Invoice Items
             Font itemFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
-            PdfPTable table = new PdfPTable(3);
+            PdfPTable table = new PdfPTable(7); // 7 columns for Sr. No, Product, Rate, Qty., Taxable value, GST, Total
             table.setWidthPercentage(100);
             table.setSpacingBefore(10f);
             table.setSpacingAfter(10f);
 
-            float[] columnWidths = {2f, 2f, 2f};
-            table.setWidths(columnWidths);
+            // Heading Row
+            String[] headings = {"Sr. No", "Product", "Rate", "Qty.", "Taxable value", "GST (%)", "Total"};
+            for (String heading : headings) {
+                PdfPCell headingCell = new PdfPCell(new Paragraph(heading, itemFont));
+                headingCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                headingCell.setBackgroundColor(Color.LIGHT_GRAY);
+                table.addCell(headingCell);
+            }
 
-            PdfPCell cell = new PdfPCell(new Paragraph("Product"));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell.setBackgroundColor(Color.LIGHT_GRAY);
-            table.addCell(cell);
+            // Table Data
+            int srNo = 1;
+            for (ProductDTO productDTO : productDTOList) {
+                table.addCell(new Paragraph(String.valueOf(srNo++), itemFont));
+                table.addCell(new Paragraph(productDTO.getProductName(), itemFont));
+                table.addCell(new Paragraph(String.format("%.2f", productDTO.getSellPrice()), itemFont));
+                table.addCell(new Paragraph(String.valueOf(productDTO.getOrderQuantity()), itemFont));
 
-            cell = new PdfPCell(new Paragraph("Quantity"));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell.setBackgroundColor(Color.LIGHT_GRAY);
-            table.addCell(cell);
+                double taxableValue = productDTO.getSellPrice() * productDTO.getOrderQuantity() * 0.18;
+                table.addCell(new Paragraph(String.format("%.2f", taxableValue), itemFont));
 
-            cell = new PdfPCell(new Paragraph("Price"));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell.setBackgroundColor(Color.LIGHT_GRAY);
-            table.addCell(cell);
 
-            // Sample Invoice Items
-            table.addCell(new Paragraph("Product A", itemFont));
-            table.addCell(new Paragraph("2", itemFont));
-            table.addCell(new Paragraph("$50.00", itemFont));
+                table.addCell(new Paragraph("18", itemFont));
 
-            table.addCell(new Paragraph("Product B", itemFont));
-            table.addCell(new Paragraph("1", itemFont));
-            table.addCell(new Paragraph("$50.00", itemFont));
+                double total = taxableValue + (productDTO.getSellPrice() * productDTO.getOrderQuantity());
+                table.addCell(new Paragraph(String.format("%.2f", total), itemFont));
+            }
 
             document.add(table);
 
-            // Total Amount
-            Font totalFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
-            Paragraph totalPara = new Paragraph("Total Amount: " + totalAmount, totalFont);
-            totalPara.setAlignment(Element.ALIGN_RIGHT);
-            document.add(totalPara);
+            // Total Quantity and Total Amount
+            Paragraph totalQtyPara = new Paragraph("Total Quantity: " + totalQuantity, totalFont);
+            totalQtyPara.setAlignment(Element.ALIGN_LEFT);
+            double totalAmountWithTax = totalAmount + (totalAmount * 0.18);
+
+            // Format the total amount to show up to two decimal places
+            String formattedTotalAmount = String.format("%.2f", totalAmountWithTax);
+            Paragraph totalAmountPara = new Paragraph("Total Amount (Rs.): " + formattedTotalAmount, totalFont);
+
+
+            PdfPTable totalTable = new PdfPTable(2);
+            totalTable.setWidthPercentage(100);
+            totalTable.setWidths(new float[]{1, 2});
+
+            PdfPCell totalQtyCell = new PdfPCell(totalQtyPara);
+            totalQtyCell.setBorder(Rectangle.NO_BORDER);
+
+            PdfPCell totalAmountCell = new PdfPCell(totalAmountPara);
+            totalAmountCell.setBorder(Rectangle.NO_BORDER);
+            totalAmountCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+
+            totalTable.addCell(totalQtyCell);
+            totalTable.addCell(totalAmountCell);
+
+            document.add(totalTable);
 
             document.close();
         } catch (DocumentException e) {
             logger.error("Error occurred: {}", e.getMessage());
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
