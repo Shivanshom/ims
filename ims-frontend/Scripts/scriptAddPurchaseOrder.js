@@ -56,6 +56,7 @@ var godownIdInput = document.querySelector('input[placeholder="Godown Id"]');
 // Set the value of the input field to the fetched GodownId
 if (godownIdInput) {
     godownIdInput.value = "Godown Id: " + godownId;
+    console.log(godownIdInput.value);
 }
 
 var cart = []; // Array to store the cart items
@@ -96,8 +97,7 @@ function placeOrder() {
     }
 
     // Get godownId and supplierId from the form
-    var godownIdString = document.querySelector('input[placeholder="Godown Id"]').value;
-    var godownId = parseInt(godownIdString.split(': ')[1]);
+   
 
     var supplierId = document.querySelector('select[name="supplierName"]').value;
 
@@ -108,7 +108,7 @@ function placeOrder() {
         products: cart
     };
 
-
+console.log(data);
     // Send a POST request
     fetch(`${baseURL}/api/createPurchaseOrder`, {
         method: 'POST',

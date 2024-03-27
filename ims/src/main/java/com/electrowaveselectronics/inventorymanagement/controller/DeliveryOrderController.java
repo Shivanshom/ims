@@ -27,6 +27,7 @@ public class DeliveryOrderController {
     private GodownHeadService godownHeadService;
 
     //FOR ADMIN USE
+
     @GetMapping("/getDeliveryOrders")
     @ResponseBody
     public ResponseEntity<?> getAllDeliveryOrders(@RequestHeader("Authorization") String authorizationHeader) {
@@ -209,6 +210,107 @@ public class DeliveryOrderController {
         }
 
     }
+
+    @GetMapping("/getSalesByWeek")
+    public ResponseEntity<?> getSalesByWeek(@RequestParam("godownId") int godownId,
+                                            @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
+            ) {
+                List<DeliveryOrder> orders = deliveryOrderService.getOrdersForYear(godownId, Calendar.getInstance().get(Calendar.YEAR));
+//                System.out.println(orders);
+
+                // Group orders by week
+                List<Map<String, Object>> salesByWeek = groupOrdersByWeek(orders);
+
+                return new ResponseEntity<>(salesByWeek, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("FAILED TO FETCH ORDER DETAILS", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private List<Map<String, Object>> groupOrdersByWeek(List<DeliveryOrder> orders) {
+        List<Map<String, Object>> salesByWeekList = new ArrayList<>();
+
+        for (int i = 1; i <= 52; i++) {
+            Map<String, Object> weekData = new LinkedHashMap<>();
+            weekData.put("week", "Week " + i);
+            weekData.put("salesCount", 0L);
+            salesByWeekList.add(weekData);
+        }
+
+        for (DeliveryOrder order : orders) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(order.getOrderDate());
+            int weekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
+            Map<String, Object> weekData = salesByWeekList.get(weekNumber - 1);
+            weekData.put("salesCount", (Long) weekData.get("salesCount") + 1);
+        }
+
+        return salesByWeekList;
+    }
+
+
+
+    @GetMapping("/getOrderQuantityByWeek")
+    public ResponseEntity<?> getOrderQuantityByWeek(@RequestParam("godownId") int godownId,
+                                                    @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
+                List<DeliveryOrder> orders = deliveryOrderService.getProductsForYear(godownId, Calendar.getInstance().get(Calendar.YEAR));
+
+                // Group orders by week
+                List<Map<String, Object>> orderQuantityByWeek = groupProductsByWeek(orders);
+
+                return new ResponseEntity<>(orderQuantityByWeek, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("FAILED TO FETCH ORDER DETAILS", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private List<Map<String, Object>> groupProductsByWeek(List<DeliveryOrder> orders) {
+        List<Map<String, Object>> orderQuantityByWeekList = new ArrayList<>();
+
+        for (int i = 1; i <= 52; i++) {
+            Map<String, Object> weekData = new LinkedHashMap<>();
+            weekData.put("week", "Week " + i);
+            weekData.put("orderQuantity", 0); // Initialize order quantity to 0
+            orderQuantityByWeekList.add(weekData);
+        }
+
+        for (DeliveryOrder order : orders) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(order.getOrderDate());
+            int weekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
+            Map<String, Object> weekData = orderQuantityByWeekList.get(weekNumber - 1);
+            int orderQuantity = (int) weekData.get("orderQuantity");
+            orderQuantity += order.getOrderQuantity(); // Add order quantity to existing quantity
+            weekData.put("orderQuantity", orderQuantity);
+        }
+
+        return orderQuantityByWeekList;
+    }
+
+
+
+
+
 
     @GetMapping("/getTopSellingProducts/{godownId}")
     public ResponseEntity<?> getTopSellingProductsByGodownId(@PathVariable String godownId, @RequestHeader("Authorization") String authorizationHeader){

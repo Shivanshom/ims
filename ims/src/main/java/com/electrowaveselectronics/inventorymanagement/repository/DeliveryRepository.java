@@ -41,4 +41,12 @@ public  interface DeliveryRepository extends JpaRepository<DeliveryOrder,Integer
             "GROUP BY p.productName " +
             "ORDER BY SUM(p.orderQuantity) DESC")
     List<Object[]> findProductNameAndQuantitySumByGodownIdOrderedBySumDesc(@Param("godownId") int godownId);
+
+
+    @Query("SELECT do FROM DeliveryOrder do WHERE do.godownId = :godownId AND do.orderDate BETWEEN :startDate AND :endDate")
+    List<DeliveryOrder> getOrdersByDateRange(@Param("godownId") int godownId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+   @Query("SELECT d FROM DeliveryOrder d WHERE d.godownId = :godownId AND YEAR(d.orderDate) = :year")
+   List<DeliveryOrder> getOrdersForYear(int godownId, int year);
+
 }
