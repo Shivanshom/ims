@@ -207,7 +207,7 @@ public class LoginService {
     }
 
 
-    public ResponseEntity<?> forgotPassword(String godownheadNo) {
+    public ResponseEntity<?> sendOtp(String godownheadNo) {
 
         try {
             System.out.println(godownheadNo);

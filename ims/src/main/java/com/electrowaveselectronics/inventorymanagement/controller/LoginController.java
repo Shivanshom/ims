@@ -73,13 +73,13 @@ public class LoginController {
         }
     }
 
-    @PostMapping("/api/forgotPassword")
-    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
+    @PostMapping("/api/sendOtp")
+    public ResponseEntity<?> sendOtp(@RequestBody Map<String, String> request) {
         try {
             String godownheadNo = request.get("godownheadNo");
 
             // Call a method in your service layer to handle the forgot password logic
-            return loginService.forgotPassword(godownheadNo);
+            return loginService.sendOtp(godownheadNo);
         } catch (Exception e) {
             return new ResponseEntity<>("Something went wrong... " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -16,10 +16,25 @@ public class OtpService {
     @Autowired
     private GodownHeadRepository godownHeadRepository;
 
+//    public void saveOtp(String godownheadNo, String otpValue) {
+//        Otp otp = new Otp(godownheadNo, otpValue);
+//        otpRepository.save(otp);
+//    }
+
     public void saveOtp(String godownheadNo, String otpValue) {
-        Otp otp = new Otp(godownheadNo, otpValue);
-        otpRepository.save(otp);
+        // Check if an OTP entry already exists for the given phone number
+        Otp existingOtp = otpRepository.findByGodownheadNo(godownheadNo);
+        if (existingOtp != null) {
+            // If an OTP entry already exists, update its value
+            existingOtp.setOtpValue(otpValue);
+            otpRepository.save(existingOtp); // Update existing OTP entry
+        } else {
+            // If no OTP entry exists, create a new one
+            Otp newOtp = new Otp(godownheadNo, otpValue);
+            otpRepository.save(newOtp); // Save new OTP entry
+        }
     }
+
 
 
     public Otp getOTPByGodownheadNo(String godownheadNo) {
