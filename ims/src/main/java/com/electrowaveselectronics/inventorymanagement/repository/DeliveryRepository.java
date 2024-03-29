@@ -25,6 +25,9 @@ public  interface DeliveryRepository extends JpaRepository<DeliveryOrder,Integer
     @Query("SELECT COALESCE(SUM(do.orderQuantity), 0) FROM DeliveryOrder do WHERE do.godownId = :godownId")
     long getTotalProductsOrderedByGodownId(@Param("godownId") int godownId);
 
+    @Query("SELECT COALESCE(SUM(do.orderQuantity), 0) FROM DeliveryOrder do")
+    long getTotalDeliveryProducts();
+
     @Query("SELECT COALESCE(COUNT(do), 0) FROM DeliveryOrder do WHERE do.godownId = :godownId AND DATE(do.orderDate) = :date")
     long getTotalSalesOrdersByGodownIDAndDate(@Param("godownId") int godownId, @Param("date") Date date);
     @Query("SELECT COALESCE(SUM(do.orderQuantity), 0) FROM DeliveryOrder do WHERE do.godownId = :godownId AND DATE(do.orderDate) = :date")
