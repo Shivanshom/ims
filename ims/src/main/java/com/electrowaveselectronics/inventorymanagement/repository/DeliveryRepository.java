@@ -20,16 +20,14 @@ public  interface DeliveryRepository extends JpaRepository<DeliveryOrder,Integer
 
    List<DeliveryOrder> findByGodownId(@Param("godownId")int godownId);
 
-    @Query("SELECT COUNT(do) FROM DeliveryOrder do WHERE do.godownId = :godownId")
+    @Query("SELECT COALESCE(COUNT(do), 0) FROM DeliveryOrder do WHERE do.godownId = :godownId")
     long getTotalSalesCountByGodownID(@Param("godownId") int godownId);
-
-    @Query("SELECT SUM(do.orderQuantity) FROM DeliveryOrder do WHERE do.godownId = :godownId")
+    @Query("SELECT COALESCE(SUM(do.orderQuantity), 0) FROM DeliveryOrder do WHERE do.godownId = :godownId")
     long getTotalProductsOrderedByGodownId(@Param("godownId") int godownId);
 
-    @Query("SELECT COUNT(do) FROM DeliveryOrder do WHERE do.godownId = :godownId AND DATE(do.orderDate) = :date")
+    @Query("SELECT COALESCE(COUNT(do), 0) FROM DeliveryOrder do WHERE do.godownId = :godownId AND DATE(do.orderDate) = :date")
     long getTotalSalesOrdersByGodownIDAndDate(@Param("godownId") int godownId, @Param("date") Date date);
-
-    @Query("SELECT SUM(do.orderQuantity) FROM DeliveryOrder do WHERE do.godownId = :godownId AND DATE(do.orderDate) = :date")
+    @Query("SELECT COALESCE(SUM(do.orderQuantity), 0) FROM DeliveryOrder do WHERE do.godownId = :godownId AND DATE(do.orderDate) = :date")
     long getTotalProductsOrderedByGodownIdAndDate(@Param("godownId") int godownId, @Param("date") Date date);
 
     @Query("SELECT d.products FROM DeliveryOrder d WHERE d.godownId = :godownId")
