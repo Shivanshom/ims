@@ -131,6 +131,30 @@ public class PurchaseOrderService {
 
     }
 
+    public ResponseEntity<?> getPurchasedProductsCountByGodownId(int godownId) throws Exception {
+        try {
+            validateGodownId(godownId);
+            long result = purchaseOrderRepository.getTotalProductsPurchasedByGodownId(godownId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        }
+        catch (Exception e){
+            throw e;
+        }
+
+    }
+
+    public ResponseEntity<?> getPurchasedProductsCount() throws Exception {
+        try {
+            long result = purchaseOrderRepository.getTotalSumOfPurchaseQuantities();
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        catch (Exception e){
+            throw e;
+        }
+
+    }
+
     private void validateGodownId(int godownId){
         if(godownId<=0){
             throw new IllegalArgumentException("Invalid Godown ID: " + godownId);

@@ -161,6 +161,17 @@ public class DeliveryOrderService {
         }
     }
 
+    public ResponseEntity<?> getTotalDeliveryProducts() throws Exception{
+        try {
+            long result = deliveryRepository.getTotalDeliveryProducts();
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        }
+        catch (Exception e){
+            throw e;
+        }
+    }
+
     public ResponseEntity<?> getTotalSalesOrdersByGodownIDAndDate(int godownID, Date date) throws Exception {
         try {
             validateGodownId(godownID);
