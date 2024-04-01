@@ -158,6 +158,26 @@ public class DeliveryOrderController {
         }
     }
 
+    @GetMapping("/getTotalDeliveryProducts")
+    public ResponseEntity<?> getTotalDeliveryProducts(@RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
+            ) {
+                return deliveryOrderService.getTotalDeliveryProducts();
+            }
+            else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("FAILED TO FETCH ORDER DETAILS", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     private String extractTokenFromAuthorizationHeader(String authorizationHeader) {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             return authorizationHeader.substring(7);

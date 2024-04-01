@@ -154,6 +154,46 @@ public class PurchaseOrderRestController {
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+        @GetMapping("/getPurchasedProductsCountByGodownId/{godownId}")
+    public ResponseEntity<?> getPurchasedProductsCountByGodownId(@PathVariable String godownId, @RequestHeader("Authorization") String authorizationHeader){
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
+
+                int parsedGodownId = Integer.parseInt(godownId);
+                return purchaseOrderService.getPurchasedProductsCountByGodownId(parsedGodownId);
+            }else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/getPurchasedProductsCount")
+    public ResponseEntity<?> getPurchasedProductsCount(@RequestHeader("Authorization") String authorizationHeader){
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
+
+                return purchaseOrderService.getPurchasedProductsCount();
+            }else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
 }
