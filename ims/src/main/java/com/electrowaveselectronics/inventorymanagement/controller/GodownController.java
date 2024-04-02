@@ -173,7 +173,7 @@ public class GodownController {
     }
 
     // product
-    @GetMapping("api/listProducts/{godownId}")
+    @GetMapping("/api/listProducts/{godownId}")
     @ResponseBody
     public ResponseEntity<?> listProductByGodownId(@PathVariable String godownId, @RequestHeader("Authorization") String authorizationHeader){
         try{
@@ -195,6 +195,7 @@ public class GodownController {
         }
         catch (Exception e){
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+
         }
     }
 
