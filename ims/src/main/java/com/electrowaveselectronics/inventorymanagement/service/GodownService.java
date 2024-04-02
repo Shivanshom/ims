@@ -276,7 +276,7 @@ public class GodownService {
             List<Product> productList = tempGodown.getProductList();
 
             return productList.isEmpty()
-                    ? new  ResponseEntity<>("Product list is empty", HttpStatus.NOT_FOUND)
+                    ? new  ResponseEntity<>("Product List is Empty", HttpStatus.NOT_FOUND)
                     : new  ResponseEntity<>(productList, HttpStatus.OK);
 
         } catch (Exception e) {
