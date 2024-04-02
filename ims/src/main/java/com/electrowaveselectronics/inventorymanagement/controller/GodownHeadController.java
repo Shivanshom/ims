@@ -100,6 +100,12 @@ public class GodownHeadController {
                 String newPassword = requestMap.get("newPassword");
 
                 if (username != null && oldPassword != null && newPassword != null) {
+
+                    String passwordRegex = "^(?=.*[!@#$%^&*])(?=.*[a-zA-Z])(?=.*[0-9].*[0-9]).{8,}$";
+                    if (!newPassword.matches(passwordRegex)) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New password must contain at least 8 characters including at least two digits and one special character");
+                    }
+
                     boolean passwordUpdated = godownHeadService.updatePassword(username, oldPassword, newPassword);
                     if (passwordUpdated) {
                         return ResponseEntity.ok("Password updated successfully");
