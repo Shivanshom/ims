@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class LoginService {
 
             if(godownHead == null){
                 Map<String, String> result = new HashMap<>();
-                result.put("message", "User does not exist");
+                result.put("message", "Username does not exist");
                 return ResponseEntity.badRequest().body(result);
 
             }
@@ -83,7 +84,7 @@ public class LoginService {
                 return ResponseEntity.accepted().body(result);
             } else {
                 Map<String, String> result = new HashMap<>();
-                result.put("message", "Login failed");
+                result.put("message", "Invalid password");
                 return ResponseEntity.badRequest().body(result);
             }
         }
@@ -155,13 +156,13 @@ public class LoginService {
         }
 
         if (!isValidUsername(username)) {
-            return ResponseEntity.badRequest().body("Invalid username format. " +
+            return new ResponseEntity<>("Invalid username format. " +
                     "Should not start with any special char or numeric value, " +
-                    "Should not contain whitespace");
+                    "Should not contain whitespace", HttpStatus.BAD_REQUEST);
         }
 
         if (godownHeadRepository.findByUsername(username)!=null) {
-            return ResponseEntity.badRequest().body("Username already taken");
+            return new  ResponseEntity<>("Username already taken",HttpStatus.BAD_REQUEST);
         }
 
         String hashedPassword = passwordEncoder.encode(password);
