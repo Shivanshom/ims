@@ -26,7 +26,7 @@ public class SupplierRestController {
     @Autowired
     private SupplierService supplierService;
 
-    // injecting supplier using constructor injectio
+    // injecting supplier using constructor injection
 
     // expose "/suppliers" and return a list of suppliers
 
