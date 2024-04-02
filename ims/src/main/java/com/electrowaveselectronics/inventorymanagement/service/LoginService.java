@@ -236,7 +236,8 @@ public class LoginService {
         try {
             GodownHead godownHead = godownHeadRepository.findByContactNumber(godownheadNo);
             if (godownHead != null) {
-                godownHead.setPassword(newPassword);
+                String hashedPassword = passwordEncoder.encode(newPassword);
+                godownHead.setPassword(hashedPassword);
                 godownHeadRepository.save(godownHead);
                 return ResponseEntity.ok("Password reset successfully.");
             }

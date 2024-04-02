@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -71,8 +72,11 @@ public class PurchaseOrderRestController {
     @PostMapping("/createPurchaseOrder")
     public ResponseEntity<?> setPurchaseOrder(@RequestBody PurchaseOrderDTO thepurchaseOrderDTO , @RequestHeader("Authorization") String authorizationHeader) {
         try {
+            System.out.println(thepurchaseOrderDTO);
             String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            System.out.println(token);
             String username = authService.findUsernameByToken(token);
+            System.out.println(username);
             if (!Objects.isNull(username) &&
                     ("admin".equals(godownHeadService.getRoleByUsername(username).name())
                             || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {

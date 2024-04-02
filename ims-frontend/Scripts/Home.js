@@ -137,8 +137,8 @@ function setProductDetails(godownId) {
              
                 const {totalQuantitiesSoldByDate, salesByDate} = response.data;
             
-                document.getElementById('totalItemsOrderedDay').innerHTML = totalQuantitiesSoldByDate === 0 ? "No Sales" : totalQuantitiesSoldByDate;
-                document.getElementById('totalSaleOrdersOfDay').innerHTML = salesByDate === 0 ? "No Sales" : salesByDate;
+                document.getElementById('totalItemsOrderedDay').innerHTML = totalQuantitiesSoldByDate === 0 ? "0" : totalQuantitiesSoldByDate;
+                document.getElementById('totalSaleOrdersOfDay').innerHTML = salesByDate === 0 ? "0" : salesByDate;
             })
             .catch(error => {
                 console.error('Error fetching sales:', error);
