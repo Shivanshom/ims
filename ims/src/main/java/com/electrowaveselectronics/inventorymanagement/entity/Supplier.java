@@ -8,7 +8,8 @@ import lombok.Setter;
 @Entity
 @Table(name = "supplier")
 @NoArgsConstructor
-public class Supplier {
+public class
+Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "supplier_id")

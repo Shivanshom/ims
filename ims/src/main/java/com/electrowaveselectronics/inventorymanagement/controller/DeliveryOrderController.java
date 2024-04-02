@@ -81,9 +81,10 @@ public class DeliveryOrderController {
     @PostMapping("/placeOrder/{customerId}")
     public ResponseEntity<?> setOrder(@PathVariable int customerId, @RequestBody DeliveryOrderDTO deliveryOrderDTO,@RequestHeader("Authorization") String authorizationHeader) {
         try {
+
             String token = extractTokenFromAuthorizationHeader(authorizationHeader);
             String username = authService.findUsernameByToken(token);
-
+            System.out.println(token+ username);
             if (!Objects.isNull(username) &&
                     ("admin".equals(godownHeadService.getRoleByUsername(username).name())
                             )
