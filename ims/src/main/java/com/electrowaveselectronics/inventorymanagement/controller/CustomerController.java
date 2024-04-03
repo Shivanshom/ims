@@ -146,7 +146,7 @@ public class CustomerController {
             }
 
         } catch (Exception e) {
-            throw  e;
+            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
         }
     }
 

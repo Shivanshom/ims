@@ -29,44 +29,44 @@ public class SupplierService {
 
 
 
-    public String updateSuppliers(Supplier theSupplier) {
-
-        try {
-            Optional<Integer> optional = Optional.of(theSupplier.getSupplierId());
-            if (optional.isEmpty()) {
-                throw new Exception("Supplier id not provided in input, please try again");
-            }
-
-
-            Supplier existingSupplier = supplierRepository.findById(theSupplier.getSupplierId()).orElseThrow(() -> new Exception("Supplier not found for provided id"));
-
-            if (theSupplier.getSupplierName() != null) {
-                Supplier duplicateSupplier = supplierRepository.findByName(theSupplier.getSupplierName());
-                if (duplicateSupplier != null && !(duplicateSupplier.getSupplierId() == (theSupplier.getSupplierId()))) {
-                    throw new Exception("A supplier with the same name already exists");
-                }
-                existingSupplier.setSupplierName(theSupplier.getSupplierName());
-            }
-            if (theSupplier.getContactNumber() != null) {
-                Supplier duplicateSupplier = supplierRepository.findByContactNumber(theSupplier.getContactNumber());
-                if (duplicateSupplier != null && !(duplicateSupplier.getSupplierId() == (theSupplier.getSupplierId()))) {
-                    throw new Exception("A supplier with the same contact number already exists");
-                }
-                existingSupplier.setContactNumber(theSupplier.getContactNumber());
-            }
-            if (theSupplier.getAddress() != null) {
-                Supplier duplicateSupplier = supplierRepository.findByAddress(theSupplier.getAddress());
-                if (duplicateSupplier != null && !(duplicateSupplier.getSupplierId() == (theSupplier.getSupplierId()))) {
-                    throw new Exception("A supplier with the same address already exists");
-                }
-                existingSupplier.setAddress(theSupplier.getAddress());
-            }
-            Supplier newSupplier = supplierRepository.save(existingSupplier);
-            return "Supplier updated with id: " + newSupplier.getSupplierId();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public String updateSuppliers(Supplier theSupplier) {
+//
+//        try {
+//            Optional<Integer> optional = Optional.of(theSupplier.getSupplierId());
+//            if (optional.isEmpty()) {
+//                throw new Exception("Supplier id not provided in input, please try again");
+//            }
+//
+//
+//            Supplier existingSupplier = supplierRepository.findById(theSupplier.getSupplierId()).orElseThrow(() -> new Exception("Supplier not found for provided id"));
+//
+//            if (theSupplier.getSupplierName() != null) {
+//                Supplier duplicateSupplier = supplierRepository.findByName(theSupplier.getSupplierName());
+//                if (duplicateSupplier != null && !(duplicateSupplier.getSupplierId() == (theSupplier.getSupplierId()))) {
+//                    throw new Exception("A supplier with the same name already exists");
+//                }
+//                existingSupplier.setSupplierName(theSupplier.getSupplierName());
+//            }
+//            if (theSupplier.getContactNumber() != null) {
+//                Supplier duplicateSupplier = supplierRepository.findByContactNumber(theSupplier.getContactNumber());
+//                if (duplicateSupplier != null && !(duplicateSupplier.getSupplierId() == (theSupplier.getSupplierId()))) {
+//                    throw new Exception("A supplier with the same contact number already exists");
+//                }
+//                existingSupplier.setContactNumber(theSupplier.getContactNumber());
+//            }
+//            if (theSupplier.getAddress() != null) {
+//                Supplier duplicateSupplier = supplierRepository.findByAddress(theSupplier.getAddress());
+//                if (duplicateSupplier != null && !(duplicateSupplier.getSupplierId() == (theSupplier.getSupplierId()))) {
+//                    throw new Exception("A supplier with the same address already exists");
+//                }
+//                existingSupplier.setAddress(theSupplier.getAddress());
+//            }
+//            Supplier newSupplier = supplierRepository.save(existingSupplier);
+//            return "Supplier updated with id: " + newSupplier.getSupplierId();
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public String createSupplier(Supplier theSupplier) {
         try {
@@ -180,6 +180,18 @@ public class SupplierService {
         }
     }
 
+    public Supplier updateSuppliers(int supplierId, Supplier theSupplier ){
+        try{
+            Optional<Supplier> existingSupplier = getSupplierBySupplierId(supplierId);
+            existingSupplier.setSupplierName(theSupplier.getSupplierName());
+            existingSupplier.setAddress(theSupplier.getAddress());
+            existingSupplier.setContactNumber(theSupplier.getContactNumber());
+
+            return supplierRepository.save(existingSupplier);
+        }catch(Exception e){
+            throw e;
+        }
+    }
 
 
     public Optional<Supplier> getSupplierBySupplierId(int supplierId) {
@@ -189,5 +201,9 @@ public class SupplierService {
             throw e;
         }
 
+    }
+
+    public boolean isContactNoExistsExceptSupplierId(String contactNumber, int supplierId) {
+        return supplierRepository.isContactNoExistsExceptSupplierId(contactNumber,supplierId);
     }
 }

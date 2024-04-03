@@ -105,7 +105,14 @@ public class SupplierRestController {
             if (!Objects.isNull(username) &&
                     ("admin".equals(godownHeadService.getRoleByUsername(username).name())
                             || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
-                return new ResponseEntity<>(supplierService.updateSuppliers(theSupplier), HttpStatus.ACCEPTED);
+                if(supplierService.isContactNoExistsExceptSupplierId(theSupplier.getContactNumber(), theSupplier.getSupplierId())){
+                    return new ResponseEntity<>("Contact number already exists. Please use a different one.", HttpStatus.BAD_REQUEST);
+                }else{
+                    Supplier newSupplier = supplierService.updateSuppliers(theSupplier.getSupplierId(), theSupplier);
+
+                    return new ResponseEntity<>("Supplier Updated Successfully", HttpStatus.ACCEPTED);
+                }
+
             }else {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
             }
