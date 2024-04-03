@@ -96,6 +96,26 @@ function placeOrder() {
         return;
     }
 
+    // Calculate total volume of products in the cart
+    var totalVolume = cart.reduce((acc, product) => {
+        return acc + (parseInt(product.productVolume) * parseInt(product.purchaseQuantity));
+    }, 0);
+
+
+    fetch(`${baseURL}/api/getCapacity/${godownId}`, {
+        headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${cookie}`
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Check if available capacity is less than total volume of products in the cart
+        if (parseInt(data.availableCapacity) < totalVolume) {
+            Notify('Not enough capacity available in godown.', 'danger');
+        } else {
+
+
     // Get godownId and supplierId from the form
    
 
@@ -137,6 +157,8 @@ console.log(data);
     for (var i = 0; i < options.length; i++) {
         options[i].disabled = false;
     }
+}
+    });
 }
 
 

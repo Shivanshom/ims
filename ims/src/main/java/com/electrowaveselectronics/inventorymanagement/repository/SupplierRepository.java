@@ -20,7 +20,7 @@ public interface SupplierRepository extends JpaRepository<Supplier, Integer> {
     @Query("SELECT s FROM Supplier s WHERE s.address = :address")
     Supplier findByAddress(String address);
 
-    @Query("SELECT COUNT(s) > 0 FROM Supplier s WHERE s.contactNumber = :contactNumber AND s.id != :supplierId")
-    boolean isAddressExistsExceptCustomerId(@Param("contactNumber") String contactNumber, @Param("supplierId") int supplierId)
-    boolean isContactNoExistsExceptSupplierId(String contactNumber, int supplierId);
+
+//    @Query("SELECT COUNT(s) > 0 FROM Supplier s WHERE s.address = :address AND s.id != :supplierId")
+//    boolean isAddressExistsExceptSupplierId( @Param("address") String address, @Param("supplierId") int supplierId);
 }

@@ -37,33 +37,10 @@ public class BillPdfService {
         logger.info("Create PDF Started");
 
 
-        // Sample data for demonstration
-//        String sellerName = "Vijay kumar";
-//        String godownAddress = "Industrial Area Phase 1, Panchkula, Haryana 134113";
-//        String invoiceNumber = "INV-001";
-//        String invoiceDatee = "2024-01-17";
-//        String totalAmount = "100.00";
-//        int totalQuantity = 5;
-//        String title = "Bn gya bill";
-//        String contenet = "product List";
-//        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD,25);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 
-//        Document document = new Document();
-//        PdfWriter.getInstance(document,out);
-//        document.open();
-//
-//        Paragraph titlePara = new Paragraph(title,titleFont);
-//        titlePara.setAlignment(Element.ALIGN_CENTER);
-//        document.add(titlePara);
-//
-//        Font paraFont = FontFactory.getFont(FontFactory.HELVETICA,18);
-//        Paragraph paragraph = new Paragraph(contenet);
-//        document.add(paragraph);
-//
-//        document.close();
         try {
             DeliveryOrder deliveryOrder = deliveryRepository.findById(orderId).orElseThrow(() -> new Exception("Order not found"));
             if (orderId <= 0) {

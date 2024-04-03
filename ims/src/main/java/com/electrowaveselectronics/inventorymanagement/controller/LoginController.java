@@ -29,8 +29,8 @@ public class LoginController {
     @ResponseBody
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest, HttpServletResponse response) {
         try {
-            System.out.println("in login ");
-            System.out.println(loginRequest);
+//            System.out.println("in login ");
+//            System.out.println(loginRequest);
             String username = loginRequest.get("username");
             String password = loginRequest.get("password");
             return loginService.login(username, password, response);
