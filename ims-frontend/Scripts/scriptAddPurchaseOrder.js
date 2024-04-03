@@ -116,7 +116,7 @@ function placeOrder() {
         } else {
 
 
-    // Get godownId and supplierId from the form
+    // Getting godownId and supplierId from the form
    
 
     var supplierId = document.querySelector('select[name="supplierName"]').value;
