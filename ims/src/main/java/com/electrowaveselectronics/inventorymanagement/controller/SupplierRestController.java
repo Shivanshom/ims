@@ -111,7 +111,7 @@ public class SupplierRestController {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.NOT_FOUND);
         }
 
 
