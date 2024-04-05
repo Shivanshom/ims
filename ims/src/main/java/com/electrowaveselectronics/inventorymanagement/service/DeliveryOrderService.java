@@ -91,14 +91,14 @@ public class DeliveryOrderService {
 
             int totalQuantity = 0;
             double totalSellprice = 0;
-
-            for (int godownId = 1; godownId <= (int)godownService.getGodownCount(); godownId++) {
+            int godownCount = (int)godownService.getGodownCount();
+            for (int godownId = 1; godownId <= godownCount; godownId++) {
                 List<ProductDTO> products = deliveryOrderDTO.getProducts();
                 boolean orderPlaced = true;
                 for (ProductDTO productDTO : products) {
                     // Validate order quantity
                     if (productDTO.getOrderQuantity() <= 0) {
-                        throw new IllegalArgumentException("Order quantity must be a positive integer");
+                        throw new IllegalArgumentException("Quantity must not be less than 1");
                     }
                     productDTO.addTaxAmount();
                     totalQuantity += productDTO.getOrderQuantity();
@@ -110,8 +110,11 @@ public class DeliveryOrderService {
                     int prodQuantityNeeded = productDTO.getOrderQuantity();
                     if (product == null || product.getTotalQuantity() < prodQuantityNeeded) {
                         orderPlaced = false;
+                        System.out.println("Order could not be placed in as product's stock is insufficient");
                         break; // Break the inner loop and try next godown
+
                     }
+
                 }
 
                 if (orderPlaced) {
@@ -130,9 +133,8 @@ public class DeliveryOrderService {
                     GodownHead godownHead = godownHeadService.getGodownHeadDetailsByGodownId(godownId);
                     deliveryOrder.setGodownHeadName(godownHead.getGodownHeadName());
                     deliveryOrder.setGodownAddress(godownRepository.findById(godownId).get().getAddress());
-
+                    return deliveryRepository.save(deliveryOrder);
                 }
-                return deliveryRepository.save(deliveryOrder);
             }
             return null; // Order could not be placed in any godown
         } catch (Exception e) {

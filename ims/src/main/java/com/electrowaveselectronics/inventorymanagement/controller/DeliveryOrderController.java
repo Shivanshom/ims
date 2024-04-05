@@ -93,13 +93,13 @@ public class DeliveryOrderController {
                 if (!Objects.isNull(newDeliveryOrder)) {
                     return new ResponseEntity<>("ORDER HAS BEEN PLACED SUCESSFULLY", HttpStatus.CREATED);
                 } else {
-                    return new ResponseEntity<>("Failed to FULFILL the Order", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>("Order could not be placed in as product's stock is insufficient", HttpStatus.NOT_FOUND);
                 }
             } else {
                 return new ResponseEntity<>("Access denied. Please login as Admin.", HttpStatus.UNAUTHORIZED);
             }
         }catch (Exception e) {
-            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
