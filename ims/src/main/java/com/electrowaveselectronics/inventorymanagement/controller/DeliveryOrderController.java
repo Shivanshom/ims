@@ -232,8 +232,8 @@ public class DeliveryOrderController {
 
     }
 
-    @GetMapping("/getSalesByWeek")
-    public ResponseEntity<?> getSalesByWeek(@RequestParam("godownId") int godownId,
+    @GetMapping("/getSalesByMonth/{godownId}")
+    public ResponseEntity<?> getSalesByMonth(@PathVariable("godownId") int godownId,
                                             @RequestHeader("Authorization") String authorizationHeader) {
         try {
             String token = extractTokenFromAuthorizationHeader(authorizationHeader);
@@ -244,12 +244,11 @@ public class DeliveryOrderController {
                             || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
             ) {
                 List<DeliveryOrder> orders = deliveryOrderService.getOrdersForYear(godownId, Calendar.getInstance().get(Calendar.YEAR));
-//                System.out.println(orders);
 
-                // Group orders by week
-                List<Map<String, Object>> salesByWeek = groupOrdersByWeek(orders);
+                // Group orders by Month
+                List<Map<String, Object>> salesByMonth = groupOrdersByMonth(orders);
 
-                return new ResponseEntity<>(salesByWeek, HttpStatus.OK);
+                return new ResponseEntity<>(salesByMonth, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
             }
@@ -258,31 +257,37 @@ public class DeliveryOrderController {
         }
     }
 
-    private List<Map<String, Object>> groupOrdersByWeek(List<DeliveryOrder> orders) {
-        List<Map<String, Object>> salesByWeekList = new ArrayList<>();
+    private List<Map<String, Object>> groupOrdersByMonth(List<DeliveryOrder> orders) {
+        List<Map<String, Object>> salesByMonthList = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
 
-        for (int i = 1; i <= 52; i++) {
-            Map<String, Object> weekData = new LinkedHashMap<>();
-            weekData.put("week", "Week " + i);
-            weekData.put("salesCount", 0L);
-            salesByWeekList.add(weekData);
+
+        for (int i = 0; i < 12; i++) {
+            calendar.set(Calendar.MONTH, i);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM");
+            String abbreviatedMonth = dateFormat.format(calendar.getTime());
+
+            Map<String, Object> MonthData = new LinkedHashMap<>();
+            MonthData.put("Month",abbreviatedMonth);
+            MonthData.put("salesCount", 0L);
+            // 0L intializes the sales count to 0
+            salesByMonthList.add(MonthData);
         }
 
         for (DeliveryOrder order : orders) {
-            Calendar calendar = Calendar.getInstance();
             calendar.setTime(order.getOrderDate());
-            int weekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
-            Map<String, Object> weekData = salesByWeekList.get(weekNumber - 1);
-            weekData.put("salesCount", (Long) weekData.get("salesCount") + 1);
+            int MonthNumber = calendar.get(Calendar.MONTH);
+            Map<String, Object> MonthData = salesByMonthList.get(MonthNumber);
+            MonthData.put("salesCount", (Long) MonthData.get("salesCount") + 1);
         }
 
-        return salesByWeekList;
+        return salesByMonthList;
     }
 
 
 
-    @GetMapping("/getOrderQuantityByWeek")
-    public ResponseEntity<?> getOrderQuantityByWeek(@RequestParam("godownId") int godownId,
+    @GetMapping("/getOrderQuantityByMonth/{godownId}")
+    public ResponseEntity<?> getOrderQuantityByMonth(@PathVariable("godownId") int godownId,
                                                     @RequestHeader("Authorization") String authorizationHeader) {
         try {
             String token = extractTokenFromAuthorizationHeader(authorizationHeader);
@@ -294,9 +299,9 @@ public class DeliveryOrderController {
                 List<DeliveryOrder> orders = deliveryOrderService.getProductsForYear(godownId, Calendar.getInstance().get(Calendar.YEAR));
 
                 // Group orders by week
-                List<Map<String, Object>> orderQuantityByWeek = groupProductsByWeek(orders);
+                List<Map<String, Object>> orderQuantityByMonth = groupProductsByMonth(orders);
 
-                return new ResponseEntity<>(orderQuantityByWeek, HttpStatus.OK);
+                return new ResponseEntity<>(orderQuantityByMonth, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
             }
@@ -305,33 +310,34 @@ public class DeliveryOrderController {
         }
     }
 
-    private List<Map<String, Object>> groupProductsByWeek(List<DeliveryOrder> orders) {
-        List<Map<String, Object>> orderQuantityByWeekList = new ArrayList<>();
+    private List<Map<String, Object>> groupProductsByMonth(List<DeliveryOrder> orders) {
+        List<Map<String, Object>> orderQuantityByMonthList = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
 
-        for (int i = 1; i <= 52; i++) {
-            Map<String, Object> weekData = new LinkedHashMap<>();
-            weekData.put("week", "Week " + i);
-            weekData.put("orderQuantity", 0); // Initialize order quantity to 0
-            orderQuantityByWeekList.add(weekData);
+        // Initialize orderQuantityByMonthList with empty order quantity for each month
+        for (int i = 0; i < 12; i++) {
+            calendar.set(Calendar.MONTH, i);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM");
+            String abbreviatedMonth = dateFormat.format(calendar.getTime());
+
+            Map<String, Object> monthData = new LinkedHashMap<>();
+            monthData.put("Month", abbreviatedMonth); // Use abbreviated month name as the key
+            monthData.put("orderQuantity", 0); // Initialize order quantity to 0
+            orderQuantityByMonthList.add(monthData);
         }
 
+        // Count order quantity for each month
         for (DeliveryOrder order : orders) {
-            Calendar calendar = Calendar.getInstance();
             calendar.setTime(order.getOrderDate());
-            int weekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
-            Map<String, Object> weekData = orderQuantityByWeekList.get(weekNumber - 1);
-            int orderQuantity = (int) weekData.get("orderQuantity");
+            int monthNumber = calendar.get(Calendar.MONTH);
+            Map<String, Object> monthData = orderQuantityByMonthList.get(monthNumber);
+            int orderQuantity = (int) monthData.get("orderQuantity");
             orderQuantity += order.getOrderQuantity(); // Add order quantity to existing quantity
-            weekData.put("orderQuantity", orderQuantity);
+            monthData.put("orderQuantity", orderQuantity);
         }
 
-        return orderQuantityByWeekList;
+        return orderQuantityByMonthList;
     }
-
-
-
-
-
 
     @GetMapping("/getTopSellingProducts/{godownId}")
     public ResponseEntity<?> getTopSellingProductsByGodownId(@PathVariable String godownId, @RequestHeader("Authorization") String authorizationHeader){
