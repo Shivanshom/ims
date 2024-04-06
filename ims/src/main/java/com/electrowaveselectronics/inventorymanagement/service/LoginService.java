@@ -249,4 +249,34 @@ public class LoginService {
 
 
     }
+
+    public ResponseEntity<?> loginWithOtp(String godownheadNo, String enteredOtp) {
+        try {
+            // Check if the OTP is valid
+//            if (otpService.verifyOtp(godownheadNo, enteredOtp)) {
+                GodownHead godownHead = godownHeadRepository.findByContactNumber(godownheadNo);
+                if (godownHead != null) {
+                    // Generate a new token and set the user as authenticated
+                    Cookie cookie = generateUserCookie(godownHead.getUsername());
+                    authService.createAuthInfo(godownHead.getUsername(), cookie.getValue());
+
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("message", "Login with OTP successful.");
+                    result.put("cookie", cookie.getValue());
+                    result.put("username", godownHead.getUsername());
+                    result.put("godownId", godownHead.getGodownId());
+                    result.put("godown_head_number",godownHead.getGodownheadNo());
+                    result.put("godownHeadId", godownHead.getGodownHeadId());
+                    result.put("role", godownHead.getRole().name());
+                    return ResponseEntity.ok(result);
+                } else {
+                    return ResponseEntity.badRequest().body("Invalid godown head number.");
+                }
+//            } else {
+//                return ResponseEntity.badRequest().body("Invalid OTP.");
+//            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Something went wrong... " + e.getLocalizedMessage());
+        }
+    }
 }

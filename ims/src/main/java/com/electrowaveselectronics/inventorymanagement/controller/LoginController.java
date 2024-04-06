@@ -129,6 +129,17 @@ public class LoginController {
         }
     }
 
+    @PostMapping("/api/loginWithOtp")
+    public ResponseEntity<?> loginWithOtp(@RequestBody Map<String, String> loginRequest) {
+        try {
+            String godownheadNo = loginRequest.get("godownheadNo");
+            String enteredOtp = loginRequest.get("otp");
+            return loginService.loginWithOtp(godownheadNo, enteredOtp);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Something went wrong... " + e.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 //    @PostMapping("api/forgot")
 //    @ResponseBody
 //    public ResponseEntity<?> forgot(@RequestParam("email")String email){
