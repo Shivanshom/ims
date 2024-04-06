@@ -216,19 +216,22 @@ public class DeliveryOrderService {
     }
 
     public List<DeliveryOrder> getOrdersForYear(int godownId, int year) {
-        // Set start date to the first day of the year
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, Calendar.JANUARY);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        Date startDate = calendar.getTime();
+        List<DeliveryOrder> allOrders = new ArrayList<>();
+        ArrayList<String> months = new ArrayList<>(Arrays.asList("JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"));
 
-        // Set end date to the last day of the year
-        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
-        calendar.set(Calendar.DAY_OF_MONTH, 31);
-        Date endDate = calendar.getTime();
+        for (String month : months) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, months.indexOf(month));
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            Date startDate = calendar.getTime();
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+            Date endDate = calendar.getTime();
 
-        return deliveryRepository.getOrdersByDateRange(godownId, startDate, endDate);
+            allOrders.addAll(deliveryRepository.getOrdersByDateRange(godownId, startDate, endDate));
+        }
+
+        return allOrders;
     }
 
     public List<DeliveryOrder> getOrdersByDateRange(int godownId, Date startDate, Date endDate) {
