@@ -224,7 +224,7 @@ public class LoginService {
 
                 // Send OTP to user via SMS or email (implement this part)
 
-                return ResponseEntity.ok("OTP sent successfully.");
+                return ResponseEntity.ok(otp);
             } else {
                 return ResponseEntity.badRequest().body("Invalid contact number.");
             }
