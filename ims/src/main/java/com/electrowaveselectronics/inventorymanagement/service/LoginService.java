@@ -6,10 +6,7 @@ import com.electrowaveselectronics.inventorymanagement.repository.OtpRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -249,11 +246,10 @@ public class LoginService {
 
 
     }
-
     public ResponseEntity<?> loginWithOtp(String godownheadNo, String enteredOtp) {
         try {
             // Check if the OTP is valid
-//            if (otpService.verifyOtp(godownheadNo, enteredOtp)) {
+            if (otpService.verifyOtp(godownheadNo, enteredOtp).getStatusCode().equals(HttpStatus.OK)) {
                 GodownHead godownHead = godownHeadRepository.findByContactNumber(godownheadNo);
                 if (godownHead != null) {
                     // Generate a new token and set the user as authenticated
@@ -265,18 +261,56 @@ public class LoginService {
                     result.put("cookie", cookie.getValue());
                     result.put("username", godownHead.getUsername());
                     result.put("godownId", godownHead.getGodownId());
-                    result.put("godown_head_number",godownHead.getGodownheadNo());
+                    result.put("godown_head_number", godownHead.getGodownheadNo());
                     result.put("godownHeadId", godownHead.getGodownHeadId());
                     result.put("role", godownHead.getRole().name());
+
+                    // Make the API call here when the status code is 200
+                    // Replace "apiCall()" with the actual method to call your API
+                    // apiCall();
+
                     return ResponseEntity.ok(result);
                 } else {
                     return ResponseEntity.badRequest().body("Invalid godown head number.");
                 }
-//            } else {
-//                return ResponseEntity.badRequest().body("Invalid OTP.");
-//            }
+            } else {
+                return ResponseEntity.badRequest().body("Invalid OTP.");
+            }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Something went wrong... " + e.getLocalizedMessage());
         }
     }
+
+
+
+//    public ResponseEntity<?> loginWithOtp(String godownheadNo, String enteredOtp) {
+//        try {
+//            // Check if the OTP is valid
+////            if (otpService.verifyOtp(godownheadNo, enteredOtp)) {
+//                GodownHead godownHead = godownHeadRepository.findByContactNumber(godownheadNo);
+//                if (godownHead != null &&  otpService.verifyOtp(godownheadNo,enteredOtp ).getStatusCode() == HttpStatusCode.valueOf(200)) {
+//                    // Generate a new token and set the user as authenticated
+//                    Cookie cookie = generateUserCookie(godownHead.getUsername());
+//                    authService.createAuthInfo(godownHead.getUsername(), cookie.getValue());
+//
+//
+//                    Map<String, Object> result = new HashMap<>();
+//                    result.put("message", "Login with OTP successful.");
+//                    result.put("cookie", cookie.getValue());
+//                    result.put("username", godownHead.getUsername());
+//                    result.put("godownId", godownHead.getGodownId());
+//                    result.put("godown_head_number",godownHead.getGodownheadNo());
+//                    result.put("godownHeadId", godownHead.getGodownHeadId());
+//                    result.put("role", godownHead.getRole().name());
+//                    return ResponseEntity.ok(result);
+//                } else {
+//                    return ResponseEntity.badRequest().body("Invalid godown head number.");
+//                }
+////            } else {
+////                return ResponseEntity.badRequest().body("Invalid OTP.");
+////            }
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body("Something went wrong... " + e.getLocalizedMessage());
+//        }
+//    }
 }
