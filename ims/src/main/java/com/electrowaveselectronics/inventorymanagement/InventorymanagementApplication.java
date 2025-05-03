@@ -30,7 +30,7 @@ public class InventorymanagementApplication extends SpringBootServletInitializer
 	@Bean
 	public CommandLineRunner commandLineRunner(LoginService loginService){
 		return runner -> {
-			loginService.registerAdmin("aniket1", "1234567890","Aniket","aniket@gmail.com","8445782391");
+			loginService.registerAdmin("shivansh", "123456789","Shivansh","shivansh@gmail.com","8860903817");
 		};
 	}
 }

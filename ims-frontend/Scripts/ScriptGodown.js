@@ -10,7 +10,7 @@ function extractCookie() {
 document.addEventListener("DOMContentLoaded", function () {
   const cookie = extractCookie();
   console.log(cookie);
-
+//while adding godown and godownhead , admin should know which godown exists already or else the created godownhead wont show due to godown id mismatch
   fetch(`${baseURL}/api/findGodownsByGodownHead`, {
     method: "GET",
     headers: {
@@ -23,9 +23,12 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+      // console.log(response.json)
       return response.json();
+
     })
     .then((godownDetails) => {
+      console.log("Fetched godown details:", godownDetails);
       const tableBody = document.querySelector("#myTable tbody");
 
       // Clear existing rows

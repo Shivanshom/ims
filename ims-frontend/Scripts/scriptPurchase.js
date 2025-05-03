@@ -41,6 +41,7 @@ function fetchPurchaseOrders() {
         }})
     .then(response => response.json())
     .then(data => {
+        console.log(data)
         // Check the role
         if (role === 'admin') {
             // Proceed as before, no filtering needed
@@ -55,6 +56,7 @@ function fetchPurchaseOrders() {
                 .then(response => response.json())
                 .then(supplierData => {
                     // Add the supplier name to the order
+                    console.log('Supplier response:', supplierData);
                     order.supplierName = supplierData.supplierName; // Replace 'name' with the actual property name for the supplier name
                     return order;
                 });
