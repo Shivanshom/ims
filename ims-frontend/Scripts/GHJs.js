@@ -16,7 +16,7 @@ function saveGodownHead() {
     };
 
     // Send data to backend API
-    fetch('http://localhost:8080/api/setGodownHead', {
+    fetch(`${basURL}/api/setGodownHead`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -25,7 +25,8 @@ function saveGodownHead() {
     })
     .then(response => {
         if (response.ok) {
-            alert('GodownHead details saved successfully!');
+            // alert('GodownHead details saved successfully!');
+            Notify('GodownHead details saved successfully!', 'success');
             // You can redirect the user to another page here if needed
         } else {
             throw new Error('Failed to save GodownHead details');
@@ -33,7 +34,8 @@ function saveGodownHead() {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred while saving GodownHead details');
+        // alert('An error occurred while saving GodownHead details');
+        Notify('An error occurred while saving GodownHead details', 'danger');
     });
 }
 

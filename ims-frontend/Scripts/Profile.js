@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 function capitalizeFirstLetter(str) {
     return str.toLowerCase().replace(/(^|\s)\S/g, function (match) {
       return match.toUpperCase();
@@ -16,7 +18,7 @@ function getUserData() {
     const godownHeadId = parseInt(userData.godownHeadId);
     const cookie = extractCookie();
     
-    axios.get(`http://localhost:8080/api/getGodownHead/${godownHeadId}`, {
+    axios.get(`${baseURL}/api/getGodownHead/${godownHeadId}`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${cookie}`
@@ -49,8 +51,52 @@ function getUserData() {
     })
     .catch( error => {
         console.error('Error fetching user data:', error);
-        alert('Error fetching user data');
+        // alert('Error fetching user data');
+        Notify('Error fetching user data', 'danger');
     });
 
 }
+
+function updatePassword() {
+    const username = JSON.parse(localStorage.getItem('user')).username;
+    const cookie = extractCookie();
+
+    const changePasswordModal = document.getElementById('changePasswordModal');
+    changePasswordModal.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const oldPassword = formData.get('oldPassword');
+        const newPassword = formData.get('newPassword');
+
+        const requestData = {
+            username: username,
+            oldPassword: oldPassword,
+            newPassword: newPassword
+        };
+
+        try {
+            const response = await axios.put(`${baseURL}/api/updatePassword`, requestData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + cookie
+                }
+            });
+            const responseData = response.data;
+            Notify(responseData, 'success');
+            setTimeout(() => {
+                window.location.href = 'Profile.html';
+            }, 500);
+
+        } catch (error) {
+            console.error('Error updating password:', error); 
+            Notify('Error updating password: '+ error.response.data, 'danger');
+        }
+    })
+}
+
+
+
+
+
 

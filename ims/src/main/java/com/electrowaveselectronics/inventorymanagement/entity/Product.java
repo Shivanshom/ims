@@ -22,7 +22,7 @@ public class Product {
     private String productName;
 
     @Column(name = "product_volume")
-    private int productVolume;
+    private float productVolume;
 
     @Column(name = "price")
     private float price;

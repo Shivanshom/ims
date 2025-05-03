@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 function extractCookie() {
   const cookieRow = document.cookie
     .split("; ")
@@ -8,8 +10,8 @@ function extractCookie() {
 document.addEventListener("DOMContentLoaded", function () {
   const cookie = extractCookie();
   console.log(cookie);
-
-  fetch("http://localhost:8080/api/findGodownsByGodownHead", {
+//while adding godown and godownhead , admin should know which godown exists already or else the created godownhead wont show due to godown id mismatch
+  fetch(`${baseURL}/api/findGodownsByGodownHead`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -21,9 +23,12 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+      // console.log(response.json)
       return response.json();
+
     })
     .then((godownDetails) => {
+      console.log("Fetched godown details:", godownDetails);
       const tableBody = document.querySelector("#myTable tbody");
 
       // Clear existing rows
@@ -43,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>${godown[7]}</td>`;
         tableBody.appendChild(row);
       });
+      $("#myTable").DataTable();
     })
     .catch((error) => {
       console.error("Error fetching data:", error);

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
-@CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
+@CrossOrigin(origins = "${myapp.cors.origin}", allowCredentials = "true")
 @RestController
 // Adjusted base pathz
 @RequestMapping("/api")
@@ -134,7 +134,7 @@ public class CustomerController {
                     ("admin".equals(godownHeadService.getRoleByUsername(username).name())
                             || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
             ) {
-                if (customerService.isContactNumberExists(NewDataCustomer.getCustomerNo())) {
+                if (customerService.isContactNumberExistsExceptCustomerId(NewDataCustomer.getCustomerNo(), customerId)) {
                     return new ResponseEntity<>("Contact number already exists. Please use a different one.", HttpStatus.BAD_REQUEST);
                 } else {
                     Customer newCustomer = customerService.updateCustomer(customerId,NewDataCustomer);
@@ -146,7 +146,7 @@ public class CustomerController {
             }
 
         } catch (Exception e) {
-            throw  e;
+            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
         }
     }
 

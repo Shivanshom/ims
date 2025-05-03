@@ -1,3 +1,4 @@
+const baseURL = SERVER_URL;
 
 function onNavItemClick(itemId, url) {
 
@@ -7,7 +8,6 @@ function onNavItemClick(itemId, url) {
         window.location.href = url;
     }
 }
-
 
 function extractCookie() {
     const cookieRow = document.cookie.split('; ').find(row => row.startsWith('cookie=='));
@@ -36,7 +36,7 @@ function handleFormSubmit(event) {
 
 
     // Call the Add Supplier API
-    fetch('http://localhost:8080/api/createSupplier', {
+    fetch(`${baseURL}/api/createSupplier`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -51,14 +51,15 @@ function handleFormSubmit(event) {
     .then(response => response.text())
     .then(data => {
         // Handle the response...
-        console.log(data);
-        alert('Supplier added successfully!');
-        
-        window.location.href = 'supplier.html'; // Redirect to the suppliers page
+        Notify('Supplier added successfully!', 'success');
+        setTimeout(() => {
+            window.location.href = 'supplier.html';
+        }, 1000);
+
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred while adding the supplier.');
+        Notify('An error occurred while adding the supplier.', 'danger');
     });
 }
 

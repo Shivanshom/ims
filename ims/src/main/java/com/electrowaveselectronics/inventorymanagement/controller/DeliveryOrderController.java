@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
+@CrossOrigin(origins = "${myapp.cors.origin}", allowCredentials = "true")
 @RestController
 @RequestMapping("/api")
 public class DeliveryOrderController {
@@ -27,6 +27,7 @@ public class DeliveryOrderController {
     private GodownHeadService godownHeadService;
 
     //FOR ADMIN USE
+
     @GetMapping("/getDeliveryOrders")
     @ResponseBody
     public ResponseEntity<?> getAllDeliveryOrders(@RequestHeader("Authorization") String authorizationHeader) {
@@ -80,9 +81,10 @@ public class DeliveryOrderController {
     @PostMapping("/placeOrder/{customerId}")
     public ResponseEntity<?> setOrder(@PathVariable int customerId, @RequestBody DeliveryOrderDTO deliveryOrderDTO,@RequestHeader("Authorization") String authorizationHeader) {
         try {
+
             String token = extractTokenFromAuthorizationHeader(authorizationHeader);
             String username = authService.findUsernameByToken(token);
-
+            System.out.println(token+ username);
             if (!Objects.isNull(username) &&
                     ("admin".equals(godownHeadService.getRoleByUsername(username).name())
                             )
@@ -91,13 +93,13 @@ public class DeliveryOrderController {
                 if (!Objects.isNull(newDeliveryOrder)) {
                     return new ResponseEntity<>("ORDER HAS BEEN PLACED SUCESSFULLY", HttpStatus.CREATED);
                 } else {
-                    return new ResponseEntity<>("Failed to FULFILL the Order", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>("Order could not be placed in as product's stock is insufficient", HttpStatus.NOT_FOUND);
                 }
             } else {
                 return new ResponseEntity<>("Access denied. Please login as Admin.", HttpStatus.UNAUTHORIZED);
             }
         }catch (Exception e) {
-            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -147,6 +149,26 @@ public class DeliveryOrderController {
                     return new ResponseEntity<>("YOU DIDN'T HAVE ANY DELIVERY ORDER", HttpStatus.BAD_REQUEST);
                 }
 
+            }
+            else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("FAILED TO FETCH ORDER DETAILS", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/getTotalDeliveryProducts")
+    public ResponseEntity<?> getTotalDeliveryProducts(@RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
+            ) {
+                return deliveryOrderService.getTotalDeliveryProducts();
             }
             else {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
@@ -208,6 +230,113 @@ public class DeliveryOrderController {
             return new ResponseEntity<>("FAILED TO FETCH ORDER DETAILS", HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @GetMapping("/getSalesByMonth/{godownId}")
+    public ResponseEntity<?> getSalesByMonth(@PathVariable("godownId") int godownId,
+                                            @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))
+            ) {
+                List<DeliveryOrder> orders = deliveryOrderService.getOrdersForYear(godownId, Calendar.getInstance().get(Calendar.YEAR));
+
+                // Group orders by Month
+                List<Map<String, Object>> salesByMonth = groupOrdersByMonth(orders);
+
+                return new ResponseEntity<>(salesByMonth, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("FAILED TO FETCH ORDER DETAILS", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private List<Map<String, Object>> groupOrdersByMonth(List<DeliveryOrder> orders) {
+        List<Map<String, Object>> salesByMonthList = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+
+
+        for (int i = 0; i < 12; i++) {
+            calendar.set(Calendar.MONTH, i);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM");
+            String abbreviatedMonth = dateFormat.format(calendar.getTime());
+
+            Map<String, Object> MonthData = new LinkedHashMap<>();
+            MonthData.put("Month",abbreviatedMonth);
+            MonthData.put("salesCount", 0L);
+            // 0L intializes the sales count to 0
+            salesByMonthList.add(MonthData);
+        }
+
+        for (DeliveryOrder order : orders) {
+            calendar.setTime(order.getOrderDate());
+            int MonthNumber = calendar.get(Calendar.MONTH);
+            Map<String, Object> MonthData = salesByMonthList.get(MonthNumber);
+            MonthData.put("salesCount", (Long) MonthData.get("salesCount") + 1);
+        }
+
+        return salesByMonthList;
+    }
+
+
+
+    @GetMapping("/getOrderQuantityByMonth/{godownId}")
+    public ResponseEntity<?> getOrderQuantityByMonth(@PathVariable("godownId") int godownId,
+                                                    @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
+                List<DeliveryOrder> orders = deliveryOrderService.getProductsForYear(godownId, Calendar.getInstance().get(Calendar.YEAR));
+
+                // Group orders by week
+                List<Map<String, Object>> orderQuantityByMonth = groupProductsByMonth(orders);
+
+                return new ResponseEntity<>(orderQuantityByMonth, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("FAILED TO FETCH ORDER DETAILS", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private List<Map<String, Object>> groupProductsByMonth(List<DeliveryOrder> orders) {
+        List<Map<String, Object>> orderQuantityByMonthList = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+
+        // Initialize orderQuantityByMonthList with empty order quantity for each month
+        for (int i = 0; i < 12; i++) {
+            calendar.set(Calendar.MONTH, i);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM");
+            String abbreviatedMonth = dateFormat.format(calendar.getTime());
+
+            Map<String, Object> monthData = new LinkedHashMap<>();
+            monthData.put("Month", abbreviatedMonth); // Use abbreviated month name as the key
+            monthData.put("orderQuantity", 0); // Initialize order quantity to 0
+            orderQuantityByMonthList.add(monthData);
+        }
+
+        // Count order quantity for each month
+        for (DeliveryOrder order : orders) {
+            calendar.setTime(order.getOrderDate());
+            int monthNumber = calendar.get(Calendar.MONTH);
+            Map<String, Object> monthData = orderQuantityByMonthList.get(monthNumber);
+            int orderQuantity = (int) monthData.get("orderQuantity");
+            orderQuantity += order.getOrderQuantity(); // Add order quantity to existing quantity
+            monthData.put("orderQuantity", orderQuantity);
+        }
+
+        return orderQuantityByMonthList;
     }
 
     @GetMapping("/getTopSellingProducts/{godownId}")

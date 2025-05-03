@@ -1,3 +1,4 @@
+
 package com.electrowaveselectronics.inventorymanagement.controller;
 
 import com.electrowaveselectronics.inventorymanagement.entity.Supplier;
@@ -9,11 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
+@CrossOrigin(origins = "${myapp.cors.origin}", allowCredentials = "true")
 @RestController
 @RequestMapping("/api")
 public class SupplierRestController {
@@ -26,7 +28,7 @@ public class SupplierRestController {
     @Autowired
     private SupplierService supplierService;
 
-    // injecting supplier using constructor injectio
+    // injecting supplier using constructor injection
 
     // expose "/suppliers" and return a list of suppliers
 
@@ -110,7 +112,7 @@ public class SupplierRestController {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.NOT_FOUND);
         }
 
 
@@ -135,7 +137,7 @@ public class SupplierRestController {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(e.fillInStackTrace().toString(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.NOT_FOUND);
         }
 
 

@@ -12,10 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-@CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
+@CrossOrigin(origins = "${myapp.cors.origin}", allowCredentials = "true")
 @RestController
 @RequestMapping("/api")
 public class PurchaseOrderRestController {
@@ -71,8 +72,11 @@ public class PurchaseOrderRestController {
     @PostMapping("/createPurchaseOrder")
     public ResponseEntity<?> setPurchaseOrder(@RequestBody PurchaseOrderDTO thepurchaseOrderDTO , @RequestHeader("Authorization") String authorizationHeader) {
         try {
+            System.out.println(thepurchaseOrderDTO);
             String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            System.out.println(token);
             String username = authService.findUsernameByToken(token);
+            System.out.println(username);
             if (!Objects.isNull(username) &&
                     ("admin".equals(godownHeadService.getRoleByUsername(username).name())
                             || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
@@ -142,6 +146,46 @@ public class PurchaseOrderRestController {
 
                 int parsedGodownId = Integer.parseInt(godownId);
                 return purchaseOrderService.getPurchaseOrderCountByGodownId(parsedGodownId);
+            }else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+        @GetMapping("/getPurchasedProductsCountByGodownId/{godownId}")
+    public ResponseEntity<?> getPurchasedProductsCountByGodownId(@PathVariable String godownId, @RequestHeader("Authorization") String authorizationHeader){
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
+
+                int parsedGodownId = Integer.parseInt(godownId);
+                return purchaseOrderService.getPurchasedProductsCountByGodownId(parsedGodownId);
+            }else {
+                return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
+            }
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/getPurchasedProductsCount")
+    public ResponseEntity<?> getPurchasedProductsCount(@RequestHeader("Authorization") String authorizationHeader){
+        try {
+            String token = extractTokenFromAuthorizationHeader(authorizationHeader);
+            String username = authService.findUsernameByToken(token);
+
+            if (!Objects.isNull(username) &&
+                    ("admin".equals(godownHeadService.getRoleByUsername(username).name())
+                            || "godownhead".equals(godownHeadService.getRoleByUsername(username).name()))) {
+
+                return purchaseOrderService.getPurchasedProductsCount();
             }else {
                 return new ResponseEntity<>("Access denied. Please login.", HttpStatus.UNAUTHORIZED);
             }

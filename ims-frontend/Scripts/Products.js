@@ -1,6 +1,8 @@
 var table;
 var table1;
 
+const baseURL = SERVER_URL;
+
 function extractCookie() {
     const cookieRow = document.cookie.split('; ').find(row => row.startsWith('cookie=='));
     return cookieRow ? cookieRow.split('==')[1] : '';
@@ -9,7 +11,7 @@ function extractCookie() {
 function generateProductRows(godownId) {
     const cookie = extractCookie();
 
-    axios.get(`http://localhost:8080/api/listProducts/${godownId}`, {
+    axios.get(`${baseURL}/api/listProducts/${godownId}`, {
         headers: {
             'Content-Type': 'application/json', 
             'Authorization': `Bearer ${cookie}`
@@ -57,7 +59,7 @@ function generateProductRows(godownId) {
                     }
                 });
                 
-                var actionCellContent = '<a class="btn btn-info1 m-1 " data-bs-toggle="modal" data-bs-target="#editProductModal" id="editProductBtn" >Update</a> ';
+                var actionCellContent = '<a title="Update Product" class="btn " data-bs-toggle="modal" data-bs-target="#editProductModal" id="editProductBtn" ><i class="fa-solid fa-xl fa-pen-to-square" style="pointer-events: none;"></i></a> ';
                 rowData.push(actionCellContent);
 
                 table.row.add(rowData).draw();
@@ -84,7 +86,7 @@ function generateProductRows(godownId) {
 function generateProductRowsAdmin() {
     const cookie = extractCookie();
 
-    axios.get('http://localhost:8080/api/listAllProducts', {
+    axios.get(`${baseURL}/api/listAllProducts`, {
         headers: {
             'Content-Type': 'application/json', 
             'Authorization': `Bearer ${cookie}`
@@ -155,7 +157,7 @@ function validateCostPrice(costPrice, costPriceInput) {
 
 function validateProductVolume(productVolume, volumeInput) {
     var volumeInput = volumeInput;
-    if (!Number.isInteger(parseInt(productVolume))) {
+    if (isNaN(parseFloat(productVolume))) {
         volumeInput.classList.add('is-invalid');
         volumeInput.classList.remove('is-valid');
         return false;
@@ -165,6 +167,7 @@ function validateProductVolume(productVolume, volumeInput) {
         return true;
     }
 }
+
 
 function validateProductQuantity(productQuantity, quantityInput) {
     var quantityInput = quantityInput;
@@ -251,7 +254,9 @@ async function addProduct() {
             const availableGodownCapacity = await getAvailableGodownCapacity(godownId);
 
             if (newTotalVolume > availableGodownCapacity) {
-                window.alert("The new product quantity and volume would exceed the available godown capacity. Please decrease the quantity, volume, or choose another godown.");
+                // window.alert("The new product quantity and volume would exceed the available godown capacity. Please decrease the quantity, volume, or choose another godown.");
+                $('#addProductModal').modal('hide');
+                Notify("The new product quantity & volume would exceed the available godown capacity.", "warning");
             } else {
                 const data = {
                     godownId: godownId,
@@ -264,18 +269,22 @@ async function addProduct() {
                 };
 
                 try {
-                    const response = await axios.post("http://localhost:8080/api/addProduct", data, {
+                    const response = await axios.post(`${baseURL}/api/addProduct`, data, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${cookie}`
                         }
                     });
 
-                    window.alert("Product added successfully");
-                    window.location.href = "Products.html";
+                    // window.location.href = "Products.html";
+                    $('#addProductModal').modal('hide');
+
+                    Notify("Product added successfully", "success");
+                    generateProductTable();
                 } catch (error) {
                     console.error('Error adding product:', error);
-                    window.alert("Failed to add product: "+ error.response.data.message);
+                    $('#addProductModal').modal('hide');
+                    Notify("Failed to add product: "+ error.response.data.message, "danger");
                 }
             }
         } else {
@@ -285,18 +294,46 @@ async function addProduct() {
     });
 }
 
+function fillEditProductModal(productId) {
+    const cookie = extractCookie();
+    axios.get(`${baseURL}/api/getProduct/${productId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${cookie}`
+        },
+        withCredentials: true
+    })
+    .then(function(response) {
+        const product = response.data;
+        const productVolume = product.productVolume;
+        const productQuantity = product.totalQuantity;
+        const costPrice = product.price;
+        console.log(costPrice);
+        const editProductModal = document.getElementById('editProductModal');
+        editProductModal.querySelector('#productVolume').value = productVolume;
+        editProductModal.querySelector('#productQuantity').value = productQuantity;
+        editProductModal.querySelector('#costprice').value = costPrice;
+    })
+    .catch(function(error) {
+        console.error('Error fetching product:', error);
+    });
 
+}
 
 function handleEditProductClick(){
     document.getElementById('product-table').addEventListener('click', function(e) { 
         if(e.target.id.includes('editProductBtn')) {
             var row = e.target.closest( "tr" );
+            const productId = row.cells[0].textContent;
+
             const productName = row.cells[1].textContent;
             localStorage.setItem('productName', productName);
             const productVolume = row.cells[5].textContent;
             localStorage.setItem('productVolume', productVolume);
             const productQuantity = row.cells[4].textContent;
             localStorage.setItem('productQuantity', productQuantity);
+            
+            fillEditProductModal(productId);
         }
 
         
@@ -333,7 +370,8 @@ async function editProduct() {
             const availableGodownCapacity = await getAvailableGodownCapacity(godownId);
 
             if (netVolumeChange > availableGodownCapacity) {
-                window.alert("The new product quantity and volume would exceed the available godown capacity. Please decrease the quantity, volume, or choose another godown.");
+                $('#editProductModal').modal('hide');
+                Notify("The new product quantity & volume would exceed the available godown capacity.", "warning");
             } else {
                 const data = {
                     godownId: godownId,
@@ -344,7 +382,7 @@ async function editProduct() {
                 };
 
                 try {
-                    const response = await axios.patch("http://localhost:8080/api/updateProduct", data, {
+                    const response = await axios.patch(`${baseURL}/api/updateProduct`, data, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${cookie}`
@@ -352,11 +390,14 @@ async function editProduct() {
                         withCredentials: true
                     });
 
-                    window.alert("Product edited successfully");
-                    window.location.href = "Products.html";
+                    // window.alert("Product edited successfully");
+                    $('#editProductModal').modal('hide');
+                    Notify("Product edited successfully", "success");
+                    generateProductTable();
                 } catch (error) {
                     console.error('Error editing product:', error);
-                    window.alert("Failed to edit product: " + error.response.data.message);
+                    $('#editProductModal').modal('hide');
+                    Notify("Failed to edit product: "+ error.response.data.message, "danger");
                 }
             }
         } else {
@@ -370,7 +411,7 @@ async function editProduct() {
 async function getAvailableGodownCapacity(godownId) {
     try {
         const cookie = extractCookie();
-        const response = await axios.get(`http://localhost:8080/api/getCapacity/${godownId}`, {
+        const response = await axios.get(`${baseURL}/api/getCapacity/${godownId}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${cookie}`
@@ -420,9 +461,6 @@ document.addEventListener("DOMContentLoaded", function() {
     table = new DataTable('#product-table');
     table1 = new DataTable('#product-table-1');
     generateProductTable();
-  
-    
-    
 });
 
 

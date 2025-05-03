@@ -13,6 +13,21 @@
   --accent-color-dark: #a2d2ff;
 } */
 
+
+.heading-1{
+  font-family: poppins, sans-serif;
+  font-size: 3rem;
+  font-weight: 600;
+}
+
+
+.heading-2{
+    font-family: poppins, sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+
 h3 {
   font-size: 3rem !important;
   margin-left: -1rem;

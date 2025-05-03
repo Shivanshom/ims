@@ -1,3 +1,4 @@
+
 package com.electrowaveselectronics.inventorymanagement.service;
 
 import com.electrowaveselectronics.inventorymanagement.entity.Supplier;
@@ -29,7 +30,7 @@ public class SupplierService {
 
 
 
-    public String updateSuppliers(Supplier theSupplier) {
+    public String updateSuppliers(Supplier theSupplier) throws Exception {
 
         try {
             Optional<Integer> optional = Optional.of(theSupplier.getSupplierId());
@@ -41,17 +42,19 @@ public class SupplierService {
             Supplier existingSupplier = supplierRepository.findById(theSupplier.getSupplierId()).orElseThrow(() -> new Exception("Supplier not found for provided id"));
 
             if (theSupplier.getSupplierName() != null) {
-                Supplier duplicateSupplier = supplierRepository.findByName(theSupplier.getSupplierName());
-                if (duplicateSupplier != null && !(duplicateSupplier.getSupplierId() == (theSupplier.getSupplierId()))) {
-                    throw new Exception("A supplier with the same name already exists");
-                }
+//                Supplier duplicateSupplier = supplierRepository.findByName(theSupplier.getSupplierName());
+//                if (duplicateSupplier != null && !(duplicateSupplier.getSupplierId() == (theSupplier.getSupplierId()))) {
+//                    throw new Exception("A supplier with the same name already exists");
+//                }
                 existingSupplier.setSupplierName(theSupplier.getSupplierName());
             }
+
             if (theSupplier.getContactNumber() != null) {
-                Supplier duplicateSupplier = supplierRepository.findByContactNumber(theSupplier.getContactNumber());
-                if (duplicateSupplier != null && !(duplicateSupplier.getSupplierId() == (theSupplier.getSupplierId()))) {
-                    throw new Exception("A supplier with the same contact number already exists");
-                }
+//                Supplier duplicateSupplier = supplierRepository.findByContactNumber(theSupplier.getContactNumber());
+//                if (duplicateSupplier != null && !(duplicateSupplier.getSupplierId() == (theSupplier.getSupplierId()))) {
+//                    throw new Exception("A supplier with the same contact number already exists");
+//                }
+
                 existingSupplier.setContactNumber(theSupplier.getContactNumber());
             }
             if (theSupplier.getAddress() != null) {
@@ -64,18 +67,12 @@ public class SupplierService {
             Supplier newSupplier = supplierRepository.save(existingSupplier);
             return "Supplier updated with id: " + newSupplier.getSupplierId();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
-    public String createSupplier(Supplier theSupplier) {
+    public String createSupplier(Supplier theSupplier) throws Exception {
         try {
-            if (theSupplier.getSupplierName() != null) {
-                Supplier duplicateSupplier = supplierRepository.findByName(theSupplier.getSupplierName());
-                if (duplicateSupplier != null && !(duplicateSupplier.getSupplierId() == (theSupplier.getSupplierId()))) {
-                    throw new Exception("A supplier with the same name already exists");
-                }
-            }
             if (theSupplier.getContactNumber() != null) {
                 Supplier duplicateSupplier = supplierRepository.findByContactNumber(theSupplier.getContactNumber());
                 if (duplicateSupplier != null && !(duplicateSupplier.getSupplierId() == (theSupplier.getSupplierId()))) {
@@ -97,7 +94,7 @@ public class SupplierService {
 
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 

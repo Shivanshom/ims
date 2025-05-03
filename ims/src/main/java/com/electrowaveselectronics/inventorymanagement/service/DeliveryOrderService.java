@@ -91,14 +91,14 @@ public class DeliveryOrderService {
 
             int totalQuantity = 0;
             double totalSellprice = 0;
-
-            for (int godownId = 1; godownId <= (int)godownService.getGodownCount(); godownId++) {
+            int godownCount = (int)godownService.getGodownCount();
+            for (int godownId = 1; godownId <= godownCount; godownId++) {
                 List<ProductDTO> products = deliveryOrderDTO.getProducts();
                 boolean orderPlaced = true;
                 for (ProductDTO productDTO : products) {
                     // Validate order quantity
                     if (productDTO.getOrderQuantity() <= 0) {
-                        throw new IllegalArgumentException("Order quantity must be a positive integer");
+                        throw new IllegalArgumentException("Quantity must not be less than 1");
                     }
                     productDTO.addTaxAmount();
                     totalQuantity += productDTO.getOrderQuantity();
@@ -110,8 +110,11 @@ public class DeliveryOrderService {
                     int prodQuantityNeeded = productDTO.getOrderQuantity();
                     if (product == null || product.getTotalQuantity() < prodQuantityNeeded) {
                         orderPlaced = false;
+                        System.out.println("Order could not be placed in as product's stock is insufficient");
                         break; // Break the inner loop and try next godown
+
                     }
+
                 }
 
                 if (orderPlaced) {
@@ -152,6 +155,17 @@ public class DeliveryOrderService {
             HashMap<String, Long> result = new HashMap<>();
             result.put("saleOrdersCount", saleOrdersCount);
             result.put("totalQuantitiesSold", totalQuantitiesSold);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        }
+        catch (Exception e){
+            throw e;
+        }
+    }
+
+    public ResponseEntity<?> getTotalDeliveryProducts() throws Exception{
+        try {
+            long result = deliveryRepository.getTotalDeliveryProducts();
             return new ResponseEntity<>(result, HttpStatus.OK);
 
         }
@@ -201,5 +215,30 @@ public class DeliveryOrderService {
         }
     }
 
+    public List<DeliveryOrder> getOrdersForYear(int godownId, int year) {
+        List<DeliveryOrder> allOrders = new ArrayList<>();
+        ArrayList<String> months = new ArrayList<>(Arrays.asList("JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"));
 
+        for (String month : months) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, months.indexOf(month));
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            Date startDate = calendar.getTime();
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+            Date endDate = calendar.getTime();
+
+            allOrders.addAll(deliveryRepository.getOrdersByDateRange(godownId, startDate, endDate));
+        }
+
+        return allOrders;
+    }
+
+    public List<DeliveryOrder> getOrdersByDateRange(int godownId, Date startDate, Date endDate) {
+        return deliveryRepository.getOrdersByDateRange(godownId, startDate, endDate);
+    }
+
+    public List<DeliveryOrder> getProductsForYear(int godownId, int year) {
+        return deliveryRepository.getOrdersForYear(godownId,year);
+    }
 }

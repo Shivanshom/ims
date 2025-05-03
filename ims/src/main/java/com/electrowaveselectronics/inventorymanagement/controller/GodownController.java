@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
+@CrossOrigin(origins = "${myapp.cors.origin}", allowCredentials = "true")
 public class GodownController {
     @Autowired
     private GodownService godownService;
@@ -173,7 +173,7 @@ public class GodownController {
     }
 
     // product
-    @GetMapping("api/listProducts/{godownId}")
+    @GetMapping("/api/listProducts/{godownId}")
     @ResponseBody
     public ResponseEntity<?> listProductByGodownId(@PathVariable String godownId, @RequestHeader("Authorization") String authorizationHeader){
         try{
@@ -195,6 +195,7 @@ public class GodownController {
         }
         catch (Exception e){
             return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+
         }
     }
 

@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 function extractCookie() {
 
   const cookieRow = document.cookie
@@ -7,10 +9,31 @@ function extractCookie() {
 }
 //global data
 
+function getCustomerById(customerId) {
+  const cookie = extractCookie();
+  axios.get(`${baseURL}/api/getCustomerById/${customerId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${cookie}`,
+    },
+    withCredentials: true,
+  })
+  .then(response => {
+      const customer = response.data;
+      document.getElementById('updatedName').value = customer.customerName;
+      document.getElementById('updatedAddress').value = customer.customerAddress;
+      document.getElementById('updatedContactNo').value = customer.customerNo;
+  })
+  .catch(error => {
+      console.error('Error fetching customer details:', error);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const cookie = extractCookie();
 
-  fetch("http://localhost:8080/api/getAllCustomers", {
+  fetch(`${baseURL}/api/getAllCustomers`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -34,14 +57,23 @@ document.addEventListener("DOMContentLoaded", function () {
                       <td>${customer.customerAddress}</td>
                       <td>${customer.customerNo}</td>
                       <td>
-                        <a class="btn btn-info1 btn-sm" href = "./updateForm.html?customerId= ${customer.customerId}">Update</a>
-                        <a class="btn btn-info1 btn-sm" href="./AddDeliveryOrder.html?customerId=${customer.customerId}">Generate Order</a>
+                        <a id="updateCustomerLink" title="Update Customer" class="btn" data-bs-toggle="modal" data-bs-target="#updateCustomerModal" data-customer-id="${customer.customerId}"><i class="fa-solid fa-xl fa-pen-to-square"></i></a>
+                        <a title="Generate Order" class="btn" href="./AddDeliveryOrder.html?customerId=${customer.customerId}"><i class="fa-solid fa-xl fa-plus"></i></a>
                       </td>
                   `;
+                  // href = "./updateForm.html?customerId= ${customer.customerId}"
         tbody.appendChild(row);
       });
-      // Initialize DataTable if needed
       $("#myTable").DataTable();
+
+      document.querySelectorAll('#updateCustomerLink').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const customerId = this.getAttribute('data-customer-id');
+            localStorage.setItem('customerId', customerId);
+            getCustomerById(customerId);
+        });
+      });
       
     })
     .catch((error) => console.log( error));
@@ -65,3 +97,4 @@ function onNavItemClick(itemId, url) {
 
 // // initialize DataTable
 // $("#myTable").DataTable();
+

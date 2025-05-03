@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 function extractCookie() {
     const cookieRow = document.cookie.split('; ').find(row => row.startsWith('cookie=='));
     return cookieRow ? cookieRow.split('==')[1] : '';
@@ -207,17 +209,19 @@ function editProfile() {
             formData.append("address", address);
             formData.append("godownHeadId", godownHeadId);
 
-            axios.put(`http://localhost:8080/api/updateGodownHead`, formData, {
+            axios.put(`${baseURL}/api/updateGodownHead`, formData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${cookie}`
                 }
             }).then(response => {
-                alert("Profile updated successfully");
-                window.location.href = "Profile.html";
+                Notify('Profile updated successfully', 'success');
+                setTimeout(() => {
+                    window.location.href = "Profile.html";
+                }, 500);
             }).catch(error => {
                 console.error('Error updating profile:', error);
-                alert("Failed to update profile: " + error.response.data.message);
+                Notify('Failed to update profile: ' + error.response.data.message, 'danger');
             });
         } else {
             e.stopPropagation();

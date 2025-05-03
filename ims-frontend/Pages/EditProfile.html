@@ -48,9 +48,9 @@
                         <div class="d-md-flex d-none flex-column align-items-center text-center p-3 py-md-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
                             <span class="font-weight-bold" id="name1">Loading...</span>
                             <span class="font-weight-bolder" id="designation1">Loading...</span>
-                            <span class="text-black-50" id="email">loading...</span><span> 
-                        
-                            </span></div>
+                            <span class="text-black-50" id="email">loading...</span>
+                            
+                        </div>
                     </div>
                     <form class="col-md-8 border-right needs-validation" style="vertical-align: middle;" id="editProfile">
                         <div class="p-3 py-5" id="editProfile" onsubmit="editProfile()">
@@ -122,14 +122,39 @@
                                 
                             </div>
                             <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="submit">Save Profile</button></div>
+                            <div class="text-center m-3">
+                                <a class="text-decoration-none" href="Profile.html">
+                                  Go Back to Profile
+                                </a>
+                              </div>
+                            
                         </div>
                       </form>
                     
                 </div>
+               
             </div>
             </div>
             </div>
+
+            <!-- Toast -->
+
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="liveToast" class="toast align-items-center text-white bg-info danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                  <div class="d-flex">
+                    <div class="toast-body">
+                      Something went wrong. Please try again.
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                  </div>
+                </div>
+              </div>
+
           </div>
+
+          <!-- Config -->
+      <script src="../config/config.js"></script>
+      <script src="../Scripts/utils.js"></script>
       
     <!--Bootstrap jquery  -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

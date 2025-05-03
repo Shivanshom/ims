@@ -5,6 +5,7 @@ import com.electrowaveselectronics.inventorymanagement.repository.AuthRepository
 import com.electrowaveselectronics.inventorymanagement.repository.GodownHeadRepository;
 import com.electrowaveselectronics.inventorymanagement.util.EnumRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -72,13 +73,27 @@ public class GodownHeadService {
             }
             GodownHead existingGodownHead = godownHeadRepository.findById(theGodownHead.getGodownHeadId()).orElseThrow(() -> new Exception("GodownHead not found for provided id"));
 
+            String newEmail = theGodownHead.getEmail();
+            String newGodownheadNo = theGodownHead.getGodownheadNo();
+
+            if (newEmail != null && !newEmail.equals(existingGodownHead.getEmail())) {
+                if (godownHeadRepository.existsByEmail(newEmail)) {
+                    throw new IllegalArgumentException("Email already taken by another GodownHead");
+                }
+                existingGodownHead.setEmail(newEmail);
+            }
+
+            if (newGodownheadNo != null && !newGodownheadNo.equals(existingGodownHead.getGodownheadNo())) {
+                if (godownHeadRepository.existsByGodownheadNo(newGodownheadNo)) {
+                    throw new IllegalArgumentException("Contact number already taken by another GodownHead");
+                }
+                existingGodownHead.setGodownheadNo(newGodownheadNo);
+            }
+
             if (theGodownHead.getGodownHeadName() != null) {
                 existingGodownHead.setGodownHeadName(theGodownHead.getGodownHeadName());
             }
 
-            if (theGodownHead.getPassword() != null) {
-                existingGodownHead.setPassword(theGodownHead.getPassword());
-            }
 
             if (theGodownHead.getRole() != null) {
                 existingGodownHead.setRole(theGodownHead.getRole());
@@ -89,7 +104,11 @@ public class GodownHeadService {
             }
 
             return godownHeadRepository.save(existingGodownHead);
-        } catch (Exception e) {
+        }
+        catch (IllegalArgumentException e) {
+            throw e;
+        }
+        catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -189,6 +208,14 @@ public class GodownHeadService {
             throw new IllegalArgumentException("Username already taken");
         }
 
+        if (isEmailTaken(email)) {
+            throw new IllegalArgumentException("Email already taken");
+        }
+
+        if (isGodownheadNoTaken(godownheadNo)) {
+            throw new IllegalArgumentException("Godownhead number already taken");
+        }
+
         GodownHead newGodownHead = new GodownHead();
         newGodownHead.setUsername(username);
         newGodownHead.setPassword(password);
@@ -201,9 +228,26 @@ public class GodownHeadService {
         return godownHeadRepository.save(newGodownHead);
     }
 
+    private boolean isEmailTaken(String email) {
+        return godownHeadRepository.existsByEmail(email);
+    }
+
+    private boolean isGodownheadNoTaken(String godownheadNo) {
+        return godownHeadRepository.existsByGodownheadNo(godownheadNo);
+    }
+
+
     public GodownHead registerAdmin( String username, String password, String godownHeadName, String email, String godownheadNo) {
         if (isUsernameTaken(username)) {
             throw new IllegalArgumentException("Username already taken");
+        }
+
+        if (isEmailTaken(email)) {
+            throw new IllegalArgumentException("Email already taken");
+        }
+
+        if (isGodownheadNoTaken(godownheadNo)) {
+            throw new IllegalArgumentException("Godownhead number already taken");
         }
 
         GodownHead newGodownHead = new GodownHead();
@@ -229,5 +273,23 @@ public class GodownHeadService {
     }
     public GodownHead getGodownHeadDetailsByGodownId(int godownId) {
         return godownHeadRepository.findByGodownId(godownId);
+    }
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public boolean updatePassword(String username, String oldPassword, String newPassword) {
+        GodownHead godownHead = godownHeadRepository.findByUsername(username);
+        if (godownHead!=null) {
+            if (validatePassword(godownHead, oldPassword)) {
+                godownHead.setPassword(passwordEncoder.encode(newPassword));
+                godownHeadRepository.save(godownHead);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean validatePassword(GodownHead godownHead, String password) {
+        return passwordEncoder.matches(password, godownHead.getPassword());
     }
 }

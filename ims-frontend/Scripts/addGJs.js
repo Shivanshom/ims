@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 function extractCookie() {
   const cookieRow = document.cookie
     .split("; ")
@@ -35,7 +37,7 @@ function addGodown(event) {
   };
 
   // Send data to backend
-  fetch("http://localhost:8080/api/createGodown", {
+  fetch(`${baseURL}/api/createGodown`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -52,7 +54,8 @@ function addGodown(event) {
     })
     .then((data) => {
       console.log("Response from server:", data);
-      alert(data); // Show the response message in an alert box
+      // alert(data); // Show the response message in an alert box
+      Notify(data, "success");
     })
     .catch((error) => {
       console.error("There was a problem adding the Godown:", error);

@@ -21,7 +21,7 @@ public class GodownHead {
     @Column(name = "godown_head_name")
     private String godownHeadName;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
     @Column(name = "password")
@@ -37,10 +37,10 @@ public class GodownHead {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "godown_head_number")
+    @Column(name = "godown_head_number", unique = true)
     private String godownheadNo;
 
     public GodownHead(String godownHeadName,int godownHeadId, String password, EnumRole role, int godownId, String email, String godownheadNo) {

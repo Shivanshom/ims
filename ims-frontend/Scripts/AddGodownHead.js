@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 // Handle navigation item clicks
 function onNavItemClick(itemId, url) {
   if (url) {
@@ -27,19 +29,26 @@ function updateStatus() {
 
         // Send data to backend API using Axios
         axios
-          .post("http://localhost:8080/api/register", formData, {
+          .post(`${baseURL}/api/register`, formData, {
             headers: {
               "Content-Type": "application/json",
             },
           })
           .then((response) => {
             console.log(response.data);
-            alert("GodownHead details saved successfully!");
+            // alert("GodownHead details saved successfully!");
+            Notify("GodownHead details saved successfully!", "success");
             // You can redirect the user to another page here if needed
+            // window.location.href = "Godown.html";
+            setTimeout(() => {
+              window.location.href = "Godown.html";
+            }, 1000);
+
           })
           .catch((error) => {
             console.error("Error:", error);
-            alert("Username is already taken, Please use another username");
+            // alert("Username is already taken, Please use another username");
+            Notify("Username is already taken, Please use another username", "danger");
           });
       });
   }
@@ -61,19 +70,25 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(formData);
     
         // Send data to backend API using Axios
-        axios.post('http://localhost:8080/api/register', formData, {
+        axios.post(`${baseURL}/api/register`, formData, {
             headers: {
                 'Content-Type': 'application/json'
             }
         })
         .then(response => {
             console.log(response.data);
-            alert('GodownHead details saved successfully!');
+            // alert('GodownHead details saved successfully!');
+            Notify('GodownHead details saved successfully!', 'success');
             // You can redirect the user to another page here if needed
+            // window.location.href = "Godown.html";
+            setTimeout(() => {
+                window.location.href = "Godown.html";
+            }, 1000);
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Username is already taken, Please use another username');
+            // alert('Username is already taken, Please use another username');
+            Notify('Username is already taken, Please use another username', 'danger');
         });
     });
 });

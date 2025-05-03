@@ -2,20 +2,17 @@ package com.electrowaveselectronics.inventorymanagement.service;
 
 import com.electrowaveselectronics.inventorymanagement.entity.GodownHead;
 import com.electrowaveselectronics.inventorymanagement.repository.GodownHeadRepository;
+import com.electrowaveselectronics.inventorymanagement.repository.OtpRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
@@ -29,7 +26,16 @@ public class LoginService {
     @Autowired
     AuthService authService;
 
+    @Autowired
+    OtpService otpService;
+
+    @Autowired
+    OtpRepository otpRepository;
+
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    private final Map<String, String> otpMap = new HashMap<>();
 
     public ResponseEntity<?> login(String username, String password, HttpServletResponse response) throws Exception {
         try {
@@ -51,7 +57,7 @@ public class LoginService {
 
             if(godownHead == null){
                 Map<String, String> result = new HashMap<>();
-                result.put("message", "User does not exist");
+                result.put("message", "Username does not exist");
                 return ResponseEntity.badRequest().body(result);
 
             }
@@ -75,7 +81,7 @@ public class LoginService {
                 return ResponseEntity.accepted().body(result);
             } else {
                 Map<String, String> result = new HashMap<>();
-                result.put("message", "Login failed");
+                result.put("message", "Invalid password");
                 return ResponseEntity.badRequest().body(result);
             }
         }
@@ -101,7 +107,6 @@ public class LoginService {
         String data = username + System.currentTimeMillis() + secretKey;
         String token = generateToken(data);
         Cookie cookie = new Cookie("token", token);
-        cookie.setMaxAge(3600); // Cookie expiry time in seconds i.e. 1 hour
         cookie.setPath("/");
 //        cookie.setSecure(true);
 //        cookie.setHttpOnly(true);
@@ -148,13 +153,13 @@ public class LoginService {
         }
 
         if (!isValidUsername(username)) {
-            return ResponseEntity.badRequest().body("Invalid username format. " +
+            return new ResponseEntity<>("Invalid username format. " +
                     "Should not start with any special char or numeric value, " +
-                    "Should not contain whitespace");
+                    "Should not contain whitespace", HttpStatus.BAD_REQUEST);
         }
 
         if (godownHeadRepository.findByUsername(username)!=null) {
-            return ResponseEntity.badRequest().body("Username already taken");
+            return new  ResponseEntity<>("Username already taken",HttpStatus.BAD_REQUEST);
         }
 
         String hashedPassword = passwordEncoder.encode(password);
@@ -192,4 +197,120 @@ public class LoginService {
 
         return ResponseEntity.ok("Admin registeration successful");
     }
+
+    private String generateOtp() {
+        Random random = new Random();
+        int otpValue = 100000 + random.nextInt(900000);
+        return String.valueOf(otpValue);
+    }
+
+
+    public ResponseEntity<?> sendOtp(String godownheadNo) {
+
+        try {
+            System.out.println(godownheadNo);
+            Map<String, String> otpMap = new HashMap<>();
+
+            GodownHead godownHead = godownHeadRepository.findByContactNumber(godownheadNo);
+            System.out.println(godownHead);
+            if (Objects.nonNull(godownHead)) {
+                // Generate OTP
+                String otp = generateOtp();
+                otpMap.put(godownheadNo,otp); // Store OTP in map for verification
+                otpService.saveOtp(godownheadNo,otp);
+
+                // Send OTP to user via SMS or email (implement this part)
+
+                return ResponseEntity.ok(otp);
+            } else {
+                return ResponseEntity.badRequest().body("Invalid contact number.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Something went wrong... " + e.getLocalizedMessage());
+        }
+    }
+
+    public ResponseEntity<?> resetpassword(String godownheadNo, String newPassword) {
+        try {
+            GodownHead godownHead = godownHeadRepository.findByContactNumber(godownheadNo);
+            if (godownHead != null) {
+                String hashedPassword = passwordEncoder.encode(newPassword);
+                godownHead.setPassword(hashedPassword);
+                godownHeadRepository.save(godownHead);
+                return ResponseEntity.ok("Password reset successfully.");
+            }
+            return ResponseEntity.badRequest().body("Invalid godown head number.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Something went wrong... " + e.getLocalizedMessage());
+        }
+
+
+    }
+    public ResponseEntity<?> loginWithOtp(String godownheadNo, String enteredOtp) {
+        try {
+            // Check if the OTP is valid
+            if (otpService.verifyOtp(godownheadNo, enteredOtp).getStatusCode().equals(HttpStatus.OK)) {
+                GodownHead godownHead = godownHeadRepository.findByContactNumber(godownheadNo);
+                if (godownHead != null) {
+                    // Generate a new token and set the user as authenticated
+                    Cookie cookie = generateUserCookie(godownHead.getUsername());
+                    authService.createAuthInfo(godownHead.getUsername(), cookie.getValue());
+
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("message", "Login with OTP successful.");
+                    result.put("cookie", cookie.getValue());
+                    result.put("username", godownHead.getUsername());
+                    result.put("godownId", godownHead.getGodownId());
+                    result.put("godown_head_number", godownHead.getGodownheadNo());
+                    result.put("godownHeadId", godownHead.getGodownHeadId());
+                    result.put("role", godownHead.getRole().name());
+
+                    // Make the API call here when the status code is 200
+                    // Replace "apiCall()" with the actual method to call your API
+                    // apiCall();
+
+                    return ResponseEntity.ok(result);
+                } else {
+                    return ResponseEntity.badRequest().body("Invalid godown head number.");
+                }
+            } else {
+                return ResponseEntity.badRequest().body("Invalid OTP.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Something went wrong... " + e.getLocalizedMessage());
+        }
+    }
+
+
+
+//    public ResponseEntity<?> loginWithOtp(String godownheadNo, String enteredOtp) {
+//        try {
+//            // Check if the OTP is valid
+////            if (otpService.verifyOtp(godownheadNo, enteredOtp)) {
+//                GodownHead godownHead = godownHeadRepository.findByContactNumber(godownheadNo);
+//                if (godownHead != null &&  otpService.verifyOtp(godownheadNo,enteredOtp ).getStatusCode() == HttpStatusCode.valueOf(200)) {
+//                    // Generate a new token and set the user as authenticated
+//                    Cookie cookie = generateUserCookie(godownHead.getUsername());
+//                    authService.createAuthInfo(godownHead.getUsername(), cookie.getValue());
+//
+//
+//                    Map<String, Object> result = new HashMap<>();
+//                    result.put("message", "Login with OTP successful.");
+//                    result.put("cookie", cookie.getValue());
+//                    result.put("username", godownHead.getUsername());
+//                    result.put("godownId", godownHead.getGodownId());
+//                    result.put("godown_head_number",godownHead.getGodownheadNo());
+//                    result.put("godownHeadId", godownHead.getGodownHeadId());
+//                    result.put("role", godownHead.getRole().name());
+//                    return ResponseEntity.ok(result);
+//                } else {
+//                    return ResponseEntity.badRequest().body("Invalid godown head number.");
+//                }
+////            } else {
+////                return ResponseEntity.badRequest().body("Invalid OTP.");
+////            }
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body("Something went wrong... " + e.getLocalizedMessage());
+//        }
+//    }
 }

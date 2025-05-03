@@ -276,7 +276,7 @@ public class GodownService {
             List<Product> productList = tempGodown.getProductList();
 
             return productList.isEmpty()
-                    ? new  ResponseEntity<>("Product list is empty for Godown with ID: " + godownId, HttpStatus.OK)
+                    ? new  ResponseEntity<>("Product List is Empty", HttpStatus.NOT_FOUND)
                     : new  ResponseEntity<>(productList, HttpStatus.OK);
 
         } catch (Exception e) {
@@ -293,6 +293,16 @@ public class GodownService {
 
     public List<Object[]> findGodownsByGodownHead() {
         // Additional validation or checks can be added here if needed
-        return godownRepository.findGodownWithHeadName();
-    }
+        List<Object[]> godowns = godownRepository.findGodownWithHeadName();
+
+        // Add logging to verify if data is fetched correctly
+        System.out.println("Fetched godowns: " + godowns.size());
+
+        // Log each row of the data to see if the structure is as expected
+        for (Object[] godown : godowns) {
+            System.out.println(Arrays.toString(godown));
+        }
+
+        // Return the result
+        return godowns;    }
 }

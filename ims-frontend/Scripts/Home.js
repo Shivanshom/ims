@@ -1,3 +1,5 @@
+const baseURL = SERVER_URL;
+
 function extractCookie() {
     const cookieRow = document.cookie.split('; ').find(row => row.startsWith('cookie=='));
     return cookieRow ? cookieRow.split('==')[1] : '';
@@ -6,7 +8,7 @@ function extractCookie() {
 const cookie = extractCookie();
 
 const instance = axios.create({
-    baseURL: 'http://localhost:8080/api/',
+    baseURL: `${baseURL}/api/`,
     headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${cookie}`
@@ -135,8 +137,8 @@ function setProductDetails(godownId) {
              
                 const {totalQuantitiesSoldByDate, salesByDate} = response.data;
             
-                document.getElementById('totalItemsOrderedDay').innerHTML = totalQuantitiesSoldByDate === 0 ? "No Sales" : totalQuantitiesSoldByDate;
-                document.getElementById('totalSaleOrdersOfDay').innerHTML = salesByDate === 0 ? "No Sales" : salesByDate;
+                document.getElementById('totalItemsOrderedDay').innerHTML = totalQuantitiesSoldByDate === 0 ? "0" : totalQuantitiesSoldByDate;
+                document.getElementById('totalSaleOrdersOfDay').innerHTML = salesByDate === 0 ? "0" : salesByDate;
             })
             .catch(error => {
                 console.error('Error fetching sales:', error);
