@@ -8,7 +8,6 @@ This monorepo contains:
 
 ---
 
-## 🧠 Backend – `ims/`
 
 ```bash
 cd ims
